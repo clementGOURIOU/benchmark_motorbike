@@ -1,5 +1,12 @@
 # HPC
 
+**OpenFOAM HPC Benchmark suite**
+
+The respository is intended to be a shared repository with relevant data-sets and information created in order to:
+
+*  provide user guides and initial scripts to set-up and run different data-sets on different HPC architectures
+*  provide to the community an homogeneous term of reference to compare different hardware architectures, software environments, configurations, etc. 
+*  define a common set of metrics/KPI (Key Performance Indicators) to measure performances
 
 *  **3-D Lid Driven cavity flow**
 
