@@ -1,5 +1,7 @@
 # HPC
 
+Code repository for the High Performance Computing Technical Committee
+
 **OpenFOAM HPC Benchmark suite**
 
 The respository is intended to be a shared repository with relevant data-sets and information created in order to:
@@ -10,7 +12,6 @@ The respository is intended to be a shared repository with relevant data-sets an
 
 *  **3-D Lid Driven cavity flow**
 
-Code repository for the High Performance Computing Technical Committee
 
 The  first test-case chosen is the a 3-D version of the [Lid-driven cavity flow tutorial](https://www.openfoam.com/documentation/tutorial-guide/tutorialse2.php). 
 
