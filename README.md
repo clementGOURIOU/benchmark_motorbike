@@ -17,6 +17,9 @@ The  first test-case chosen is the a 3-D version of the [Lid-driven cavity flow 
 
 This test-case has simple geometry and boundary conditions, involving transient, isothermal, incompressible laminar flow in a three-dimensional box domain. The *icoFoam* solver is used in such test-case.
 
-It is intended to be a stress test for the linear algebra solver, being most of the time spent in the pressure equation
+It is intended to be a stress test for the linear algebra solver, being most of the time spent in the pressure equation.
+
+The set-up of iterative method has been chosed of type FIXEDITER. In that case the computational load is fixed, when running with the given solver. This case is useful for comparing different hardware configurations
+by keeping constant the computational load.  
 
 * **HPC motorbike**
