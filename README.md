@@ -28,8 +28,9 @@ by keeping constant the computational load.
 
 The two different options are selected by choosing one of the two configurations files: 
 
-1.  `system/fvSolution.fixedITER` in that cases it has been fixed a constat number of iteration for the pressure solver equal to 250 
+1.  `system/fvSolution.fixedITER` in that cases it has been fixed a constat number of iteration for the pressure solver equal to 250, and for the velocity solver equal to 5. 
 2.  `system/fvSolution.fixedNORM` in that case it has been fixed an exit norm value of 10^{-4} for the pressure solver. 
 
+Figures shows the 
 
 * **HPC motorbike**
