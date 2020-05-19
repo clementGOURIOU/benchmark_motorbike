@@ -50,7 +50,13 @@ The time step ∆t is reduced proportionally to Co and ∆x, by 4 times. The phy
 
 The test-case XL is used with a number ofiteration equal to 100 to reduce the computational time.
 
-***Converge criterion of interative method***
+***Set-up of linear algebra solvers***
+
+The set-up for the linear algebra solvers consists of: 
+
+
+*  Pressure: DIC-PCG that is a combination of Diagonal-based Incomplete-Cholesky (DIC) preconditioner with a Conjugate Gradient (PCG) solver 
+*  Velocity: DILU-PBiCGStab that is combination of Diagonal Incomplete LU (asymmetric) factorization for the preconditioner with a Stabilized Preconditioned (bi-)conjugate gradient solver
 
 The iterative method can be run using two different converge criterion:   
 
