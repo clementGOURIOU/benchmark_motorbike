@@ -4,7 +4,7 @@ Code repository for the High Performance Computing Technical Committee
 
 **OpenFOAM HPC Benchmark suite**
 
-The respository is intended to be a shared repository with relevant data-sets and information created in order to:
+The repository is intended to be a shared repository with relevant data-sets and information created in order to:
 
 *  provide user guides and initial scripts to set-up and run different data-sets on different HPC architectures
 *  provide to the community an homogeneous term of reference to compare different hardware architectures, software environments, configurations, etc. 
@@ -21,7 +21,7 @@ It is intended to be a stress test for the linear algebra solver, being most of 
 
 ***Definition of geometrical and physical properties***
 
-In such simple geometry all the boundaries of the square are walls. The top wall moves in thex-direction at the speed of 1 m/s while the other five are stationary.
+In such simple geometry all the boundaries of the box are walls. The top wall moves in the x-direction at the speed of 1 m/s while the other five are stationary.
 Three different sizes have been selected:
 
 *  Small (S)
@@ -48,7 +48,7 @@ The time step ∆t is reduced proportionally to Co and ∆x, by 4 times. The phy
 | n. of iter.                | -         |  -    | 100    |
 
 
-The test-case XL is used with a number ofiteration equal to 100 to reduce the computational time.
+The test-case XL is used with a number of iteration equal to 100 to reduce the computational time.
 
 ***Set-up of linear algebra solvers***
 
@@ -58,18 +58,18 @@ The set-up for the linear algebra solvers consists of:
 *  Pressure: DIC-PCG that is a combination of Diagonal-based Incomplete-Cholesky (DIC) preconditioner with a Conjugate Gradient (PCG) solver 
 *  Velocity: DILU-PBiCGStab that is combination of Diagonal Incomplete LU (asymmetric) factorization for the preconditioner with a Stabilized Preconditioned (bi-)conjugate gradient solver
 
-The iterative method can be run using two different converge criterion:   
+The iterative method can be run using two different convergence criteria:   
 
 
-1.   FIXEDITER: In that case the computational load is fixed, when running with the given solver. This case is useful for comparing different hardware configurations
+1.   FIXEDITER: In this case the computational load is fixed, when running with the given solver. This case is useful for comparing different hardware configurations
 by keeping constant the computational load.  
-2.   FIXEDNORM: in that case the the exit norm is fixed.
+2.   FIXEDNORM: in this case the exit norm is fixed.
 
 The two different options are selected by choosing one of the two configurations files: 
 
-1.  `system/fvSolution.fixedITER`, with a constat number of iteration per time step for the pressure solver, different accorinding to the test-case size. The velocity solver is set to 5 iteration per time step for the different test-cases. 
+1.  `system/fvSolution.fixedITER`, with a constant number of iteration per time step for the pressure solver, different according to the test-case size. The velocity solver is set to 5 iteration per time step for the different test-cases. 
 2.  `system/fvSolution.fixedNORM`, with a fixed exit norm value of 10^{-4} for the pressure solver. 
 
-Figures shows the residual for pressure and veloccity for the two different options. 
+Figures shows the residual for pressure and velocity for the two different options. 
 
 * **HPC motorbike**
