@@ -70,6 +70,9 @@ The two different options are selected by choosing one of the two configurations
 1.  `system/fvSolution.fixedITER`, with a constant number of iteration per time step for the pressure solver, different according to the test-case size. The velocity solver is set to 5 iteration per time step for the different test-cases. 
 2.  `system/fvSolution.fixedNORM`, with a fixed exit norm value of 10^{-4} for the pressure solver. 
 
+***Post-process of the results***
+To get the figures reported below, please use these [scripts](https://gitlab.com/amemmolo/png_tecplot)
+
 Figures shows the residual for pressure and velocity for the two different options. 
 
 * **HPC motorbike**
