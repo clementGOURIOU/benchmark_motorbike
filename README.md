@@ -55,10 +55,11 @@ The test-case XL is used with a number of iteration equal to 100 to reduce the c
 The set-up for the linear algebra solvers consists of: 
 
 
-*  Pressure: 
+**  Pressure: 
 *  DIC-PCG is an iterativer solver that combins a Diagonal-based Incomplete-Cholesky (DIC) preconditioner with a Conjugate Gradient (PCG) solver. DIC is a common preconditioner in OpenFOAM forits easy configuration and high efficiency 
 *  GAMG-PCG is an  iterative  solver  implemented  in  OpenFOAM  that  uses  aConjugate  Gradient  (CG)  accelerated  by  a  generalized  geometric-algebraic  multigrid(GAMG) method that supports both geometrical and algebraic multigrid.
-*  Velocity: DILU-PBiCGStab that is combination of Diagonal Incomplete LU (asymmetric) factorization for the preconditioner with a Stabilized Preconditioned (bi-)conjugate gradient solver
+*  
+**  Velocity: DILU-PBiCGStab that is combination of Diagonal Incomplete LU (asymmetric) factorization for the preconditioner with a Stabilized Preconditioned (bi-)conjugate gradient solver
 
 The iterative method can be run using two different convergence criteria:   
 
