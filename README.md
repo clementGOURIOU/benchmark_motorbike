@@ -60,7 +60,7 @@ Pressure:
 *  FOAM-GAMG-PCG is an iterative solver provided in OpenFOAM that uses a Conjugate Gradient (CG) accelerated by a generalized geometric-algebraic  multigrid(GAMG) method that supports both geometrical and algebraic multigrid.
 *  PETSc-ICC-CG(*)  is  the  PETSc  counterpart  of  the  FOAM-DIC-PCG  method. ICC  is  the Incomplete Cholesky factoriza-tion implementation of PETSc
 *  PETSc-AMG-CG(*)  is  the  PETSc  counterpart  of  the  FOAM-GAMG-PCG  method.  Inthis  solver  we  use  an  algebraic  multigrid  method,  named  BoomerAMG,  provided  bythe third-party library of PETSc named Hypre. 
-*  PETSc-AMG-CG(*) + caching is the same solver described above but the matrix is con-verted only once at the beginning and cached together with the preconditioner for allthe time-steps. In this particular case of constant-coefficients matrix, the numerical so-lution is equivalent to the case without caching.
+*  PETSc-AMG-CG(*) + caching is the same solver described above but the matrix is converted only once at the beginning and cached together with the preconditioner for allthe time-steps. In this particular case of constant-coefficients matrix, the numerical so-lution is equivalent to the case without caching.
 
 (*) For the PETSc solver, it is used the [PETSc4FOAM library](https://develop.openfoam.com/Community/external-solver/-/blob/develop/README.md) for embedding Petsc and its external dependencies (i.e. Hypre) into arbitrary OpenFOAM simulations.
 Velocity:
