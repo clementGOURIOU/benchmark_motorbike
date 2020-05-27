@@ -58,12 +58,15 @@ The set-up for the linear algebra solvers consists of:
 Pressure: 
 *  FOAM-DIC-PCG is an iterative solver provided by OpenFOAM that combins a Diagonal-based Incomplete-Cholesky (DIC) preconditioner with a Conjugate Gradient (PCG) solver. DIC is a common preconditioner in OpenFOAM for its easy configuration and high efficiency 
 *  FOAM-GAMG-PCG is an iterative solver provided in OpenFOAM that uses a Conjugate Gradient (CG) accelerated by a generalized geometric-algebraic  multigrid(GAMG) method that supports both geometrical and algebraic multigrid.
+*  PETSc-ICC-CG(*)  is  the  PETSc  counterpart  of  the  FOAM-DIC-PCG  method. ICC  is  the Incomplete Cholesky factoriza-tion implementation of PETSc
+*  PETSc-AMG-CG(*)  is  the  PETSc  counterpart  of  the  FOAM-GAMG-PCG  method.  Inthis  solver  we  use  an  algebraic  multigrid  method,  named  BoomerAMG,  provided  bythe third-party library of PETSc named Hypre. 
+*  PETSc-AMG-CG(*) + caching is the same solver described above but the matrix is con-verted only once at the beginning and cached together with the preconditioner for allthe time-steps. In this particular case of constant-coefficients matrix, the numerical so-lution is equivalent to the case without caching.
 
+(*) For the PETSc solver, it is used the [PETSc4FOAM library](https://develop.openfoam.com/Community/external-solver/-/blob/develop/README.md) for embedding Petsc and its external dependencies (i.e. Hypre) into arbitrary OpenFOAM simulations.
 Velocity:
 * The solver/preconditioner pair for the momentum equation is keeping fixed by using a DILU-PBiCGStab that is combination of Diagonal Incomplete LU (asymmetric) factorization for the preconditioner with a Stabilized Preconditioned (bi-)conjugate gradient solver
 
-The iterative method can be run using two different convergence criteria:   
-
+The iterative method can be run using two different convergence criteria:
 
 1.   FIXEDITER: In this case the computational load is fixed, when running with the given solver. This case is useful for comparing different hardware configurations
 by keeping constant the computational load.  
@@ -73,6 +76,13 @@ The two different options are selected by choosing one of the two configurations
 
 1.  `system/fvSolution.fixedITER`, with a constant number of iteration per time step for the pressure solver, different according to the test-case size. The velocity solver is set to 5 iteration per time step for the different test-cases. 
 2.  `system/fvSolution.fixedNORM`, with a fixed exit norm value of 10^{-4} for the pressure solver. 
+
+The following Table summirizes the different Preconditioner/solver pairs used to solve pressure equation 
+
+| Method        | Preconditioner                     | Solver 
+| ------        | ------                             | -----
+| FOAM-DIC-PCG  | Diagonal-based incomplete-Cholesky | Conjugate Gradient
+| FOAM-GAMG-PCG | cell | 
 
 ***Post-process of the results***
 To get the figures reported below, please use these [scripts](https://gitlab.com/amemmolo/png_tecplot)
