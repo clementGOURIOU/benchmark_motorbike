@@ -82,7 +82,7 @@ The iterative method can be run using two different convergence criterions:
 by keeping constant the computational load.  
 2.   FIXEDNORM: in this case the exit norm is fixed.
 
-The two different options are selected by choosing one of the two configurations files: 
+The two different options are selected by choosing one of the two configurations files, where <Method> keyword is selected according to previous Table: 
 
 1.  `system/fvSolution.<Method>.fixedITER`, with a constant number of iteration per time step for the pressure solver, different according to the test-case size. The velocity solver is set to 5 iteration per time step for the different test-cases. 
 2.  `system/fvSolution.<Method>.fixedNORM`, with a fixed exit norm value of 10^{-4} for the pressure solver. 
