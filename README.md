@@ -84,8 +84,8 @@ by keeping constant the computational load.
 
 The two different options are selected by choosing one of the two configurations files: 
 
-1.  `system/fvSolution.fixedITER`, with a constant number of iteration per time step for the pressure solver, different according to the test-case size. The velocity solver is set to 5 iteration per time step for the different test-cases. 
-2.  `system/fvSolution.fixedNORM`, with a fixed exit norm value of 10^{-4} for the pressure solver. 
+1.  `system/fvSolution.<Method>.fixedITER`, with a constant number of iteration per time step for the pressure solver, different according to the test-case size. The velocity solver is set to 5 iteration per time step for the different test-cases. 
+2.  `system/fvSolution.<Method>.fixedNORM`, with a fixed exit norm value of 10^{-4} for the pressure solver. 
 
 
 ***Post-process of the results***
