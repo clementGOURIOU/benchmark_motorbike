@@ -46,7 +46,7 @@ The time step ∆t is reduced proportionally to Co and ∆x, by 4 times. The phy
 | Reynolds number            | 10        | 10    | 10     |
 | U (m/s)                    | 1         | 1     | 1      |
 | n. of iter.                | 500       | 2000  | 8000 (100) |
-| Final physical Time (s.)   | 0.5       | 0.5   | 0.5 (0.00625)|
+| End physical Time (s.)   | 0.5       | 0.5   | 0.5 (0.00625)|
 
 The test-case XL is used with a number of iteration equal to 100 to reduce the computational time.
 
