@@ -98,5 +98,5 @@ Figures shows the residual for pressure and velocity for the two different optio
 ** References ** 
 
  S. Bnà, I. Spisso, M. Olesen, G. Rossi: ''PETSc4FOAM: A Library to plug-in PETSc into the OpenFOAM
-Framework''' [https://prace-ri.eu/wp-content/uploads/WP294-PETSc4FOAM-A-Library-to-plug-in-PETSc-into-the-OpenFOAM-Framework.pdf PRACE White paper]
+Framework'' [https://prace-ri.eu/wp-content/uploads/WP294-PETSc4FOAM-A-Library-to-plug-in-PETSc-into-the-OpenFOAM-Framework.pdf PRACE White paper]
 
