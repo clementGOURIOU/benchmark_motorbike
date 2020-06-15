@@ -95,5 +95,4 @@ Figures shows the residual for pressure and velocity for the two different optio
 
 * **HPC motorbike**
 * 
-* References 
-* 
+** References ** 
