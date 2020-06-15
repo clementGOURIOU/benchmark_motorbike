@@ -28,7 +28,7 @@ Three different sizes have been selected:
 *  Medium (M) 
 *  eXtraLarge (XL)
 
-The following Table shows the geometrical and physical properties of the different test-cases, which have an increasing number of cells: 1 million(m) (S), 8 m (M) and 64 m (XL) of cells, obtained by halving ∆x when moving from the smaller to the bigger test-case. 
+The following Table shows the geometrical and physical properties of the different test-cases, which have an increasing number of cells: 1 million (m) (S), 8 m (M) and 64 m (XL) of cells, obtained by halving ∆x when moving from the smaller to the bigger test-case. 
 The Courant number Co=(U ∆t)/∆x is kept under stability limit, and it is halved when moving to bigger test-cases. 
 The time step ∆t is reduced proportionally to Co and ∆x, by 4 times. The physical time to reach the steady state in laminar flow is T= 0.5. 
 
