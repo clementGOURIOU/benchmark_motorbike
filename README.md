@@ -91,15 +91,8 @@ To use one of the selected method copy/rename the chosen file in fvSolution or u
 
 `ln -s fvSolution.<Method>.fixedITER fvSolution`
 
-******Post-process of the results***
-To get the figures reported below, please use these [scripts](https://gitlab.com/amemmolo/png_tecplot)
-
-Figures shows the residual for pressure and velocity for the two different options. 
-
-* **HPC motorbike**
 
 **References** 
 
  S. Bnà, I. Spisso, M. Olesen, G. Rossi *PETSc4FOAM: A Library to plug-in PETSc into the OpenFOAM
 Framework* [PRACE White paper](https://prace-ri.eu/wp-content/uploads/WP294-PETSc4FOAM-A-Library-to-plug-in-PETSc-into-the-OpenFOAM-Framework.pdf)
-
