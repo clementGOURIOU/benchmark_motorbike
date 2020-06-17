@@ -93,6 +93,16 @@ To use one of the selected method copy/rename the chosen file in fvSolution or u
 
 [Figure](https://develop.openfoam.com/committees/hpc/-/blob/develop/time.png) shows the total time for solving  PISO with different Preconditioner/solver pairs reported in the Table the results reported in [1]
 
+******Post-process of the results***
+
+To get the figures reported below, please use these [scripts](https://gitlab.com/amemmolo/png_tecplot)
+
+Figures shows the residual for pressure and velocity for the two different options.
+
+* **HPC motorbike**
+
+**References** 
+
 **References** 
 
  [1] S. Bnà, I. Spisso, M. Olesen, G. Rossi *PETSc4FOAM: A Library to plug-in PETSc into the OpenFOAM
