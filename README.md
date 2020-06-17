@@ -89,7 +89,7 @@ The two different options are selected by choosing one of the two configurations
 
 To use one of the selected method copy/rename the chosen file in fvSolution or use the symbolic link of the unix envoroment, e.g.
 
-ln -s fvSolution.<Method>.fixedITER fvSolution
+`ln -s fvSolution.<Method>.fixedITER fvSolution`
 
 ***Post-process of the results***
 To get the figures reported below, please use these [scripts](https://gitlab.com/amemmolo/png_tecplot)
