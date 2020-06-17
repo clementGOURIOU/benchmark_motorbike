@@ -91,7 +91,7 @@ To use one of the selected method copy/rename the chosen file in fvSolution or u
 
 `ln -s fvSolution.<Method>.fixedITER fvSolution`
 
-Figure [](https://develop.openfoam.com/committees/hpc/-/blob/develop/time.png) shows the results reported in [1]
+[Figure](https://develop.openfoam.com/committees/hpc/-/blob/develop/time.png) shows the total time for solving  PISO with different Preconditioner/solver pairs reported in the Table the results reported in [1]
 
 
 **References** 
