@@ -94,7 +94,7 @@ To use one of the selected method copy/rename the chosen file in fvSolution or u
 
 `ln -s fvSolution.<Method>.fixedITER fvSolution`
 
-![Figure](time.png "total time for PISO solver")
+![Figure](Lid_driven_cavity-3d/img/time_3d.png "total time for PISO solver")
 
 This figure shows the total time for solving PISO with different Preconditioner/solver pairs reported in the Table above.
 
