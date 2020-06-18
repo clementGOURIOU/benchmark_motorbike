@@ -1,8 +1,8 @@
 /*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
-|  \\    /   O peration     | Version:  3.0.1                                 |
-|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|  \\    /   O peration     | Version:  v2006                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
 |    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
 FoamFile
@@ -24,8 +24,8 @@ solvers
 
         petsc
         {
- 	    options
-	    {
+            options
+            {
                 ksp_type cg;
                 pc_type bjacobi;
                 sub_pc_type icc;
@@ -33,19 +33,19 @@ solvers
                 mat_type mpiaijmkl;
                 sub_pc_factor_shift_type none;
             }
-            
+
             caching
-	    {
-	        matrix
-	        {
-	            update always;
-	        }
-		
-	        preconditioner
-	        {
-	            update always;
-	        }
-	    }
+            {
+                matrix
+                {
+                    update always;
+                }
+
+                preconditioner
+                {
+                    update always;
+                }
+            }
         }
 
         tolerance       1.e-04;

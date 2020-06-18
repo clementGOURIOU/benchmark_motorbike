@@ -1,8 +1,8 @@
 /*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
-|  \\    /   O peration     | Version:  3.0.1                                 |
-|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|  \\    /   O peration     | Version:  v2006                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
 |    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
 FoamFile
@@ -23,7 +23,7 @@ solvers
         preconditioner  DIC;
         tolerance       0;
         relTol          0;
-        maxIter         650; 
+        maxIter         650;
     }
 
     pFinal
@@ -38,8 +38,7 @@ solvers
         preconditioner  DILU;
         tolerance       0;
         relTol          0;
-        maxIter         5; 
-        
+        maxIter         5;
     }
 }
 
