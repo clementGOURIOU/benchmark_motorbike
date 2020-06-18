@@ -1,16 +1,19 @@
-# HPC
+**Code repository for the High Performance Computing Technical Committee**
 
-Code repository for the High Performance Computing Technical Committee
+[[_TOC_]]
 
-**OpenFOAM HPC Benchmark suite**
+## OpenFOAM HPC Benchmark suite
 
 The repository is intended to be a shared repository with relevant data-sets and information created in order to:
 
-*  provide user guides and initial scripts to set-up and run different data-sets on different HPC architectures
+*  Provide user guides and initial scripts to set-up and run different data-sets on different HPC architectures
 *  provide to the community an homogeneous term of reference to compare different hardware architectures, software environments, configurations, etc. 
-*  define a common set of metrics/KPI (Key Performance Indicators) to measure performances
+*  Define a common set of metrics/KPI (Key Performance Indicators) to measure performances
 
-*  **3-D Lid Driven cavity flow**
+
+## 3-D Lid Driven cavity flow
+
+[//]: <>  (**3-D Lid Driven cavity flow**)
 
 
 The  first test-case chosen is the 3-D version of the [Lid-driven cavity flow tutorial](https://www.openfoam.com/documentation/tutorial-guide/tutorialse2.php). 
@@ -95,13 +98,7 @@ To use one of the selected method copy/rename the chosen file in fvSolution or u
 
 This figure shows the total time for solving PISO with different Preconditioner/solver pairs reported in the Table above.
 
-******Post-process of the results***
-
-To get the figures reported below, please use these [scripts](https://gitlab.com/amemmolo/png_tecplot)
-
-Figures show the residual for pressure and velocity for the two different options.
-
-* **HPC motorbike**
+## HPC motorbike 
 
 
 **References** 
