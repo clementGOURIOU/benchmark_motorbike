@@ -30,6 +30,7 @@ Three different sizes have been selected:
 - Small (S)
 - Medium (M)
 - Extra-Large (XL)
+- Extra-extra Large (XXL)
 
 The following table shows the geometrical and physical properties of the different test-cases, which have an increasing number of cells: 1 million (m) (S), 8 m (M) and 64 m (XL) of cells, obtained by halving ∆x when moving from the smaller to the bigger test-case.
 The Courant number Co=(U ∆t)/∆x is kept under the stability limit, and it is halved when moving to bigger test-cases.
