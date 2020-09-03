@@ -47,10 +47,5 @@ timePrecision   6;
 
 runTimeModifiable true;
 
-functions
-{
-    #includeFunc  solverInfo
-    // #includeFunc  residuals
-}
 
 // ************************************************************************* //
