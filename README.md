@@ -95,7 +95,7 @@ To use one of the selected method copy/rename the chosen file in
 For example,
 ```
 cd system
-ln -s fvSolution.<Method>.fixedITER fvSolution`
+ln -s fvSolution.<Method>.fixedITER fvSolution
 ```
 
 ![Figure](Lid_driven_cavity-3d/assets/time_3d.png "total time for PISO solver, XL Test case")
