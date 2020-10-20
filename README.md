@@ -100,7 +100,7 @@ ln -s fvSolution.<Method>.fixedITER fvSolution
 
 ![Figure](Lid_driven_cavity-3d/assets/time_3d.png "total time for PISO solver, XL Test case")
 
-This figure shows the total time for solving PISO with different preconditioner/solver pairs reported in the Table above, for the XL test-case
+This figure shows the total time for solving PISO with different preconditioner/solver pairs reported in the Table above, for the XL test-case, with fixed exit norm cofiguration. 
 
 ## HPC motorbike
 
