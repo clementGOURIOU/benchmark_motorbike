@@ -81,8 +81,7 @@ The following Table summarizes the different preconditioner/solver pairs used to
 
 The iterative method can be run using two different convergence criteria:
 
-1. `fixedITER`: In this case the computational load is fixed, when running with the given solver.
-   This case is useful for comparing different hardware configurations by keeping constant the computational load.
+1. `fixedITER`: In this case the computational load is fixed, when running with the given solver. It is NOT representative of the real set-up. Used only for preliminary tests in the dev. phase or stress HPC architectures. This case is useful for comparing different hardware configurations by keeping constant the computational load. 
 2. `fixedNORM`: in this case the exit norm is fixed.
 
 The two different options are selected by choosing one of the two configurations files, where <Method> keyword is selected according to the previous Table:
