@@ -104,7 +104,7 @@ This figure shows the total time for solving PISO with different preconditioner/
 ## HPC motorbike
 
 
-***HPC adaptation of motorbike tutorial***
+***HPC modification of motorbike tutorial***
 
 
 #OpenFoam used version:
