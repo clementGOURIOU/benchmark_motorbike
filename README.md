@@ -81,8 +81,7 @@ The following Table summarizes the different preconditioner/solver pairs used to
 
 The iterative method can be run using two different convergence criteria:
 
-1. `fixedITER`: In this case the computational load is fixed, when running with the given solver.
-   This case is useful for comparing different hardware configurations by keeping constant the computational load.
+1. `fixedITER`: In this case the computational load is fixed, when running with the given solver. It is NOT representative of the real set-up. Used only for preliminary tests in the development phase or stress HPC architectures. This case is useful for comparing different hardware configurations by keeping constant the computational load. 
 2. `fixedNORM`: in this case the exit norm is fixed.
 
 The two different options are selected by choosing one of the two configurations files, where <Method> keyword is selected according to the previous Table:
@@ -104,9 +103,9 @@ This figure shows the total time for solving PISO with different preconditioner/
 
 ## HPC motorbike
 
-/*----------------------------------------------------*\
-|       HPC adaptation of motorbike tutorial           |
-\*----------------------------------------------------*/
+
+***HPC modification of motorbike tutorial***
+
 
 #OpenFoam used version:
 v1912
@@ -123,14 +122,8 @@ Meshes are built as follows:
     * the snappyHexMeshDict is the same as in the tutorial
 - M and L are obtained using the mirroMesh functionality starting from the S mesh so that 
   M is 2xS and L is 2xM
-    ___         ______         ____________ 
-   |   |       |      |       |            |
-   | M |       | M  M |       | M  M  M  M |
-   | O |       | O  O |       | O  O  O  O |
-   | T |       | T  T |       | T  T  T  T |
-   | O |       | O  O |       | O  O  O  O |
-   |___|       |______|       |____________|
-   SMALL        MEDIUM            LARGE            
+
+   
    
 - Mesh calculation is performed using snappyHexMesh in parallel, with 16 tasks   
    
