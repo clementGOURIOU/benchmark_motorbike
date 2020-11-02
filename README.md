@@ -122,14 +122,8 @@ Meshes are built as follows:
     * the snappyHexMeshDict is the same as in the tutorial
 - M and L are obtained using the mirroMesh functionality starting from the S mesh so that 
   M is 2xS and L is 2xM
-    ___         ______         ____________ 
-   |   |       |      |       |            |
-   | M |       | M  M |       | M  M  M  M |
-   | O |       | O  O |       | O  O  O  O |
-   | T |       | T  T |       | T  T  T  T |
-   | O |       | O  O |       | O  O  O  O |
-   |___|       |______|       |____________|
-   SMALL        MEDIUM            LARGE            
+
+   
    
 - Mesh calculation is performed using snappyHexMesh in parallel, with 16 tasks   
    
