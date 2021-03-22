@@ -18,8 +18,9 @@ planeType       pointAndNormal;
 
 pointAndNormalDict
 {
-    point       ( 0 4 0 );
-    vector    ( 0 1 0 );
+    point           ( 0 4 0 );
+    normal          ( 0 1 0 ); 
+    basePoint       ( 0 4 0 );
 }
 
 planeEquationDict
