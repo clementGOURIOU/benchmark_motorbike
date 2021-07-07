@@ -1,0 +1,71 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2.0.1                                 |
+|   \\  /    A nd           | Web:      www.OpenFOAM.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      blockMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#include "myDerivedDict"
+
+centerlineProbes
+    {
+        type            probes;
+        functionObjectLibs ("libsampling.so");
+        //  enabled         true;
+        // writeInterval   writeTime; //timeStep;
+        // outputInterval  1;
+       // setFormat  csv; // gnuplot;  doesn't work
+        probeLocations
+        (
+            (0 0 $probeDistanceZ1)
+            (0 0 $probeDistanceZ2)
+        );
+        fields
+        (
+           U p T
+        );
+    }
+
+shearlayerProbes
+    {
+        type            probes;
+        functionObjectLibs ("libsampling.so");
+        probeLocations
+        (
+          //  ($radius 0 $probeDistanceZ1)
+            ($radius 0 $probeDistanceZ2)
+        );
+        fields
+        (
+           U p T
+        );
+    }
+
+
+
+acousticProbes
+    {
+        type            probes;
+        functionObjectLibs ("libsampling.so");
+        probeLocations
+        (
+            ($probeDistanceX 0 $probeDistanceZ1)
+            ($probeDistanceX 0 $probeDistanceZ2)
+        );
+        fields
+        (
+            p
+        );
+    }
+
+
+// ************************************************************************* //

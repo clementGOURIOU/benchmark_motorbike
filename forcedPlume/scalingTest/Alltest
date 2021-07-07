@@ -1,0 +1,128 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # Run from this directory
+
+#////////////////////////////////////////////////////////////////////////////////////////
+# USER INPUT:
+#
+# Please selct a multi test type below () and then eventually edit multitest parameters
+# in each dedicated subsection to adapt multitest to your needs.
+#
+# multitest types:
+#           example ->  tutorial for generic single parameter test to explore the effect of any simulation parameter
+#           strong  ->  tutorial for strong scaling problem to  test parallel effciency 
+#           weak   -<   tutorial for weak scaling problem to test parallel efficiency
+#
+#////////////////////////////////////////////////////////////////////////////////////////
+
+SELECT_MULTITEST="weak" # possible types: example, strong, weak
+
+
+# global settings (do not change them) 
+BIN_DIR="../bin"
+LOGFILE="log.setScalingTest"
+
+
+#-----------------------------
+#  simple multi test examples 
+# ----------------------------
+if [ "$SELECT_MULTITEST" = "example" ]
+then
+
+SCHEDULER="no"
+
+# pre processing example
+PARAM_NAME="myResolution1" # param to be explored 
+PARAM_DICT="system/myDict"
+PARAM_VALUES="2,4"
+OPTION="-d" # options for Allrun.pre (same for all test cases, for more info "./Allrun.pre -h")
+REFINE="-r 1,2" # refine mesh n times
+PROCESSORS="-p 2,4" # for domain decomposition
+
+# Example running on a cluster machine with scheduler (automatic job submission)
+# (example below tested on laki)
+if [ "$SCHEDULER" = "yes" ]
+then
+   NODES="-s 1,2" # number of nodes  
+   NODE_CORES="16" # number of core per node (same for all tests; for intra-node tests select always one node and change PROCESSORS)
+   QUEUE="-q small,small" # to select queue (optional)
+
+   # just for a short debug test (2 min)
+   REFINE="-r 1,1"
+   PROCESSORS="-p 16,32" 
+   PARAM_VALUES="2,2"
+fi
+ 
+echo "" | tee $LOGFILE  
+echo " Running Parameter Test example " | tee -a $LOGFILE
+
+# execution
+./$BIN_DIR/setParameterTest  $REFINE $PROCESSORS -o $OPTION $NODES $NODE_CORES $QUEUE $PARAM_NAME $PARAM_DICT $PARAM_VALUES | tee -a $LOGFILE
+
+fi
+
+
+# ------------------------------------------------------------------------
+# Strong scaling test
+#
+# select appropriate case size using:
+#
+#             "foamDictionary run/system/infoDict"
+#
+# (example below tested on laki)
+# ------------------------------------------------------------------------
+if [ "$SELECT_MULTITEST" = "strong" ]
+then
+
+# use domain geometry 1 (lx=ly=lz)
+cp ../run/system/myDictCase1 ../run/system/myDict || exit 0
+OPTION="-u" # options for Allrun.pre (same for all test cases, for more info "./Allrun.pre -h")
+
+PARAM_NAME="lx" # param to be explored 
+PARAM_DICT="system/myDict"
+PARAM_VALUES="11,11,11,11,11"
+REFINE="2,2,2,2,2" # refine mesh n times
+PROCESSORS="16,32,64,128,192" # for domain decomposition
+NODES="1,2,4,8,12" # number of nodes  
+NODE_CORES="16" # number of core per node (same for all tests; for intra-node tests select always one node and change PROCESSORS)
+QUEUE="-q small,small,large,large,large" # to select queue (optional)
+
+echo "" | tee $LOGFILE
+echo " Running Strong Scaling Test " | tee -a $LOGFILE
+./$BIN_DIR/setParameterTest -r $REFINE -p $PROCESSORS -o $OPTION -s $NODES $NODE_CORES $QUEUE $PARAM_NAME $PARAM_DICT $PARAM_VALUES | tee -a $LOGFILE
+
+fi
+
+
+# ------------------------------------------------------------------------
+# Weak scaling test
+#
+# select appropriate case size using:
+#
+#             "foamDictionary run/system/infoDict"
+#
+# (example below tested on laki)
+# ------------------------------------------------------------------------
+
+if [ "$SELECT_MULTITEST" = "weak" ]
+then
+
+# Weak scaling doubling number of cores:
+# domain geometry 2 (lx=ly=lz, but lz can be changed) 
+cp ../run/system/myDictCase2 ../run/system/myDict || exit 0 
+foamDictionary -disableFunctionEntries  -entry lx -set 6  ../run/system/myDict || exit 0 # about 3e4 cells per cores
+OPTION="-u" # options for Allrun.pre (same for all test cases, for more info "./Allrun.pre -h")
+
+PARAM_NAME="lz" # param to be explored 
+PARAM_DICT="system/myDict"
+PARAM_VALUES="6,12,24,48"
+REFINE="2,2,2,2" # refine mesh n times
+PROCESSORS="16,32,64,128" # for domain decomposition
+NODES="1,2,4,8" # number of nodes  
+NODE_CORES="16" # number of core per node (same for all tests; for intra-node tests select always one node and change PROCESSORS)
+QUEUE="-q small,small,large,large" # to select queue (optional)
+
+echo "" | tee $LOGFILE
+echo " Running Weak Scaling Test " | tee -a $LOGFILE
+./$BIN_DIR/setParameterTest -r $REFINE -p $PROCESSORS -o $OPTION -s $NODES $NODE_CORES $QUEUE $PARAM_NAME $PARAM_DICT $PARAM_VALUES | tee -a $LOGFILE
+
+fi

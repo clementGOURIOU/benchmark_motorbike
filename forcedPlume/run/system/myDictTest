@@ -1,0 +1,19 @@
+
+myNCores 10; 
+
+jetDiameter 0.0635; 
+
+myResolution1 2;    // cells in the diameter 
+
+lx 19.5; // 5.5  // domain width in diameters
+
+lz 20.0; // 18.0 // domain height in diameters
+
+myEndTime 0.003;
+
+myWriteInterval 1.0; // 0.001; 
+
+probeDistanceZ1_D 2.0;  // height in diamters 
+probeDistanceZ2_D 4.0;  // height in diamters 
+probeDistanceX_D  5.0;  // horizontal distance (acoustic probes)
+
