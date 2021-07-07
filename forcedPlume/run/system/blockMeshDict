@@ -1,0 +1,184 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2.0.1                                 |
+|   \\  /    A nd           | Web:      www.OpenFOAM.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      blockMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#include "myDict"
+
+convertToMeters $jetDiameter; // 0.0635;
+
+//Re #calc "$convertToMeters*364.1*1/1.8e-5";
+
+resolution1 $myResolution1;
+resolution2 #calc "$lx*$resolution1";		// 5.5*resolution1
+resolution3 #calc "$lz*$resolution1";	// 18*resolution1
+
+lxT #calc "1.0*$lx";
+lxTm #calc "-1.0*$lxT";
+
+vertices        
+(
+// central
+	(-0.5 -0.5 0) 	//0
+	(0.5 -0.5 0) 		//1
+	(0.5 0.5 0)		//2
+	(-0.5 0.5 0)		//3
+
+	(-0.5 -0.5 $lz)	//4
+	(0.5 -0.5 $lz)	//5
+	(0.5 0.5 $lz)	//6
+	(-0.5 0.5 $lz)	//7
+
+// WSB
+	($lxTm $lxTm 0)		//8
+	(-0.5 $lxTm 0)		//9
+//	(-0.5 -0.5 0)
+	($lxTm -0.5 0)		//10
+
+	($lxTm $lxTm $lz)	//11
+	(-0.5 $lxTm $lz)	//12
+//	(-0.5 -0.5 $lz)
+	($lxTm -0.5 $lz)	//13
+
+// SB
+//	(-0.5 $lxTm 0)
+	(0.5 $lxTm 0)		//14
+//	(0.5 -0.5 0)
+//	(-0.5 -0.5 0)
+
+//	(-0.5 $lxTm $lz)
+	(0.5 $lxTm $lz)	//15
+//	(0.5 -0.5 $lz)
+//	(-0.5 -0.5 $lz)
+
+// SE
+	($lxT $lxTm 0)		//16
+	($lxT -0.5 0)		//17
+
+	($lxT $lxTm $lz)
+	($lxT -0.5 $lz)
+
+// E
+	($lxT 0.5 0)           //20
+
+	($lxT 0.5 $lz)	     //21
+
+// NE
+	($lxT $lxT 0)		//22
+	(0.5 $lxT 0)		//23
+
+	($lxT $lxT $lz)		//24
+	(0.5 $lxT $lz)		//25
+
+// N
+	(-0.5 $lxT 0)		//26
+
+	(-0.5 $lxT $lz)		//27
+
+// NO
+	($lxTm $lxT 0)		//28
+	($lxTm 0.5 0)		//29
+	
+	($lxTm $lxT $lz)		//30
+	($lxTm 0.5 $lz)		//31
+
+);
+
+blocks          
+(
+        hex (0 1 2 3 4 5 6 7) ($resolution1 $resolution1 $resolution3) simpleGrading (1 1 1)
+	hex (8 9 0 10 11 12 4 13) ($resolution2 $resolution2 $resolution3) simpleGrading (1 1 1)
+	hex (9 14 1 0 12 15 5 4) ($resolution1 $resolution2 $resolution3) simpleGrading (1 1 1)
+	hex (14 16 17 1 15 18 19 5) ($resolution2 $resolution2 $resolution3) simpleGrading (1 1 1)
+	hex (1 17 20 2 5 19 21 6) ($resolution2 $resolution1 $resolution3) simpleGrading (1 1 1)
+	hex (2 20 22 23 6 21 24 25) ($resolution2 $resolution2 $resolution3) simpleGrading (1 1 1)
+	hex (3 2 23 26 7 6 25 27) ($resolution1 $resolution2 $resolution3) simpleGrading (1 1 1)
+	hex (29 3 26 28 31 7 27 30) ($resolution2 $resolution2 $resolution3) simpleGrading (1 1 1)
+	hex (10 0 3 29 13 4 7 31) ($resolution2 $resolution1 $resolution3) simpleGrading (1 1 1)
+);
+
+edges           
+(
+);
+
+boundary
+(
+    inlet
+    {
+        type patch;
+        faces
+        (
+            (0 3 2 1)
+        );
+    }
+
+    wall
+    {
+        type wall;
+        faces
+        (
+	                (8 10 0 9)
+			(9 0 1 14)
+			(14 1 17 16)
+			(1 2 20 17)
+			(2 23 22 20)
+			(3 26 23 2)
+			(29 28 26 3)
+			(10 29 3 0)
+        );
+    }
+
+    vertical
+    {
+        type patch;
+        faces
+        (
+            	        (8 11 13 10)
+			(10 13 31 29)
+			(29 31 30 28)
+			(22 24 21 20)
+			(20 21 19 17)
+			(17 19 18 16)
+                        (28 30 27 26)
+			(26 27 25 23)
+			(23 25 24 22)
+                        (16 18 15 14)
+			(14 15 12 9)
+			(9 12 11 8)
+        );
+    }
+
+    top
+    {
+        type patch;
+        faces
+        (
+			(11 12 4 13)
+			(13 4 7 31)
+			(31 7 27 30)
+			(12 15 5 4)
+			(4 5 6 7)
+			(7 6 25 27)
+			(15 18 19 5)
+			(5 19 21 6)
+			(6 21 24 25)
+        );
+    }
+);
+
+mergePatchPairs
+(
+);
+
+// ************************************************************************* //

@@ -1,0 +1,31 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v1912                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+myNCores        32;
+
+jetDiameter     0.0635;
+
+myResolution1   2;
+
+lx              15; // 20;
+
+lz              $lx;
+
+myEndTime       0.003;
+
+myWriteInterval 1.0; // 0.001;
+
+probeDistanceZ1_D 2;
+
+probeDistanceZ2_D 4;
+
+probeDistanceX_D 5;
+
+
+// ************************************************************************* //

@@ -1,0 +1,13 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # Run from this directory
+
+set -e
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+#  give -d for small debug run
+./Allrun.pre $1
+
+runApplication $(getApplication)
+#------------------------------------------------------------------------------

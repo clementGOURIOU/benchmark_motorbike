@@ -1,0 +1,10 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # Run from this directory
+
+echo "removing Alltest.post generated files"
+for i in log.*; do test -f "$i" && rm log.* && break; done
+for i in *.png; do test -f "$i" && rm *.png && break; done
+for i in *.dat; do test -f "$i" && rm *.dat && break; done
+
+
+#------------------------------------------------------------------------------

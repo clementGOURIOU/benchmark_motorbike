@@ -1,0 +1,11 @@
+
+# *********************************
+# Source this file in the ~/.bashrc
+# *********************************
+
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+export OF_MYTEST_DIR=${DIR%%/etc*}
+
+# Add openfoam-mytest scripts to the path
+export PATH=$OF_MYTEST_DIR/bin:$PATH

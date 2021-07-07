@@ -1,0 +1,74 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # Run from this directory
+
+# ...  Functions
+printData()
+{
+[ -f $DATA_FILE  ] && rm $DATA_FILE
+
+    echo "# machine OF arch name cells cores executionTime clockTime simulationTime" >> $DATA_FILE
+for i in test* ; do
+
+    if [ -f $i"/"$LOGFILE ]
+    then
+    #  check info
+    machine=$(hostname) # replace with read from log.preProcessingTime
+    OF=$(grep "OPENFOAM=" $i"/"$LOGFILE | cut -f 2 -d =)
+    arch=$(grep "Arch   : " $i"/"$LOGFILE | cut -f 2 -d \")
+    name="$i"
+
+    # data
+    cells=$(awk '/cells:/ {print $2}' $i"/""log.checkMesh")
+    cores=$(awk '/nProcs :/ {print $3}' $i"/"$LOGFILE)
+    executionTime=$(awk '/^ExecutionTime/ {print $3}' $i"/"$LOGFILE | tail -n 1) 
+    clockTime=$(awk '/ClockTime/ {print $7}' $i"/"$LOGFILE | tail -n 1) 
+    simulationTime=$(awk '/^Time/ {print $3}' $i"/"$LOGFILE | tail -n 1) 
+
+    # echo "# machine OF arch name cells cores executionTime clockTime simulationTime" >> $DATA_FILE
+    echo "$machine $OF $arch $name $cells $cores $executionTime $clockTime $simulationTime" >> $DATA_FILE
+
+    fi
+done
+    # sort lines based on number of cores
+    sort -g -k6,6 $DATA_FILE > tmp
+    mv tmp $DATA_FILE
+}
+
+printLogs()
+{
+OUTLOGFILE="$LOGFILE.all"
+[ -f $OUTLOGFILE  ] && rm $OUTLOGFILE
+
+for i in test* ; do
+    if [ -f $i"/"$LOGFILE ]
+    then
+    
+    echo "" >> $OUTLOGFILE
+    echo "$i"                             >> $OUTLOGFILE
+    echo "------------------------------" >> $OUTLOGFILE
+
+    (cat $i"/"$LOGFILE >> $OUTLOGFILE)     
+    fi
+done
+}
+
+
+# ... collect pre-processing data
+LOGFILE="log.preProcessing"
+printLogs
+
+LOGFILE="log.preProcessingTime"
+printLogs
+
+# ... collect processing data
+DATA_FILE="test.dat"
+LOGFILE="log.rhoPimpleFoam"
+printData
+
+
+# ... plot scaling test results
+./plotScaling $DATA_FILE 
+
+# open figures
+# eog speedup.png
+

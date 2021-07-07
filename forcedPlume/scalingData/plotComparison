@@ -1,0 +1,148 @@
+#!/bin/bash
+
+PERSIST='-p'
+IMAGE_FORMAT="png"
+
+machine="marconi_interNode"
+
+
+#   select figures
+executionTime=1
+gain=1
+gain_cellsCore=0 # not working
+speedup=1
+speedup_cellsCore=0 # not working
+
+
+# data format
+dataFile="$machine.dat"
+nCores=1
+timeDP=2
+timeSPDP=3
+
+
+
+if [ "$executionTime" -eq 1 ]; then
+gnuplot $PERSIST << eof
+
+
+set xlabel "number of cores" font ",12"
+set ylabel "excution time (s)" font ",12" offset 1,0,0
+
+plot '$dataFile' using $nCores:$timeDP with linespoint lw 2 pt 11 title "DP", \
+'$dataFile' using  $nCores:$timeSPDP with linespoint lw 2 pt 11 title "SPDP"
+
+# print figure
+set terminal png
+set output "executionTime_$machine.$IMAGE_FORMAT"
+replot
+
+eof
+fi
+
+if [ "$gain" -eq 1 ]; then
+gnuplot $PERSIST << eof
+
+set nokey
+
+# set title "Performance: Scaling" font ",12"
+
+set xlabel "Number of cores" font ",12"
+set ylabel "Gain" font ",12" offset 1,0,0
+
+# set xrange [0:2000] 
+plot '$dataFile' using $nCores:((\$2/\$3)) with linespoint lw 2 pt 11 lt -1
+
+# print figure
+set terminal png
+set output "gain_$machine.$IMAGE_FORMAT"
+replot
+
+eof
+fi
+
+if [ "$gain_cellsCore" -eq 1 ]; then
+gnuplot $PERSIST << eof
+
+
+set nokey
+
+# set xlabel " cells/core () " font ",12"
+# set ylabel "Gain" font ",12" offset 1,0,0
+set xrange [10e6:0] 
+# set xtics  format "%g"
+
+plot '$dataFile' using 3:((\$$timeDP/\$$timeSPDP))  with linespoint lw 2 pt 11 lt -1
+
+# print figure
+# set terminal png
+# set output "gain_$machine.$IMAGE_FORMAT"
+# replot
+
+eof
+fi
+
+if [ "$speedup" -eq 1 ]; then
+gnuplot $PERSIST << eof
+
+# Functions for scaling metrics
+speedup(t_ref,t) = t_ref/t
+ideal(Np_ref,Np)=Np/Np_ref
+
+refNproc=system("awk 'FNR == 2 {print \$1}' $dataFile")
+refTimeDP=system("awk 'FNR == 2 {print \$2}' $dataFile")
+refTimeSPDP=system("awk 'FNR == 2 {print \$3}' $dataFile")
+print("reference time")
+print(refTime)
+print("reference number of processor")
+print(refNproc)
+
+set key left top
+set xlabel "Number of cores" font ",12"
+set ylabel "Speedup" font ",12" offset 1,0,0
+
+plot '$dataFile' u 1:(speedup(refTimeDP,\$2)) with linespoint lw 2 pt 11 title "DP", \
+'$dataFile' u 1:(speedup(refTimeSPDP,\$3)) with linespoint lw 3 pt 11 title "SPDP", \
+'$dataFile' u 1:(ideal(refNproc,\$1))  with lines lt -1 dt ".-" title "ideal"
+
+# print figure
+set terminal png
+set output "speedup_$machine.$IMAGE_FORMAT"
+replot
+
+eof
+fi
+
+if [ "$speedup_cellsCore" -eq 1 ]; then
+gnuplot $PERSIST << eof
+
+# Functions for scaling metrics
+speedup(t_ref,t) = t_ref/t
+ideal(Np_ref,Np)=Np/Np_ref
+
+refNproc=system("awk 'FNR == 2 {print \$1}' $dataFile")
+refTimeDP=system("awk 'FNR == 2 {print \$2}' $dataFile")
+refTimeSPDP=system("awk 'FNR == 2 {print \$3}' $dataFile")
+
+print("Tot number of cells:")
+print(totCells)
+print("reference time")
+print(refTime)
+print("reference number of processor")
+print(refNproc)
+
+set key left top
+set xlabel "Number of cores" font ",12"
+set ylabel "Speedup" font ",12" offset 1,0,0
+
+plot '$dataFile' u 1:(speedup(refTimeDP,\$2)) with linespoint lw 2 pt 11 title "DP", \
+'$dataFile' u 1:(speedup(refTimeSPDP,\$3)) with linespoint lw 3 pt 11 title "SPDP", \
+'$dataFile' u 1:(ideal(refNproc,\$1))  with lines lt -1 dt ".-" title "ideal"
+
+# print figure
+set terminal png
+set output "speedup_cellCore_$machine.$IMAGE_FORMAT"
+replot
+
+eof
+fi

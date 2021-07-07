@@ -1,0 +1,203 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # Run from this directory
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+set -e
+
+usage() {
+    exec 1>&2
+    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
+    cat<<USAGE
+
+Usage: ${0##*/} [OPTION] <file> 
+options:
+  -h | -help       print the usage
+  -d | -debug      small dubug rum (with I/O) 
+  -u | -user       user defined setup editing system/myDict
+  -b | -big        big domain run
+  -r | -refine <n> refine mesh n times. (n=1 by default)
+                   Considering standard test case (myDictTest):   n    Tot. nCells
+                                                                  1    2048000 
+                                                                  2    16384000
+                                                                  3    131072000 
+  -p | -parallel <n>  refine mesh in parallel for n processor (optional).
+                      ATTENTION: at time=0 the mesh is refined only in the decomposed domains.
+                                 Otherwise run "reconstrctParMesh -constant -withZero" 
+
+USAGE
+    exit 1
+}
+
+
+testDict=1
+nRefine=1
+parallelRefineMesh=0
+nCores=0
+useRenumber=0
+useCollated=0
+argCollated=''
+
+# Parse options
+while [ "$#" -gt 0 ]
+do
+    case "$1" in
+    -h | -help)
+        usage
+        ;;
+    -d | -debug)
+        echo "prepare debug ... using system/myDictDebug"	
+        cp system/myDictDebug system/myDict
+        testDict=0
+        shift 1
+        ;;
+    -u | -user)
+        echo "prepare run ... using system/myDict"	
+        testDict=0
+        shift 1
+        ;;
+    -b | -bigDomain)
+        echo "prepare big test ... using system/myDictTestBig"	
+        cp system/myDictTestBig system/myDict
+        testDict=0
+        shift 1
+        ;;
+    -r | -refine)
+        [ "$#" -ge 2 ] || usage "'$1' option requires an argument"
+        nRefine="$2"
+        shift 2
+        ;;
+    -dict)
+        [ "$#" -ge 3 ] || usage "'$1' option requires 3 arguments instead of "
+	paramName="$2"
+        paramDict="$3"
+        paramValue=$4
+        shift 4
+        ;;
+    -p | -parallel)
+       parallelRefineMesh=1
+       if [ "$#" -ge 2 ]; then 
+         nCores="$2"
+         shift 2
+       else
+         shift 1
+       fi
+       ;;
+    -renumber)	
+        useRenumber=1 
+        shift 1
+        ;;
+    -collated)	
+        useCollated=1 
+	argCollated='-fileHandler collated'
+        shift 1
+        ;;
+    *)
+        usage "unknown option/argument: '$*'"
+        ;;
+    esac
+done
+
+# select standard test 
+[ $testDict -eq 1 ] &&  (echo "prepare test ... using system/myDictTest"; cp system/myDictTest system/myDict)
+         
+
+# number of cores as argument 
+if [ $nCores -gt 0 ]; then  
+   # foamDictionary -entry myNCores system/myDict > /dev/null ||  exit 0 # check first to avoid to insert new entry 
+   foamDictionary -disableFunctionEntries  -entry myNCores -set $nCores  system/myDict || exit 0
+  
+  if [ $useCollated -eq 0 ]; then
+     cp system/decomposeParDict-include system/decomposeParDict	  
+  else
+     # this is needed since collated is not working with  '#include' in the system/decomposePar
+     cp system/decomposeParDict-noInclude system/decomposeParDict	  
+     foamDictionary -disableFunctionEntries  -entry numberOfSubdomains -set $nCores  system/decomposeParDict > /dev/null || exit 0	  
+  fi 
+
+# no argument for number of cores 
+else
+    if [ $useCollated -eq 0 ]; then
+       cp system/decomposeParDict-include system/decomposeParDict	  
+    else
+       # this is needed since collated is not working with  '#include' in the system/decomposePar
+       cp system/decomposeParDict-noInclude system/decomposeParDict	  
+       myDictNCores=$(foamDictionary -entry myNCores -value system/myDict) 
+       foamDictionary -entry numberOfSubdomains -set $myDictNCores system/decomposeParDict   
+    fi
+fi
+
+
+
+if [ -n "$paramName"  ]; then
+  foamDictionary -entry $paramName $paramDict > /dev/null ||  exit 0 # check first to avoid to insert new entry
+  foamDictionary -disableFunctionEntries -entry $paramName -set $paramValue $paramDict || exit 0 
+fi
+
+rm -r 0
+cp -r 0.org 0
+
+
+STARTTIME_PRE=$(date +%s)
+
+STARTTIME_BLOCK=$(date +%s)
+runApplication blockMesh
+ENDTIME_BLOCK=$(date +%s)
+
+
+
+# mesh on single processor
+if [ $parallelRefineMesh -eq 0 ]; then
+ 
+STARTTIME_REFINE=$(date +%s)
+   for i in `seq 1 $nRefine`;
+   do
+       runApplication -s $i refineMesh  -overwrite
+   done
+ENDTIME_REFINE=$(date +%s)
+
+
+STARTTIME_CHECK=$(date +%s)
+   runApplication checkMesh
+ENDTIME_CHECK=$(date +%s)
+STARTTIME_DECOMPOSE=$(date +%s)
+   runApplication decomposePar $argCollated
+ENDTIME_DECOMPOSE=$(date +%s)
+
+
+# mesh in parallel
+else
+
+STARTTIME_DECOMPOSE=$(date +%s)
+      runApplication decomposePar $argCollated
+ENDTIME_DECOMPOSE=$(date +%s)
+STARTTIME_REFINE=$(date +%s)
+   for i in `seq 1 $nRefine`;
+   do
+       runParallel -s $i refineMesh -overwrite $argCollated  # -decomposeParDict system/decomposeParDict 
+   done
+ENDTIME_REFINE=$(date +%s)
+
+STARTTIME_CHECK=$(date +%s)
+   runParallel checkMesh $argCollated  # -decomposeParDict system/decomposeParDict
+ENDTIME_CHECK=$(date +%s)
+
+
+fi
+
+# renumberMesh 
+[ $useRenumber -eq 1 ] && runParallel renumberMesh -overwrite $argCollated
+
+ENDTIME_PRE=$(date +%s)
+
+echo "It takes $(($ENDTIME_PRE - $STARTTIME_PRE)) seconds to complete Allrun.pre" > log.preProcessingTime
+
+echo "blockMesh: $(($ENDTIME_BLOCK - $STARTTIME_BLOCK)) seconds" >> log.preProcessingTime
+echo "refineMesh $(($ENDTIME_REFINE - $STARTTIME_REFINE)) seconds" >> log.preProcessingTime
+echo "decomposePar: $(($ENDTIME_DECOMPOSE - $STARTTIME_DECOMPOSE)) seconds" >> log.preProcessingTime
+echo "checkMesh: $(($ENDTIME_CHECK - $STARTTIME_CHECK)) seconds" >> log.preProcessingTime
+
+grep "cells:" log.checkMesh >> log.preProcessingTime 
+hostname >> log.preProcessingTime 
+#------------------------------------------------------------------------------

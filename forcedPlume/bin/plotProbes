@@ -1,0 +1,112 @@
+#!/bin/bash
+set -e
+
+echo "Probe plotting ..."
+
+source functions_gnuplot.sh
+
+# output png or open window with persist '-p' option 
+# persist not working on old gnuplot (< 5)
+[ "$PERSIST" ] ||  echo "PERSIST $PERSIST $gnuplotTerminal  "  # PERSIST='' # change with ''
+
+# set postprocessing and reference case (optional) dir with probe data
+[ "$gnuplotTerminal" ] || gnuplotTerminal="png"
+[ "$imageExt"  ] ||  imageExt="png"
+localDir="postProcessing"
+
+#  keys to appear in legend 
+[ "$localKey" ] || localKey=""
+[ "$refKey" ] || refKey=""
+
+# probe figure selection (1 yes; 0 no)
+[ "$ACOUSTICS" ] || ACOUSTICS=1
+[ "$CENTERLINE_VEL" ] || CENTERLINE_VEL=1
+[ "$CENTERLINE_PT" ] || CENTERLINE_PT=1
+[ "$SHEARLAYER" ] || SHEARLAYER=1
+
+# check postprocessing and reference case (optional) dir for probe data
+localDir="postProcessing"
+[ -d $localDir ]    ||  "Directory $localDir does not exist"
+[ -d $referenceDir ]    ||  "Directory $referenceDir does not exist"
+
+# probe dir names
+ac="acousticProbes"
+ce='centerlineProbes'
+sh='shearlayerProbes'
+time='0'
+acoustics="$localDir/$ac/$time"
+centerline="$localDir/$ce/$time"
+shearlayer="$localDir/$sh/$time"
+
+# check
+check
+
+echo "$localKey"
+
+# General Plot settings 
+plotType=1
+titleSize="12"
+labelSize="10"
+ticLabelSize=8
+xLabel="Time (s)"
+xTicNoFormat="set xtics nomirror format ''"
+xTicFormat="'%g'"
+
+# acoustic Probes
+if [ $ACOUSTICS -eq 1 ]; then
+   echo "plotting acoustic probes"
+   imageFile="$ac.$imageExt"
+   nProbes=2
+   dataFile="$acoustics/p"
+   figTitle="$ac Pressure"
+   yLabel=("(Pa)" "(Pa)")
+   yTics="'2e3'"
+   terminalSize="600,400"
+ #  printGnuCommands
+   gnuCommands | gnuplot $PERSIST	
+fi
+
+# centerline Probes 
+if [ $CENTERLINE_VEL -eq 1 ]; then
+   echo "plotting centerline probes: velocity"
+   imageFile="centerlineProbes_velocity.$imageExt"
+   nProbes=4
+   columnOrder=(4 7 3 6)
+   dataFile="$centerline/U"
+   figTitle="$ce Velocity (m/s)"
+   yTics=(200 100 20 20)
+   yLabel=("Uz" "Uz" "Uy" "Uy")
+   legend=("Probe 1" "Probe 2" "Probe 1" "Probe 2")
+   terminalSize="600,600"
+   gnuCommands | gnuplot $PERSIST	
+fi
+
+# Centerline Pressure and temperature
+if [ $CENTERLINE_PT -eq 1 ]; then
+   echo "plotting centerline probes: pressure and temperature"
+   imageFile="centerlineProbes_p_t.$imageExt"
+   nProbes=4
+   columnOrder=(2 3 2 3)
+   dataFile=("$centerline/p" "$centerline/p" "$centerline/T" "$centerline/T")
+   figTitle="$ce Pressure and Temperature"
+   yTics=(10000 10000 20 20)
+   yLabel=("p (Pa)" "p (Pa)" "T (K)" "T (K)")
+   legend=("Probe 1" "Probe 2" "Probe 1" "Probe 2")
+   terminalSize="600,600"
+   gnuCommands | gnuplot $PERSIST	
+fi
+
+# Shear layer Pressure and temperature
+if [ $SHEARLAYER -eq 1 ]; then
+   echo "plotting shear layer probes: pressure and temperature"
+   imageFile="shearlayerProbes_p_t.$imageExt"
+   nProbes=2
+   columnOrder=(2 2)
+   dataFile=("$shearlayer/p" "$shearlayer/T")
+   figTitle="$sh Pressure and Temperature"
+   yTics=(10000 20)
+   yLabel=("p (Pa)" "T (K)")
+   legend=("Probe 1" "Probe 1")
+   terminalSize="600,400"
+   gnuCommands | gnuplot $PERSIST	
+fi

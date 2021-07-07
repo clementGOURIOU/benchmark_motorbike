@@ -1,0 +1,27 @@
+#!/bin/bash
+
+
+# Export parameters to overwrite default values 
+
+# output png or open window with persist '-p' option 
+# persist not working on old gnuplot (< 5)
+# and only with wxt terminal. 
+# export PERSIST='-p' # default is ''
+# export gnuplotTerminal="wxt"
+
+#  set simulation directory for comparison
+# export referenceDir="../../../test_SPDP/write_no/nCell_2e6_nCores_32/"
+# export localKey="DP"
+# export refKey="SPDP"
+
+
+# ////////  PROBE PLOTTING ////////////////////////////////////////////////
+
+# probe figure selection (1 yes; 0 no)
+export ACOUSTICS=1
+export CENTERLINE_VEL=1
+export CENTERLINE_PT=1
+export SHEARLAYER=1
+
+# probe Plot
+plotProbes 

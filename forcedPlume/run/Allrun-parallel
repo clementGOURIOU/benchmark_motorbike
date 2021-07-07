@@ -1,0 +1,23 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # Run from this directory
+
+# check for collated
+collated=''
+for var in "$@"
+do
+    [ $var = "-collated" ] && collated='-fileHandler collated'
+done
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+./Allrun.pre $*
+
+#  this is needed to avoid #calc additional output when using runParallel
+nCores=$(foamDictionary -entry myNCores  system/myDict  -value)
+runParallel -np $nCores $(getApplication) $collated
+
+# uncomment this if you have problems with mesh reconstruction
+# runApplication reconstructParMesh -constant -withZero
+runApplication reconstructPar
+#------------------------------------------------------------------------------
