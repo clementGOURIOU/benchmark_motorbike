@@ -65,20 +65,20 @@ Optionally, adjusting `maxIter` for every run (when the decomposition method or 
 # Methodology
 This section describes how the cases were setup. It serves for informative purposes only and is not a part of the microbenchmark.
 * The three cases were first run up to t=0.5s. For each case the following procedure was performed.
-	* Find out averaged initial residual $r_c$ at the end of the run: [0.4s, 0.5s]. 
-	* The initial residual reaches a plateau (not decreasing anymore) at some point before t=0.4s. Find out this point in time by finding at which time $1.2 r_c$ of the initial residual is reached (e.g. for the 1M case $t_c$=0.34s). Put differently, it is assumed that the 
-	* Calculate the averaged iteration number $iter_{run}$ from $t$ up to $t_c$.
-	* Calculate the averaged iteration number $iter_{start}$ from the first *15* time steps.
-	* Build a factor $a_{case}=iter_{start}/iter_{run}$.
-* An average factor $a$ was build based on the three cases. It is used for the extrapolation from *fixedTol* setup to *fixedIter* setup giving a mean iteration number, which is representative for the whole run of the initial transient. In this way there is no need to run a case for the complete duration of 0.5s.
-* Run the cases with the fixed iteration number $iter_{run}$ for 1000 time steps.
-	* Analyze the wall clock time per time step $dt_{wc}$. 
-	* Compute its average $dt_{wcAv}$ and standard deviation $dt_{wcStd}$
-	* Compute the sample size of time steps needed for 95% confidence level with 1% error and given $dt_{wcAv}$, $dt_{wcStd}$ according to this formula:
-	$n_{dt} = 1.96^2*dt_{wcStd}^2/(dt_{wcAv}*0.01)^2$
-* Several runs to evaluate $n_{dt}$ on both a workstation and on a HPC were performed. The highest $n_{dt}$ was found to be 13. Finally, it is set to 15 to be aligned with the *fixedTol* setup.
+	* Find out averaged initial residual $`r_c`$ at the end of the run: [0.4s, 0.5s]. 
+	* The initial residual reaches a plateau (not decreasing anymore) at some point before t=0.4s. Find out this point in time by finding at which time $`1.2 r_c`$ of the initial residual is reached (e.g. for the 1M case $`t_c`$=0.34s). Put differently, it is assumed that the 
+	* Calculate the averaged iteration number $`iter_{run}`$ from $`t`$ up to $`t_c`$.
+	* Calculate the averaged iteration number $`iter_{start}`$ from the first *15* time steps.
+	* Build a factor $`a_{case}=iter_{start}/iter_{run}`$.
+* An average factor $`a`$ was build based on the three cases. It is used for the extrapolation from *fixedTol* setup to *fixedIter* setup giving a mean iteration number, which is representative for the whole run of the initial transient. In this way there is no need to run a case for the complete duration of 0.5s.
+* Run the cases with the fixed iteration number $`iter_{run}`$ for 1000 time steps.
+	* Analyze the wall clock time per time step $`dt_{wc}`$. 
+	* Compute its average $`dt_{wcAv}`$ and standard deviation $`dt_{wcStd}`$
+	* Compute the sample size of time steps needed for 95% confidence level with 1% error and given $`dt_{wcAv}`$, $`dt_{wcStd}`$ according to this formula:
+	$`n_{dt} = 1.96^2*dt_{wcStd}^2/(dt_{wcAv}*0.01)^2`$
+* Several runs to evaluate $`n_{dt}`$ on both a workstation and on a HPC were performed. The highest $`n_{dt}`$ was found to be 13. Finally, it is set to 15 to be aligned with the *fixedTol* setup.
 
 	
-# Remarks
+# General remarks
 * Fixing the iteration number per time step n_iter is not based on a fixed tolerance run up to the stationary state (t=1s), which may be argued to be the actual representative case. During the run with fixed tolerance, n_iter decreases and the average value n_iterAv of the complete run would be relatively low. If the same case is run with a fixed iteration number of n_iterAv, which is too low to achieve the needed convergence, the run might end in a failure.
 * CFL number of 1 is too high for the cases to depict the start-up process of the flow correctly, which may be seen when mean Co of two cases with different mesh sizes is analyzed. Co=1 is chosen because this is closer to the industrial setups.
