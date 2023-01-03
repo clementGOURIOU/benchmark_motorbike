@@ -1,4 +1,4 @@
-MOVED TO the WIKI -->>> https://develop.openfoam.com/committees/hpc/-/wikis/home
+MOVED TO the WIKI -->>> https://develop.openfoam.com/committees/hpc/-/wikis/OpenFOAM-HPC-Benchmark-suite
 
 
 
