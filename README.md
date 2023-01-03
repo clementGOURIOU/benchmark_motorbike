@@ -15,7 +15,9 @@ The repository is intended to be a shared repository with relevant data-sets and
 - Provide the community an homogeneous term of reference to compare different hardware architectures, software environments, configurations, etc.
 - Define a common set of metrics/KPI (Key Performance Indicators) to measure performances
 
+See [wiki](https://develop.openfoam.com/committees/hpc/-/wikis/home) for details on the bechmarch suite 
 
+##############################################################################################################################
 ## 3-D Lid Driven cavity flow
 
 [//]: <>  (**3-D Lid Driven cavity flow**)
