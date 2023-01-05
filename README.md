@@ -1,5 +1,6 @@
-MOVED TO the WIKI -->>> https://develop.openfoam.com/committees/hpc/-/wikis/OpenFOAM-HPC-Benchmark-suite
+MOVED TO the WIKI -->>> https://develop.openfoam.com/committees/hpc/-/wikis/home
 
+WORK IN PROPGRESS
 
 
 **Code repository for the High Performance Computing Technical Committee**
