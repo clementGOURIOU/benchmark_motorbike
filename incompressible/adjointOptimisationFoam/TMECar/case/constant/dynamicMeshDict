@@ -1,0 +1,128 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2004                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      dynamicMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+solver volumetricBSplinesMotionSolver;
+
+volumetricBSplinesMotionSolverCoeffs
+{
+    controlBoxes (rearArc tailLight spoiler frontBumper);
+    frontBumper
+    {
+        type     cartesian;
+
+        nCPsU   7;
+        nCPsV   7;
+        nCPsW   8;
+        degreeU 3;
+        degreeV 3;
+        degreeW 3;
+
+        controlPointsDefinition axisAligned;
+        lowerCpBounds ( -0.017 -1      0.8 );
+        upperCpBounds (  0.65   1.e-6  1.6 );
+
+        confineUmovement false;
+        confineVmovement false;
+        confineWmovement false;
+        confineBoundaryControlPoints false;
+        confineUMinCPs ( (true true true) );
+        confineUMaxCPs ( (true true true) (true true true) );
+        confineVMinCPs ( (true true true) );
+        confineVMaxCPs ( (false true false) );
+        confineWMinCPs ( (true true true) );
+        confineWMaxCPs ( (true true true) (true true true) );
+    };
+    tailLight
+    {
+        type     cartesian;
+
+        nCPsU   4;
+        nCPsV   4;
+        nCPsW   4;
+        degreeU 2;
+        degreeV 2;
+        degreeW 2;
+
+        controlPointsDefinition axisAligned;
+        lowerCpBounds ( 3.53 -0.940 1.56 );
+        upperCpBounds ( 4.27 -0.51  1.75 );
+
+        confineUmovement false;
+        confineVmovement false;
+        confineWmovement false;
+        confineBoundaryControlPoints true;
+        confineUMinCPs ( (true true true) );
+        confineUMaxCPs ( (true true true) );
+        confineVMinCPs ( (true true true) );
+        confineVMaxCPs ( (true true true) );
+        confineWMinCPs ( (true true true) );
+        confineWMaxCPs ( (true true true) );
+    };
+    rearArc
+    {
+        type     cartesian;
+
+        nCPsU   4;
+        nCPsV   4;
+        nCPsW   4;
+        degreeU 2;
+        degreeV 2;
+        degreeW 2;
+
+        controlPointsDefinition axisAligned;
+        lowerCpBounds ( 4.01 -0.9   1.01 );
+        upperCpBounds ( 4.37 -0.595 1.5  );
+
+        confineUmovement false;
+        confineVmovement false;
+        confineWmovement false;
+        confineBoundaryControlPoints true;
+        confineUMinCPs ( (true true true) );
+        confineUMaxCPs ( (true true true) );
+        confineVMinCPs ( (true true true) );
+        confineVMaxCPs ( (true true true) );
+        confineWMinCPs ( (true true true) );
+        confineWMaxCPs ( (true true true) );
+    };
+    spoiler
+    {
+        type     cartesian;
+
+        nCPsU   4;
+        nCPsV   4;
+        nCPsW   4;
+        degreeU 2;
+        degreeV 2;
+        degreeW 2;
+
+        controlPointsDefinition axisAligned;
+        lowerCpBounds ( 3.76 -0.6    2.1  );
+        upperCpBounds ( 3.93  1.e-6  2.25 );
+
+        confineUmovement true;
+        confineVmovement true;
+        confineWmovement false;
+        confineBoundaryControlPoints false;
+        confineUMinCPs ( (true true true) );
+        confineUMaxCPs ( (true true true) );
+        confineVMinCPs ( (true true true) );
+        confineVMaxCPs ( (true true false) );
+        confineWMinCPs ( (true true true) );
+        confineWMaxCPs ( (true true true) );
+    };
+}
+
+// ************************************************************************* //

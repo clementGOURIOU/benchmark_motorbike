@@ -1,0 +1,130 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2004                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volVectorField;
+    object      U;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions [0 1 -1 0 0 0 0];
+
+internalField uniform ( 30. 0. 0. );
+
+boundaryField
+{
+	"car_.*"
+	{
+		type        fixedValue;
+		value	    uniform (0. 0. 0.);
+	}
+
+	wheels_MRF_front
+	{
+		type        fixedValue;
+		value	    uniform (0. 0. 0.);
+	}
+
+	wheels_MRF_rear
+	{
+		type        fixedValue;
+		value	    uniform (0. 0. 0.);
+	}
+
+	wheels_rims_front
+	{
+		type        rotatingWallVelocity;
+		origin      (0.9994192504571453 -0.8693565358688384 1.0551816135172187);
+		axis	    (0. 1. 0.);
+		omega	    -87.16;
+	}
+
+	wheels_rims_rear
+	{
+		type        rotatingWallVelocity;
+		origin      (3.6395940368337762 -0.8681037017968252 1.0467604941158508);
+		axis	    (0. 1. 0.);
+		omega	    -89.825;
+	}
+
+	wheels_tyres_front
+	{
+		type        rotatingWallVelocity;
+		origin      (0.9994192504571453 -0.8693565358688384 1.0551816135172187);
+		axis	    (0. 1. 0.);
+		omega	    -87.16;
+	}
+
+	wheels_tyres_front_no_layers
+	{
+		type        rotatingWallVelocity;
+		origin      (0.9994192504571453 -0.8693565358688384 1.0551816135172187);
+		axis	    (0. 1. 0.);
+		omega	    -87.16;
+	}
+
+	wheels_tyres_rear
+	{
+		type        rotatingWallVelocity;
+		origin      (3.6395940368337762 -0.8681037017968252 1.0467604941158508);
+		axis	    (0. 1. 0.);
+		omega	    -89.825;
+	}
+
+	wheels_tyres_rear_no_layers
+	{
+		type        rotatingWallVelocity;
+		origin      (3.6395940368337762 -0.8681037017968252 1.0467604941158508);
+		axis	    (0. 1. 0.);
+		omega	    -89.825;
+	}
+
+	windtunnel_inlet
+	{
+		type        surfaceNormalFixedValue;
+		refValue    uniform -30.;
+	}
+
+	windtunnel_outlet
+	{
+		type        inletOutlet;
+		inletValue  uniform (0. 0. 0.);
+		value	    uniform (0. 0. 0.);
+	}
+
+	windtunnel_road
+	{
+		type        fixedValue;
+		value	    uniform (30. 0. 0.);
+	}
+
+	windtunnel_road_no_layers
+	{
+		type        fixedValue;
+		value	    uniform (30. 0. 0.);
+	}
+
+	windtunnel_side_1
+	{
+		type        symmetry;
+	}
+
+	windtunnel_top
+	{
+		type        symmetry;
+	}
+
+	windtunnel_symmetry
+	{
+		type        symmetry;
+	}
+}
+
+// ************************************************************************* //

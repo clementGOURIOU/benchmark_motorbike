@@ -1,0 +1,116 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2004                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volScalarField;
+    object      nut;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions [0 2 -1 0 0 0 0];
+
+internalField uniform 0.;
+
+boundaryField
+{
+	"car_.*"
+	{
+		type        nutUSpaldingWallFunction;
+		value       uniform 0.;
+	}
+
+	wheels_MRF_front
+	{
+		type        nutUSpaldingWallFunction;
+		value       uniform 0.;
+	}
+
+	wheels_MRF_rear
+	{
+		type        nutUSpaldingWallFunction;
+		value       uniform 0.;
+	}
+
+	wheels_rims_front
+	{
+		type        nutUSpaldingWallFunction;
+		value       uniform 0.;
+	}
+
+	wheels_rims_rear
+	{
+		type        nutUSpaldingWallFunction;
+		value       uniform 0.;
+	}
+
+	wheels_tyres_front
+	{
+		type        nutUSpaldingWallFunction;
+		value       uniform 0.;
+	}
+
+	wheels_tyres_front_no_layers
+	{
+		type        nutUSpaldingWallFunction;
+		value       uniform 0.;
+	}
+
+	wheels_tyres_rear
+	{
+		type        nutUSpaldingWallFunction;
+		value       uniform 0.;
+	}
+
+	wheels_tyres_rear_no_layers
+	{
+		type        nutUSpaldingWallFunction;
+		value       uniform 0.;
+	}
+
+	windtunnel_inlet
+	{
+		type        fixedValue;
+		value       uniform 2.05537e-06;
+	}
+
+	windtunnel_outlet
+	{
+        type        zeroGradient;
+	}
+
+	windtunnel_road
+	{
+		type        nutUSpaldingWallFunction;
+		value       uniform 0.;
+	}
+
+	windtunnel_road_no_layers
+	{
+		type        nutUSpaldingWallFunction;
+		value       uniform 0.;
+	}
+
+	windtunnel_side_1
+	{
+		type        symmetry;
+	}
+
+	windtunnel_top
+	{
+		type        symmetry;
+	}
+
+	windtunnel_symmetry
+	{
+		type        symmetry;
+	}
+}
+
+// ************************************************************************* //

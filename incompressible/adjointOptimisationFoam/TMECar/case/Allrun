@@ -1,0 +1,19 @@
+#!/bin/sh
+cd "${0%/*}" || exit                                # Run from this directory
+. ${WM_PROJECT_DIR:?}/bin/tools/RunFunctions        # Tutorial run functions
+#------------------------------------------------------------------------------
+
+# Default endTime - corresponds to 4 time-steps
+endTime=${1:-4.e-04}
+
+# Set endTime and integrationEndTime for the objective function
+foamDictionary system/controlDict -entry endTime -set $endTime
+foamDictionary system/optimisationDict -entry adjointManagers.am1.adjointSolvers.as1.objectives.objectiveNames.drag.integrationEndTime \
+    -set $endTime
+
+# Decompose, renumber and run the case
+runApplication decomposePar
+runParallel renumberMesh -overwrite
+runParallel adjointOptimisationFoam
+
+#------------------------------------------------------------------------------

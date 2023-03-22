@@ -1,0 +1,155 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2004                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      optimisationDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+optimisationManager unsteadyOptimisation;
+
+primalSolvers
+{
+    p1
+    {
+        active                 true;
+        type                   incompressible;
+        solver                 pimple;
+        solutionControls
+        {
+            nOuterCorrectors            3;
+            nCorrectors                 6;
+            nNonOrthogonalCorrectors    0;
+            pRefCell                    0;
+            pRefValue                   0;
+            turbOnFinalIterOnly         no;
+            finalOnLastPimpleIterOnly   yes;
+            residualControl
+            {
+                "U.*"
+                {
+                    tolerance   1.e-7;
+                    relTol      0;
+                }
+                "p.*"
+                {
+                    tolerance   1.e-7;
+                    relTol      0;
+                }
+            }
+        }
+        storage
+        {
+            type  none;
+        }
+    }
+}
+
+adjointManagers
+{
+    am1
+    {
+        primalSolver    p1;
+        adjointSolvers
+        {
+            as1
+            {
+                // choose adjoint solver
+                //----------------------
+                active                  false;
+                type                    incompressible;
+                solver                  adjointPimple;
+                computeSensitivities    true;
+
+                // manage objectives
+                //------------------
+                objectives
+                {
+                    type            incompressible;
+                    objectiveNames
+                    {
+                        force
+                        {
+                            weight               1.;
+                            type                 force;
+                            patches              (cylinder2);
+                            direction            (1. 0. 0.);
+                            Aref                 0.0001;
+                            rhoInf               1.225;
+                            UInf                 0.1;
+                            integrationStartTime 0.674;
+                            integrationEndTime   1.348;
+                        }
+                    }
+                }
+
+                // ATC treatment
+                //--------------
+                ATCModel
+                {
+                    ATCModel    standard;
+                }
+
+                // solution control
+                //------------------
+                solutionControls
+                {
+                    printMaxMags true;
+                    nOuterCorrectors            3;
+                    nCorrectors                 5;
+                    nNonOrthogonalCorrectors    0;
+                    pRefCell                    0;
+                    pRefValue                   0;
+                    turbOnFinalIterOnly         no;
+                    finalOnLastPimpleIterOnly   yes;
+                    residualControl
+                    {
+                        "Ua.*"
+                        {
+                            tolerance   1.e-7;
+                            relTol      0;
+                        }
+                        "pa.*"
+                        {
+                            tolerance   1.e-6;
+                            relTol      0;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+optimisation
+{
+    optimisationType
+    {
+        type             shapeOptimisation;
+        writeEachMesh    true;
+    }
+    sensitivities
+    {
+        type        volumetricBSplinesFI;
+        patches     (cylinder1);
+    }
+    updateMethod
+    {
+        method          steepestDescent;
+    }
+    meshMovement
+    {
+        type                   volumetricBSplines;
+        maxAllowedDisplacement 5.e-4;
+    }
+}
+
+// ************************************************************************* //

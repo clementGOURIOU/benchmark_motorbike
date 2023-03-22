@@ -1,0 +1,297 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2004                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      blockMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+scale 0.01;
+
+// * * * * * * * * * * * * * * * Input Settings  * * * * * * * * * * * * * * //
+    
+    // * * * * * * * * * * * * * * * Topology  * * * * * * * * * * * * * * * //
+    
+    r1    0.5;
+    r2    #eval{  $r1 * 2 };
+    minX  #eval{ -$r1 * 38 };
+    midX  #eval{  $r1 * 6 };
+    maxY  #eval{  $r1 * 18 };
+    minZ  -0.5;
+    maxZ   0.5;
+    
+    // * * * * * * * * * * * * * * * Mesh Size * * * * * * * * * * * * * * * //
+    
+    nx1    58;
+    nx2    25;
+    nx3    123;
+    ny1    11;
+    ny2    30;
+    nyCyl  17;
+
+    gradX1  #eval{ 1/12 };
+    gradX2  2;
+    gradX4  17;
+    gradYU  11;
+    gradY1  4.6;
+
+// * * * * * * * * * * * * * Calculated Parameters * * * * * * * * * * * * * //
+    
+    // * * * * * * * * * * * * * * * Topology  * * * * * * * * * * * * * * * //
+    
+    maxX  #eval{  $r1*90 + 2*$midX };
+    minY  0;
+    mid1Y #eval{  $r1*0.70710678 };
+    mid2Y #eval{  $r2*0.70710678 };
+
+    inn1_X0   #eval{ -$r1 };
+    inn1_X1   #eval{ -$r1*0.70710678 };
+    inn1_X2   #eval{  $r1*0.70710678 };
+    inn1_X3   #eval{  $r1 };
+    out1_X0   #eval{ -$r2 };
+    out1_X1   #eval{ -$r2*0.70710678 };
+    out1_X2   #eval{  $r2*0.70710678 };
+    out1_X3   #eval{  $r2 };
+
+    inn2_X0   #eval{ 2 * $midX - $r1 };
+    inn2_X1   #eval{ 2 * $midX - $r1*0.70710678 };
+    inn2_X2   #eval{ 2 * $midX + $r1*0.70710678 };
+    inn2_X3   #eval{ 2 * $midX + $r1 };
+    out2_X0   #eval{ 2 * $midX - $r2 };
+    out2_X1   #eval{ 2 * $midX - $r2*0.70710678 };
+    out2_X2   #eval{ 2 * $midX + $r2*0.70710678 };
+    out2_X3   #eval{ 2 * $midX + $r2 };
+    
+    // * * * * * * * * * * * * * * * Mesh Size * * * * * * * * * * * * * * * //
+
+    nx45   #eval{ $ny1 };
+    nx90   #eval{ $nx45 * 2};
+
+vertices        
+(
+//- back plane
+
+    ( $minX     $minY   $minZ )   //0
+    ( $out1_X0  $minY   $minZ )   //1
+    ( $inn1_X0  $minY   $minZ )   //2
+    ( $inn1_X3  $minY   $minZ )   //3
+    ( $out1_X3  $minY   $minZ )   //4
+    ( $midX     $minY   $minZ )   //5
+    ( $out2_X0  $minY   $minZ )   //6
+    ( $inn2_X0  $minY   $minZ )   //7
+    ( $inn2_X3  $minY   $minZ )   //8
+    ( $out2_X3  $minY   $minZ )   //9
+    ( $maxX     $minY   $minZ )   //10
+
+    ( $inn1_X1  $mid1Y  $minZ )   //11
+    ( $inn1_X2  $mid1Y  $minZ )   //12
+    ( $inn2_X1  $mid1Y  $minZ )   //13
+    ( $inn2_X2  $mid1Y  $minZ )   //14
+
+    ( $minX     $mid2Y  $minZ )   //15
+    ( $out1_X1  $mid2Y  $minZ )   //16
+    ( $out1_X2  $mid2Y  $minZ )   //17
+    ( $midX     $mid2Y  $minZ )   //18
+    ( $out2_X1  $mid2Y  $minZ )   //19
+    ( $out2_X2  $mid2Y  $minZ )   //20
+    ( $maxX     $mid2Y  $minZ )   //21
+
+    ( $minX     $maxY   $minZ )   //22
+    ( $out1_X1  $maxY   $minZ )   //23
+    ( $out1_X2  $maxY   $minZ )   //24
+    ( $midX     $maxY   $minZ )   //25
+    ( $out2_X1  $maxY   $minZ )   //26
+    ( $out2_X2  $maxY   $minZ )   //27
+    ( $maxX     $maxY   $minZ )   //28
+
+//- dublicate front plane
+
+    ( $minX     $minY   $maxZ )   //29
+    ( $out1_X0  $minY   $maxZ )   //30
+    ( $inn1_X0  $minY   $maxZ )   //31
+    ( $inn1_X3  $minY   $maxZ )   //32
+    ( $out1_X3  $minY   $maxZ )   //33
+    ( $midX     $minY   $maxZ )   //34
+    ( $out2_X0  $minY   $maxZ )   //35
+    ( $inn2_X0  $minY   $maxZ )   //36
+    ( $inn2_X3  $minY   $maxZ )   //37
+    ( $out2_X3  $minY   $maxZ )   //38
+    ( $maxX     $minY   $maxZ )   //39
+
+    ( $inn1_X1  $mid1Y  $maxZ )   //40
+    ( $inn1_X2  $mid1Y  $maxZ )   //41
+    ( $inn2_X1  $mid1Y  $maxZ )   //42
+    ( $inn2_X2  $mid1Y  $maxZ )   //43
+
+    ( $minX     $mid2Y  $maxZ )   //44
+    ( $out1_X1  $mid2Y  $maxZ )   //45
+    ( $out1_X2  $mid2Y  $maxZ )   //46
+    ( $midX     $mid2Y  $maxZ )   //47
+    ( $out2_X1  $mid2Y  $maxZ )   //48
+    ( $out2_X2  $mid2Y  $maxZ )   //49
+    ( $maxX     $mid2Y  $maxZ )   //50
+
+    ( $minX     $maxY   $maxZ )   //51
+    ( $out1_X1  $maxY   $maxZ )   //52
+    ( $out1_X2  $maxY   $maxZ )   //53
+    ( $midX     $maxY   $maxZ )   //54
+    ( $out2_X1  $maxY   $maxZ )   //55
+    ( $out2_X2  $maxY   $maxZ )   //56
+    ( $maxX     $maxY   $maxZ )   //57
+);
+
+gradX3  #eval{ 1/$gradX2 };
+
+blocks          
+(
+    hex ( 0  1 16 15 29 30 45 44)  ($nx1  $ny1   1) simpleGrading ($gradX1        1  1)  //0
+    hex (15 16 23 22 44 45 52 51)  ($nx1  $ny2   1) simpleGrading ($gradX1  $gradYU  1)  //1
+    hex ( 2 11 16  1 31 40 45 30)  ($nx45 $nyCyl 1) simpleGrading (      1  $gradY1  1)  //2
+    hex (11 12 17 16 40 41 46 45)  ($nx90 $nyCyl 1) simpleGrading (      1  $gradY1  1)  //3
+    hex (12  3  4 17 41 32 33 46)  ($nx45 $nyCyl 1) simpleGrading (      1  $gradY1  1)  //4
+    hex (16 17 24 23 45 46 53 52)  ($nx90 $ny2   1) simpleGrading (      1  $gradYU  1)  //5
+    hex ( 4  5 18 17 33 34 47 46)  ($nx2  $ny1   1) simpleGrading ($gradX2        1  1)  //6
+    hex (17 18 25 24 46 47 54 53)  ($nx2  $ny2   1) simpleGrading ($gradX2  $gradYU  1)  //7
+    hex ( 5  6 19 18 34 35 48 47)  ($nx2  $ny1   1) simpleGrading ($gradX3        1  1)  //8
+    hex (18 19 26 25 47 48 55 54)  ($nx2  $ny2   1) simpleGrading ($gradX3  $gradYU  1)  //9
+    hex ( 7 13 19  6 36 42 48 35)  ($nx45 $nyCyl 1) simpleGrading (      1  $gradY1  1)  //10
+    hex (13 14 20 19 42 43 49 48)  ($nx90 $nyCyl 1) simpleGrading (      1  $gradY1  1)  //11
+    hex (14  8  9 20 43 37 38 49)  ($nx45 $nyCyl 1) simpleGrading (      1  $gradY1  1)  //12
+    hex (19 20 27 26 48 49 56 55)  ($nx90 $ny2   1) simpleGrading (      1  $gradYU  1)  //13
+    hex ( 9 10 21 20 38 39 50 49)  ($nx3  $ny1   1) simpleGrading ($gradX4        1  1)  //14
+    hex (20 21 28 27 49 50 57 56)  ($nx3  $ny2   1) simpleGrading ($gradX4  $gradYU  1)  //15
+);
+
+inn_y1   #eval{  $r1*sin(degToRad(30)) };
+inn_y2   #eval{  $r1 };
+inn_y3   #eval{  $r1*sin(degToRad(30)) };
+out_y1   #eval{  $r2*sin(degToRad(30)) };
+out_y2   #eval{  $r2 };
+out_y3   #eval{  $r2*sin(degToRad(30)) };
+
+inn1_x1  #eval{ -$r1*cos(degToRad(30)) };
+inn1_x2  #eval{  0 };
+inn1_x3  #eval{  $r1*cos(degToRad(30)) };
+out1_x1  #eval{ -$r2*cos(degToRad(30)) };
+out1_x2  #eval{  0 };
+out1_x3  #eval{  $r2*cos(degToRad(30)) };
+
+inn2_x1  #eval{ 2 * $midX - $r1*cos(degToRad(30)) };
+inn2_x2  #eval{ 2 * $midX };
+inn2_x3  #eval{ 2 * $midX + $r1*cos(degToRad(30)) };
+out2_x1  #eval{ 2 * $midX - $r2*cos(degToRad(30)) };
+out2_x2  #eval{ 2 * $midX };
+out2_x3  #eval{ 2 * $midX + $r2*cos(degToRad(30)) };
+
+edges           
+(
+    arc  2 11 ( $inn1_x1 $inn_y1 $minZ )
+    arc 11 12 ( $inn1_x2 $inn_y2 $minZ )
+    arc 12  3 ( $inn1_x3 $inn_y3 $minZ )
+    arc  1 16 ( $out1_x1 $out_y1 $minZ )
+    arc 16 17 ( $out1_x2 $out_y2 $minZ )
+    arc 17  4 ( $out1_x3 $out_y3 $minZ )
+    arc  7 13 ( $inn2_x1 $inn_y1 $minZ )
+    arc 13 14 ( $inn2_x2 $inn_y2 $minZ )
+    arc 14  8 ( $inn2_x3 $inn_y3 $minZ )
+    arc  6 19 ( $out2_x1 $out_y1 $minZ )
+    arc 19 20 ( $out2_x2 $out_y2 $minZ )
+    arc 20  9 ( $out2_x3 $out_y3 $minZ )
+    
+    arc 31 40 ( $inn1_x1 $inn_y1 $maxZ )
+    arc 40 41 ( $inn1_x2 $inn_y2 $maxZ )
+    arc 41 32 ( $inn1_x3 $inn_y3 $maxZ )
+    arc 30 45 ( $out1_x1 $out_y1 $maxZ )
+    arc 45 46 ( $out1_x2 $out_y2 $maxZ )
+    arc 46 33 ( $out1_x3 $out_y3 $maxZ )
+    arc 36 42 ( $inn2_x1 $inn_y1 $maxZ )
+    arc 42 43 ( $inn2_x2 $inn_y2 $maxZ )
+    arc 43 37 ( $inn2_x3 $inn_y3 $maxZ )
+    arc 35 48 ( $out2_x1 $out_y1 $maxZ )
+    arc 48 49 ( $out2_x2 $out_y2 $maxZ )
+    arc 49 38 ( $out2_x3 $out_y3 $maxZ )
+);
+
+boundary
+(
+    down
+    {
+        type symmetry;
+        faces
+        (
+            ( 1  0 29 30)
+            ( 2  1 30 31)
+            ( 4  3 32 33)
+            ( 5  4 33 34)
+            ( 6  5 34 35)
+            ( 7  6 35 36)
+            ( 9  8 37 38)
+            (10  9 38 39)
+        );
+    }
+    topBottom
+    {
+        type patch;
+        faces
+        (
+            (22 23 52 51)
+            (23 24 53 52)
+            (24 25 54 53)
+            (25 26 55 54)
+            (26 27 56 55)
+            (27 28 57 56)
+        );
+    }
+    outlet
+    {
+        type patch;
+        faces
+        (
+            (21 10 39 50)
+            (28 21 50 57)
+        );
+    }
+    inlet
+    {
+        type patch;
+        faces
+        (
+            ( 0 15 44 29)
+            (15 22 51 44)
+        );
+    }
+    cylinder1
+    {
+        type wall;
+        faces
+        (
+            (11  2 31 40)
+            (12 11 40 41)
+            ( 3 12 41 32)
+        );
+    }
+    cylinder2
+    {
+        type wall;
+        faces
+        (
+            (13  7 36 42)
+            (14 13 42 43)
+            ( 8 14 43 37)
+        );
+    }
+);
+
+mergePatchPairs
+(
+);
+
+// ************************************************************************* //

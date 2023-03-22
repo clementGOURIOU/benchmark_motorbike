@@ -1,0 +1,111 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v1912                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      fvOptions;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+velocityDamping
+{
+	// Mandatory entries
+	type            velocityDampingConstraint;
+	UMax            120;
+
+	// Optional entries
+	selectionMode   all;
+	UNames          (U); // names of given velocity fields
+
+	// Optional fvOptions entries
+	active          true;
+}
+
+limitU
+{
+	type            limitVelocity;
+	active          yes;
+
+	selectionMode   all;
+	UNames          (U); // names of given velocity fields
+	
+    max             160;
+}
+
+
+/*porosityProperty_2544
+{
+    type            explicitPorositySource;
+    active          yes;
+
+    explicitPorositySourceCoeffs
+    {
+        type            DarcyForchheimer;
+        selectionMode   cellZone;
+        cellZone        RADI;
+
+        DarcyForchheimerCoeffs
+        {
+            d  d [ 0 -2 0 0 0 0 0 ] ( 60702438.20 -20 -20 );
+            f  f [ 0 -1 0 0 0 0 0 ] ( 196.68 -20 -20 );
+
+            coordinateSystem
+            {
+                type cartesian;
+                origin (0.36493199 -0.3422 1.0042029);
+                coordinateRotation
+                {
+                    type axesRotation;
+                    e3 ( 0 0 1 );
+                    e1 ( 1 0 0 );
+                }
+            }
+        }
+
+    }
+
+}
+
+porosityProperty_2545
+{
+    type            explicitPorositySource;
+    active          yes;
+
+    explicitPorositySourceCoeffs
+    {
+        type            DarcyForchheimer;
+        selectionMode   cellZone;
+        cellZone        COND;
+
+        DarcyForchheimerCoeffs
+        {
+            d  d [ 0 -2 0 0 0 0 0 ] ( 49305335.07 -20 -20 );
+            f  f [ 0 -1 0 0 0 0 0 ] ( 238.17 -20 -20 );
+
+            coordinateSystem
+            {
+                type cartesian;
+                origin (0.3304109 -0.347 1.0040543);
+                coordinateRotation
+                {
+                    type axesRotation;
+                    e3 ( 0 0 1 );
+                    e1 ( 1 0 0 );
+                }
+            }
+        }
+
+    }
+
+}*/
+
+
+// ************************************************************************* //

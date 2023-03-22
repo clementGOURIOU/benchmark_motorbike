@@ -1,0 +1,177 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v1812                                 |
+|   \\  /    A nd           | Web:      www.OpenFOAM.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      topoSetDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+// The topoSetDict comprises a list of actions to perform on different
+// set types (cellSet, faceSet, pointSet, etc).
+//
+// Each action is a dictionary with e.g.
+//     // Name of set
+//     name    c0;
+//
+//     // type: pointSet/faceSet/cellSet/faceZoneSet/cellZoneSet
+//     type    cellSet;
+//
+//     // action to perform on set. Two types:
+//     // - require no source : clear/invert/remove
+//     //       clear  : clears set or zone
+//     //       invert : select all currently non-selected elements
+//     //       remove : removes set or zone
+//     // - require source    : new/add/subtract/subset
+//     //       new    : create new set or zone from source
+//     //       add    : add source to contents
+//     //       subtract : subtract source from contents
+//     //       subset : keeps elements both in contents and source
+//     action  new;
+//
+// The source entry varies according to the type of set.
+//
+// In OpenFOAM 1806 and earlier, it was compulsory to use a 'sourceInfo'
+// sub-dictionary to define the sources.
+// In OpenFOAM 1812 and later, this sub-directory is optional, unless
+// there would be a name clash (Eg, 'type' or 'name' appearing at both levels).
+// In most cases, the source definitions have been adjusted to avoid such
+// clashes.
+//
+// More detailed listing in the annotated topoSetSourcesDict
+
+actions
+(
+    // Example: pick up internal faces on outside of cellSet
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    // Get all faces in faceZone FR_L
+    {
+        name    AMIFaceSet_FR_L_inside;
+        type    faceSet;
+        action  new;
+        source  zoneToFace;
+        zones   (AMIZone_FR_L);
+    }
+    {
+        name    AMIFaceSet_FR_L_inside;
+        type    faceSet;
+        action  subset;
+        source  boxToFace;
+        box     (0.792 -0.864 0.855) (1.205 -0.801 1.268);
+    }
+    {
+        name    AMIFaceSet_FR_L_outside;
+        type    faceSet;
+        action  new;
+        source  zoneToFace;
+        zones   (AMIZone_FR_L);
+    }
+    {
+        name    AMIFaceSet_FR_L_outside;
+        type    faceSet;
+        action  subset;
+        source  boxToFace;
+        box     (0.750 -0.905 0.813) (1.247 -0.873 1.310);
+    }
+
+    // Get all faces in faceZone FR_R
+    {
+        name    AMIFaceSet_FR_R_inside;
+        type    faceSet;
+        action  new;
+        source  zoneToFace;
+        zones   (AMIZone_FR_R);
+    }
+    {
+        name    AMIFaceSet_FR_R_inside;
+        type    faceSet;
+        action  subset;
+        source  boxToFace;
+        box     (0.792 0.801 0.855) (1.205 0.864 1.268);
+    }
+    {
+        name    AMIFaceSet_FR_R_outside;
+        type    faceSet;
+        action  new;
+        source  zoneToFace;
+        zones   (AMIZone_FR_R);
+    }
+    {
+        name    AMIFaceSet_FR_R_outside;
+        type    faceSet;
+        action  subset;
+        source  boxToFace;
+        box     (0.750 0.873 0.813) (1.247 0.905 1.310);
+    }
+
+    // Get all faces in faceZone RR_L
+    {
+        name    AMIFaceSet_RR_L_inside;
+        type    faceSet;
+        action  new;
+        source  zoneToFace;
+        zones   (AMIZone_RR_L);
+    }
+    {
+        name    AMIFaceSet_RR_L_inside;
+        type    faceSet;
+        action  subset;
+        source  boxToFace;
+        box     (3.434 -0.861 0.853) (3.847 -0.791 1.266);
+    }
+    {
+        name    AMIFaceSet_RR_L_outside;
+        type    faceSet;
+        action  new;
+        source  zoneToFace;
+        zones   (AMIZone_RR_L);
+    }
+    {
+        name    AMIFaceSet_RR_L_outside;
+        type    faceSet;
+        action  subset;
+        source  boxToFace;
+        box     (3.392 -0.903 0.812) (3.889 -0.863 1.309);
+    }
+
+    // Get all faces in faceZone RR_R
+    {
+        name    AMIFaceSet_RR_R_inside;
+        type    faceSet;
+        action  new;
+        source  zoneToFace;
+        zones   (AMIZone_RR_R);
+    }
+    {
+        name    AMIFaceSet_RR_R_inside;
+        type    faceSet;
+        action  subset;
+        source  boxToFace;
+        box     (3.434 0.791 0.853) (3.847 0.861 1.266);
+    }
+    {
+        name    AMIFaceSet_RR_R_outside;
+        type    faceSet;
+        action  new;
+        source  zoneToFace;
+        zones   (AMIZone_RR_R);
+    }
+    {
+        name    AMIFaceSet_RR_R_outside;
+        type    faceSet;
+        action  subset;
+        source  boxToFace;
+        box     (3.392 0.863 0.812) (3.889 0.903 1.309);
+    }
+
+);
+
+// ************************************************************************* //
