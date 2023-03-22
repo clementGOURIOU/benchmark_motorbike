@@ -1,0 +1,23 @@
+// Boundary conditions
+ftInletMain         0.03344;    // fuel fraction at inlet, tab. 3.2 Severin2019
+ftInletsPilots      0.06084;    // fuel fraction for pilots, tab. 3.2 Severin2019
+SuGuelder           0.2436;     // laminar flame speed at inlet acc. to Guelder
+bInlets             1;          // regression coefficient
+kInit               1e-5;       // initial TKE
+pOutlet             8e5;        // pressure at the outlet
+TInit               1900;
+TInletMain          725;        // temperature of the preheated inflow
+TInletsPilots       633;        // temperature of the preheated inflow
+TChamberFront       600;        // from Gruhlke2020
+TChamberLateral     800;        // from Gruhlke2020
+massFlowInletMain   0.5563;     // mass flow of fuel mixture at inlet
+massFlowInletsPilots   0.0558;  // mass flow of fuel mixture at pilot inlets
+UInletMain          (113 0 0);
+UInletsPilots       (109 0 0);
+UAngledPilots       (54.5 -94.4 0);  // angle of 60 degrees
+
+//ftInletsPilotsSmooth      0.045;    // fuel fraction for pilots, tab. 3.2 Severin2019
+//bInletsSmooth      0.5;          // regression coefficient
+//TInletsPilotsSmooth      1300;        // temperature of the preheated inflow
+//UAngledPilotsSmooth      (27 -47 0);  // angle of 60 degrees
+//XiInletsPilotsSmooth    2;

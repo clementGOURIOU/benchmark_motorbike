@@ -1,0 +1,165 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+ =========                |
+ \      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+  \    /   O peration     | Website:  https://openfoam.org
+   \  /    A nd           | Version:  dev                                   
+    \/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    object      controlDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+application     reactingFoam;
+
+startFrom       latestTime;
+
+startTime       0;
+
+stopAt          endTime;
+
+endTime         0.05;
+
+deltaT          1e-6;
+
+writeControl    adjustable;
+
+writeInterval   2e-4;
+
+purgeWrite      10;
+
+writeFormat     ascii;
+
+writePrecision  8;
+
+writeCompression off;
+
+timeFormat      general;
+
+timePrecision   6;
+
+runTimeModifiable true;
+
+adjustTimeStep  yes;
+
+maxCo           0.3;
+
+functions
+{
+    cuttingPlane
+    {
+        type            surfaces;
+        libs            (sampling);
+
+        writeControl    writeTime;
+
+        surfaceFormat   vtk;
+        fields          ( p U T Qdot CH4 O2 H2 CH3 OH CO2 CO);
+
+        interpolationScheme cellPoint;
+
+        surfaces
+        {
+            chamberSlice
+            {
+                type            cuttingPlane;
+                planeType       pointAndNormal;
+                pointAndNormalDict
+                {
+                    point   (0 0 0);
+                    normal  (0 0 1);
+                }
+                interpolate     true;
+            }
+
+            chamberSliceX1
+            {
+                type            cuttingPlane;
+                planeType       pointAndNormal;
+                pointAndNormalDict
+                {
+                    point   (0.03 0 0);
+                    normal  (1 0 0);
+                }
+                interpolate     true;
+            }
+
+            chamberSliceX2
+            {
+                type            cuttingPlane;
+                planeType       pointAndNormal;
+                pointAndNormalDict
+                {
+                    point   (0.06 0 0);
+                    normal  (1 0 0);
+                }
+                interpolate     true;
+            }
+
+            chamberSliceX3
+            {
+                type            cuttingPlane;
+                planeType       pointAndNormal;
+                pointAndNormalDict
+                {
+                    point   (0.09 0 0);
+                    normal  (1 0 0);
+                }
+                interpolate     true;
+            }
+
+            chamberSliceX4
+            {
+                type            cuttingPlane;
+                planeType       pointAndNormal;
+                pointAndNormalDict
+                {
+                    point   (0.12 0 0);
+                    normal  (1 0 0);
+                }
+                interpolate     true;
+            }
+
+            chamberSliceX5
+            {
+                type            cuttingPlane;
+                planeType       pointAndNormal;
+                pointAndNormalDict
+                {
+                    point   (0.15 0 0);
+                    normal  (1 0 0);
+                }
+                interpolate     true;
+            }
+        }
+    }
+    
+    fieldAverage
+    {
+        type            fieldAverage;
+        libs            (fieldFunctionObjects);
+        writeControl    writeTime;
+        fields
+        (
+            U
+            {
+                mean        on;
+                prime2Mean  off;
+                base        time;
+            }
+
+            T
+            {
+                mean        on;
+                prime2Mean  off;
+                base        time;
+            }
+
+        );
+    }
+}
+
+// ************************************************************************* //

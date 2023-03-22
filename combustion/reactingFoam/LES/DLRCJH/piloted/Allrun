@@ -1,0 +1,27 @@
+#!/bin/bash
+
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+#We stop this script when we encounter a problem
+trap "exit -1" ERR
+
+setKeyword () {
+    _entry="$1"
+    _value="$2"
+    _file="$3"
+
+    foamDictionary -entry "$_entry" -set "$_value" "$_file" > /dev/null
+}
+
+./makeMesh $1
+
+if [ -n "$1" ] && [ "$1" -gt 1 ];
+then
+    runParallel setFields
+    runParallel $(getApplication)
+
+else
+    runApplication setFields
+    runApplication $(getApplication)
+fi
+

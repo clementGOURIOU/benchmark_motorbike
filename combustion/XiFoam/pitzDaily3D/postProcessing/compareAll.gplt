@@ -1,0 +1,22 @@
+#
+# Automatic post processing by Hakan Nilsson, Maryse Page and Martin Beaudoin
+#
+
+call "compareU.gplt" "0" "0"  "1.3e-01"        "Computed" "1.000002"
+call "compareU.gplt" "1" "0"  "1.3e-01"        "Computed" "1.000002"
+call "compareU.gplt" "2" "0"  "1.3e-01"        "Computed" "1.000002"
+call "compareU.gplt" "4" "0"  "1.3e-01"        "Computed" "1.000002"
+call "compareU.gplt" "5" "0"  "1.3e-01"        "Computed" "1.000002"
+call "compareU.gplt" "7" "0"  "1.3e-01"        "Computed" "1.000002"
+
+call "compareV.gplt" "1" "0"  "1.3e-01"        "Computed" "1.000002"
+call "compareV.gplt" "2" "0"  "1.3e-01"        "Computed" "1.000002"
+call "compareV.gplt" "5" "0"  "1.3e-01"        "Computed" "1.000002"
+
+call "compare_uRms.gplt" "1" "0"  "1.3e-01"        "Computed" "1.000002"
+call "compare_uRms.gplt" "2" "0"  "1.3e-01"        "Computed" "1.000002"
+call "compare_uRms.gplt" "5" "0"  "1.3e-01"        "Computed" "1.000002"
+
+call "compare_vRms.gplt" "1" "0"  "1.3e-01"        "Computed" "1.000002"
+call "compare_vRms.gplt" "2" "0"  "1.3e-01"        "Computed" "1.000002"
+call "compare_vRms.gplt" "5" "0"  "1.3e-01"        "Computed" "1.000002"

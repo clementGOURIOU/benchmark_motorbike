@@ -1,0 +1,51 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+ =========                |
+ \      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+  \    /   O peration     | Website:  https://openfoam.org
+   \  /    A nd           | Version:  dev                                   
+    \/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       volScalarField;
+    object      p;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#include "${FOAM_CASE}/constant/caseSettings"
+
+dimensions      [1 -1 -2 0 0 0 0];
+
+internalField   uniform $:intFields.p;
+
+boundaryField
+{
+    #includeEtc "caseDicts/setConstraintTypes"
+
+    inlet
+    {
+        type            zeroGradient;
+    }
+
+    fuelInlet
+    {
+        type            zeroGradient;
+    }
+
+    outlet
+    {
+        type            waveTransmissive;
+        gamma           1.3;
+        fieldInf        $../../intFields/p;
+        lInf            10;
+        value           $internalField;
+    }
+
+    DLRCJH
+    {
+        type            zeroGradient;
+    }
+}
+
+// ************************************************************************* //

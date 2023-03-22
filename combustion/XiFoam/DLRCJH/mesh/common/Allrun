@@ -1,0 +1,18 @@
+#!/bin/bash
+cd "${0%/*}" || exit                                # Run from this directory
+. ${WM_PROJECT_DIR:?}/bin/tools/RunFunctions        # Tutorial run functions
+#------------------------------------------------------------------------------
+
+# We stop this script when we encounter a problem
+trap "exit -1" ERR
+
+echo "Extracting triSurface folder"
+tar -xJf triSurface.tar.xz
+runApplication blockMesh
+runApplication decomposePar
+runApplication surfaceFeatureExtract
+
+runParallel snappyHexMesh
+runParallel transformPoints -time 2 -scale "(0.001 0.001 0.001)"
+
+runApplication reconstructParMesh -latestTime

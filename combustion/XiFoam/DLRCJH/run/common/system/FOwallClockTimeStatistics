@@ -1,0 +1,95 @@
+// --------------------------------*- C++ -*-------------------------------- //
+//
+// File
+//     OpenFOAM coded function object
+//
+// Description
+//     Measure clock time for each time step and provide statistics at the end
+//
+// ------------------------------------------------------------------------- //
+
+wallClockTimeStatistics
+{
+    type coded;
+    name wallClockTimeStatistics;
+    libs ( utilityFunctionObjects );
+
+    // Additional context for code execute/write
+    codeContext
+    {
+        verbose true;
+    }
+
+    codeInclude
+    #{
+        #include "clockValue.H"
+    #};
+
+    codeData
+    #{
+        clockValue wallClock_;
+        DynamicList<double> times_;
+        double sum_ = 0.0;
+        bool firstIter = true;
+    #};
+
+    codeExecute
+    #{
+        // Ignore the first time step since no correct measurement may be
+        // executed.
+        if (!firstIter)
+        {
+            const double dt = wallClock_.elapsedTime();
+            Info<< "Wall clock time elapsed during the current time step = "
+                << dt << nl << endl;
+            times_.append(dt);
+            sum_ += dt;
+        }
+        wallClock_.update();
+        firstIter = false;
+    #};
+
+    codeEnd
+    #{
+        const double n = times_.size();
+        if (n)
+        {
+            const double mean = sum_/n;
+            const double err = 0.01;  // statistical error
+
+            // Compute standard deviation
+            double stdDev = 0.0;
+            forAll(times_, i)
+            {
+                stdDev += (times_[i] - mean)*(times_[i] - mean);
+            }
+            stdDev = sqrt(stdDev/n);
+
+            // Compute number of time steps needed for statistical time
+            // measurement with 1% error at 95% confidence level. Add 1 because
+            // the first time step is not measured.
+            const label minN = round(sqr(1.96*stdDev/(err*mean))) + 1;
+
+            Info<< "Statistics:" << nl
+                << "    Average wall clock time per time step = "
+                << mean << nl
+                << "    Standard deviation of wall clock time per time step = "
+                << stdDev << nl
+                << "    Minimum number of time steps for 1% error at the 95% "
+                << "confidence level = "
+                << minN << nl << endl;
+
+            if (mesh().time().timeIndex() < minN)
+            {
+                WarningInFunction
+                    << "Number of time steps of the current run is smaller than "
+                    << "the calculated one by the statistical analysis. "
+                    << "Consider to raise endTime in controlDict."
+                    << nl << endl;
+            }
+        }
+    #};
+}
+
+
+// ************************************************************************* //

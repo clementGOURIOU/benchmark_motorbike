@@ -1,0 +1,53 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+ =========                |
+ \      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+  \    /   O peration     | Website:  https://openfoam.org
+   \  /    A nd           | Version:  dev                                   
+    \/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       volScalarField;
+    object      N2;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#include "${FOAM_CASE}/constant/caseSettings"
+
+N2val  #calc "1 - $:inlet.O2 - $:inlet.CH4";
+
+dimensions      [0 0 0 0 0 0 0];
+
+internalField   uniform 0.77;
+
+boundaryField
+{
+    #includeEtc "caseDicts/setConstraintTypes"
+
+    inlet
+    {
+        type            fixedValue;
+        value           uniform $N2val;
+    }
+
+    // pilot, closed or open 
+    fuelInlet
+    {
+        type            zeroGradient;
+    }
+
+    outlet
+    {
+        type            inletOutlet;
+        inletValue      $internalField;
+        value           $internalField;
+    }
+
+    DLRCJH
+    {
+        type            zeroGradient;
+    }
+}
+
+// ************************************************************************* //

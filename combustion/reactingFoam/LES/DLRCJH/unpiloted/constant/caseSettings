@@ -1,0 +1,43 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+ =========                |
+ \      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+  \    /   O peration     | Website:  https://openfoam.com
+   \  /    A nd           | Version:  v2202                                 
+    \/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      caseSettings;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+inlet
+{
+    U   111.0;
+    T   725.0;
+
+    // species
+    CH4 0.0305;
+    O2  0.204;
+}
+
+walls
+{
+    T   700;
+}
+
+intFields
+{
+    p   8e5;
+    T   1900;
+}
+
+mesh
+{
+    avgMeshSize  2;//fine: 0.5; coarse: 3;
+}
+
+// ************************************************************************* //

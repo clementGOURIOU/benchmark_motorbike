@@ -1,0 +1,36 @@
+#!/bin/bash
+
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+#We stop this script when we encounter a problem
+trap "exit -1" ERR
+
+
+setKeyword () {
+    _entry="$1"
+    _value="$2"
+    _file="$3"
+
+    foamDictionary -entry "$_entry" -set "$_value" "$_file" > /dev/null
+}
+
+./Allclean 
+
+cp -r 0.bak 0
+
+runApplication blockMesh
+runApplication topoSet
+runApplication createPatch -overwrite
+runApplication -s fuel extrudeMesh -dict system/extrudeMeshDict.fuel
+runApplication -s air  extrudeMesh -dict system/extrudeMeshDict.air
+runApplication surfaceFeatureExtract
+
+if [ -n "$1" ] && [ "$1" -gt 1 ]; then
+
+    setKeyword numberOfSubdomains "$1" system/decomposeParDict
+    runApplication decomposePar -copyZero
+    runParallel snappyHexMesh -overwrite
+
+else
+    runApplication snappyHexMesh -overwrite
+fi

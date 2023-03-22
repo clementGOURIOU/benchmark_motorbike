@@ -1,0 +1,22 @@
+Do automatic post-processing by doing the following:
+(this example uses the latest tim step. To use another time step
+modify the -time for sample, and modify in compareAll.gplt)
+
+postProcess -func sampleDict -case .. -latestTime
+gnuplot compareAll.gplt
+firefox compareAll.html
+
+To plot the residuals do the following:
+(This example assumes that you have a log file in your case directory)
+foamLog ../log
+gnuplot plotResiduals.gplt
+firefox residuals.png
+
+The development of these files was done by:
+    Hakan Nilsson, Chalmers University of Technology, Sweden
+    Maryse Page, IREQ, Hydro Quebec, Canada
+    Martin Beaudoin, IREQ, Hydro Quebec, Canada
+    Omar Bounous, Chalmers University of Technology, Sweden
+    
+Modified for the compatibility with gnuplot 5.2 by
+    Sergey Lesnik, Wikki GmbH, Germany, 2021

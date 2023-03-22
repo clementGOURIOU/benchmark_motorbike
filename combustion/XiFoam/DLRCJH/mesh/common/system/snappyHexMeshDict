@@ -1,0 +1,195 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2106                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      snappyHexMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+// Which of the steps to run
+castellatedMesh true;
+snap            true;
+addLayers       false;
+
+geometry
+{
+    // STLs
+    DLRCJH
+    {
+        type closedTriSurfaceMesh;
+        file "DLRCJH.obj";
+        regions
+        {
+            inletMain { name inletMain; }
+            inletsPilots { name inletsPilots; }
+            outlet { name outlet; }
+            wallChamberFront { name wallChamberFront; }
+            wallsChamberLateral { name wallsChamberLateral; }
+            wallInletPipe { name wallInletPipe; }
+            wallsPilots { name wallsPilots; }
+        }
+    }
+    wallInletPipe.stl
+    {
+        type triSurfaceMesh;
+        name wallInletPipe;
+        regions { name wallInletPipe; }
+    }
+    wallsPilots.stl
+    {
+        type triSurfaceMesh;
+        name wallsPilots;
+        regions { name wallsPilots; }
+    }
+
+    refineChamber
+    {
+        type searchableBox;
+        min (0 -55 -55);
+        max (400 55 55);
+    }
+};
+
+castellatedMeshControls
+{
+    maxLocalCells 12345678;
+    maxGlobalCells 1234567890;
+    minRefinementCells 10;
+    maxLoadUnbalance 0.10;
+    nCellsBetweenLevels 2;
+
+    // Explicit feature edge refinement
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    // Specifies a level for any cell intersected by its edges.
+    // This is a featureEdgeMesh, read from constant/triSurface for now.
+    features
+    (
+        {file "DLRCJH.eMesh"; level 0;}
+    );
+
+    // Surface based refinement
+    // ~~~~~~~~~~~~~~~~~~~~~~~~
+
+    // Specifies two levels for every surface. The first is the minimum level,
+    // every cell intersecting a surface gets refined up to the minimum level.
+    // The second level is the maximum level. Cells that 'see' multiple
+    // intersections where the intersections make an
+    // angle > resolveFeatureAngle get refined up to the maximum level.
+
+    refinementSurfaces
+    {
+        DLRCJH
+        {
+            level (0 0);
+            regions
+            {
+                inletMain { level (0 0); patchInfo { type patch; } }
+                inletsPilots { level (0 0); patchInfo { type patch; } }
+                outlet { level (0 0); patchInfo { type patch; } }
+                wallChamberFront { level (0 0); patchInfo { type wall; } }
+                wallsChamberLateral { level (0 0); patchInfo { type wall; } }
+                wallInletPipe { level (0 0); patchInfo { type wall; } }
+                wallsPilots { level (0 0); patchInfo { type wall; } }
+            }
+        }
+    }
+
+    resolveFeatureAngle 30;
+
+    // Region-wise refinement
+    // ~~~~~~~~~~~~~~~~~~~~~~
+
+    // Specifies refinement level for cells in relation to a surface. One of
+    // three modes
+    // - distance. 'levels' specifies per distance to the surface the
+    //   wanted refinement level. The distances need to be specified in
+    //   descending order.
+    // - inside. 'levels' is only one entry and only the level is used. All
+    //   cells inside the surface get refined up to the level. The surface
+    //   needs to be closed for this to be possible.
+    // - outside. Same but cells outside.
+
+    refinementRegions
+    {
+        wallInletPipe { mode distance; levels ((6.0 2)); }
+        wallsPilots   { mode distance; levels ((0.7 4)); }
+        refineChamber { mode inside; levels ((1E15 2)); }
+    }
+
+    locationInMesh (100 0 0);
+    allowFreeStandingZoneFaces true;
+}
+
+// Settings for the snapping.
+snapControls
+{
+    //- Number of patch smoothing iterations before finding correspondence
+    //  to surface
+    nSmoothPatch 4;
+
+    //- Relative distance for points to be attracted by surface feature point
+    //  or edge. True distance is this factor times local
+    //  maximum edge length.
+    tolerance 1.0;
+
+    //- Number of mesh displacement relaxation iterations.
+    nSolveIter 100;
+
+    //- Maximum number of snapping relaxation iterations. Should stop
+    //  before upon reaching a correct mesh.
+    nRelaxIter 5;
+
+    // Feature snapping
+
+        nFeatureSnapIter 10;
+
+        //- Detect (geometric) features by sampling the surface
+        implicitFeatureSnap false;
+
+        //- Use castellatedMeshControls::features
+        explicitFeatureSnap true;
+
+        //- Detect features between multiple surfaces
+        //  (only for explicitFeatureSnap, default = false)
+        multiRegionFeatureSnap true;
+}
+
+// Settings for the layer addition.
+addLayersControls
+{}
+
+// Generic mesh quality settings. At any undoable phase these determine
+// where to undo.
+meshQualityControls
+{
+    maxNonOrtho 65;
+    maxBoundarySkewness 4;
+    maxInternalSkewness 1;
+    maxConcave 80;
+    minVol 1e-13;
+    minTetQuality 1e-30;
+    minArea -1;
+    minTwist 0.02;
+    minDeterminant 0.001;
+    minFaceWeight 0.05;
+    minVolRatio 0.01;
+    minTriangleTwist -1;
+    nSmoothScale 4;
+    errorReduction 0.75;
+}
+
+// Merge tolerance. Is fraction of overall bounding box of initial mesh.
+// Note: the write tolerance needs to be higher than this.
+mergeTolerance 1E-6;
+
+
+// ************************************************************************* //
