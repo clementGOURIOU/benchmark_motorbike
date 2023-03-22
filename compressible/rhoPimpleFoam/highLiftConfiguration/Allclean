@@ -1,0 +1,31 @@
+#!/bin/sh
+
+#------------------------------------------------------------------------------
+
+# clean processor folders
+rm -r 0
+rm -r [1-9]*
+rm -r processor*
+
+# clean control files
+rm system/controlDict
+rm system/fvSchemes
+rm system/fvSolution
+
+# clean grid and meshing files
+rm -r constant/extendedFeatureEdgeMesh
+rm -r constant/polyMesh
+rm -r constant/triSurface/*.curvature
+rm -r constant/triSurface/*.eMesh
+
+# clean post-processing folder
+rm -r postProcessing
+
+# clean log files
+rm log.*
+rm -r logFiles
+
+# clean dynamic code
+rm -r dynamicCode
+
+#------------------------------------------------------------------------------

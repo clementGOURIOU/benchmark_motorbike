@@ -1,0 +1,63 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2012                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      topoSetDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#include        "${FOAM_CASE}/system/include/caseDefinition"
+
+sidePatch       ff_zMax;
+
+actions
+(
+    // Get both sides of AMI
+    // ~~~~~~~~~~~~~~~~~~~~~
+
+    // Get all faces in cellSet
+    {
+        name    set_ff_zMin;
+        type    faceSet;
+        action  new;
+        source  patchToFace;
+        patch   $sidePatch;
+    }
+    {
+        name    set_ff_zMin;
+        type    faceSet;
+        action  delete;
+        source  normalToFace;
+        normal  (0 0 1);
+        cos     0.01;
+    }
+    // Get both sides of AMI
+    // ~~~~~~~~~~~~~~~~~~~~~
+
+    // Get all faces in cellSet
+    {
+        name    set_ff_zMax;
+        type    faceSet;
+        action  new;
+        source  patchToFace;
+        patch   $sidePatch;
+    }
+    {
+        name    set_ff_zMax;
+        type    faceSet;
+        action  delete;
+        source  normalToFace;
+        normal  (0 0 -1);
+        cos     0.01;
+    }
+);
+
+// ************************************************************************* //

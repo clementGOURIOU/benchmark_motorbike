@@ -1,0 +1,53 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2012                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      sampleDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+type                surfaces;
+libs                ("libsampling.so");
+
+interpolationScheme cell;
+surfaceFormat       raw;
+
+fields
+(
+    Cp
+    pMean
+    wallShearStressMean
+    yPlus
+);
+
+surfaces
+(
+    airfoil_slat
+    {
+        type            patch;
+        patches         ( "ww_slat.*" );
+    }
+
+    airfoil_wing
+    {
+        type            patch;
+        patches         ( "ww_wing.*" );
+    }
+
+    airfoil_flap
+    {
+        type            patch;
+        patches         ( "ww_flap.*" );
+    }
+);
+
+// *********************************************************************** //

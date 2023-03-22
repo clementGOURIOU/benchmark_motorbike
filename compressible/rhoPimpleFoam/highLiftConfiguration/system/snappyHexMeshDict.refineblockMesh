@@ -1,0 +1,171 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2012                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      snappyHexMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#include        "${FOAM_CASE}/system/include/caseDefinition"
+
+// Which of the steps to run
+castellatedMesh true;
+snap            false;
+addLayers       false;
+
+// spanwise domain extent
+LspanExt        #eval{ $Lspan/2.0 };
+    
+// x/y/z-location inside domain
+xInDom          #calc "($Xc + 1.0e-05) * $Lchord";
+yInDom          #calc "($Yc * $Lchord) + (($dimblockMesh + 1.0e-05) * $Lchord / 2.0)";
+zInDom          #calc "($Zc * $Lchord) - ($res0 * $Lchord / 2.0) + (1.0e-05 * $Lchord)";
+
+// calculate refinement levels relative to L0
+LLspan          #calc "static_cast<int>(max((log10(scalar($res0*$Lchord)/scalar($LspanExt*$Lchord)) / log10(2.0)) + 0.1, 0))";
+
+// Geometry. Definition of all surfaces. All surfaces are of class
+// searchableSurface.
+// Surfaces are used
+// - to specify refinement for any mesh cell intersecting it
+// - to specify refinement for any mesh cell inside/outside/near
+// - to 'snap' the mesh boundary to the surface
+geometry
+{
+    refBoxFocus
+    {
+        type searchableBox;
+        min ( #eval{ ($Xc - 2.0) * $Lchord }  #eval{ ($Yc - 2.0) * $Lchord } #eval{ ($Zc - $res0) * $Lchord } );
+        max ( #eval{ ($Xc + 10.0) * $Lchord } #eval{ ($Yc + 5.0) * $Lchord } #eval{ $Zc*$Lchord } );
+    }
+};
+
+
+// Settings for the castellatedMesh generation.
+castellatedMeshControls
+{
+    maxLocalCells        10000000;
+    maxGlobalCells       200000000;
+    minRefinementCells   10;
+    maxLoadUnbalance     0.10;
+    nCellsBetweenLevels  $nCellsLevels;
+
+    features
+    (
+    );
+
+    refinementSurfaces
+    {
+    }
+
+    resolveFeatureAngle 30;
+    planarAngle 30;
+
+    refinementRegions
+    {
+        refBoxFocus
+        {
+            mode   inside;
+            levels ((1E15 $LLspan));
+        }
+    }
+
+    locationInMesh             ($xInDom $yInDom $zInDom);
+    allowFreeStandingZoneFaces false;
+}
+
+
+// Settings for the snapping.
+snapControls
+{
+    nSmoothPatch            2;
+//    nSmoothInternal         $nSmoothPatch;
+    tolerance               2.0;
+    nSolveIter              10;
+    nRelaxIter              5;
+    nFeatureSnapIter        10;
+//    nFaceSplitInterval      5;
+    implicitFeatureSnap     false;
+    explicitFeatureSnap     true;
+    multiRegionFeatureSnap  true;
+}
+
+
+// Settings for the layer addition.
+addLayersControls
+{
+    relativeSizes true;
+    layers
+    {
+        "ww.*"
+        {
+            nSurfaceLayers 1;
+        }
+    }
+    expansionRatio             1.2;
+    finalLayerThickness        0.3;
+    minThickness               1.0E-10;
+    nGrow                      0;
+    featureAngle               360;
+    slipFeatureAngle           30;
+    nSmoothSurfaceNormals      1;
+    nSmoothNormals             3;
+    nSmoothThickness           10;
+    nSmoothDisplacement        90;
+    maxFaceThicknessRatio      0.5;
+    maxThicknessToMedialRatio  0.3;
+    minMedianAxisAngle         130;
+    nMedialAxisIter            10;
+    slipFeatureAngle           30;
+    nRelaxIter                 3;
+    nBufferCellsNoExtrude      0;
+    nLayerIter                 50;
+    nRelaxedIter               0;
+
+    meshShrinker        displacementMotionSolver;
+    solver              displacementLaplacian;
+    displacementLaplacianCoeffs
+    {
+        //- Increase diffusivity close to all walls
+        diffusivity         inverseVolume;
+    }
+
+//    layerTerminationAngle      -180;
+//    detectExtrusionIsland      true;
+}
+
+// Generic mesh quality settings. At any undoable phase these determine
+// where to undo.
+meshQualityControls
+{
+    #include                   "meshQualityDict"
+    nSmoothScale               4;
+    errorReduction             0.75;
+}
+
+// Advanced
+// Write flags
+writeFlags
+(
+    scalarLevels
+    layerSets
+    layerFields     // write volScalarField for layer coverage
+);
+
+// Merge tolerance. Is fraction of overall bounding box of initial mesh.
+// Note: the write tolerance needs to be higher than this.
+mergeTolerance 1e-6;
+
+// Optional: avoid patch-face merging. Allows mesh to be used for
+//           refinement/unrefinement
+mergePatchFaces off; // default on
+
+// ************************************************************************* //

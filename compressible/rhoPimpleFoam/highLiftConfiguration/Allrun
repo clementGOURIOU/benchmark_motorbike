@@ -1,0 +1,203 @@
+#!/bin/sh
+### Script for running the 30P30N micro-benchmark (MB9)
+### Upstream CFD, 2022
+### Setup prepared by:
+###     Marian Fuchs, e-mail: marian.fuchs@upstream-cfd.com
+###     Julius Bergmann
+
+# The project leading to this application has received funding from
+# the European High-Performance Computing Joint Undertaking Joint
+# Undertaking (JU) under grant agreement No 956416. The JU receives
+# support from the European Union's Horizon 2020 research and
+# innovation programme and France, United Kingdom, Germany, Italy,
+# Croatia, Spain, Greece, Portugal
+
+# Be aware that the current Reynolds number of 2.08e6 is smaller than
+# in the NASA HLPW. See README.md
+
+#------------------------------------------------------------------------------
+
+# function to read parameters from caseDefinition
+function getInputParam () 
+{
+    varVal=`grep -w ${1} system/include/caseDefinition | cut -d ";" -f 1 | grep -v '//'`
+    varVal=`echo ${varVal:${#1}}`
+    echo $varVal
+}
+
+nProcs=`getInputParam nCores`
+simMode=`getInputParam simMode`
+finalTime=`getInputParam finalTime`
+turbModel=`getInputParam turbModel`
+Uref=`getInputParam Uref`
+pref=`getInputParam pref`
+rhoref=`getInputParam rhoref`
+muref=`getInputParam muref`
+
+# name of parallel execution command (e.g. mpirun or srun)
+parEx="mpirun -np $nProcs"
+#parEx="srun"
+
+# name of log files folder
+LOGDIR="logFiles"
+mkdir ${LOGDIR}
+
+# generate CFD grid
+meshing=true
+
+# decompose CFD grid and initialise flow field
+decompose=true
+
+# run CFD solver
+solving=true
+
+# run individual stages of scale-resolving simulation
+run_initial_SRS=true
+run_productive_SRS=true
+
+#------------------------------------------------------------------------------
+
+# run snappyHexMesh
+if $meshing; then
+
+    echo -e -n '\n    Running snappyHexMesh ...\n'
+    (
+        cd system
+        cp controlDict.SHM controlDict
+        cp fvSchemes.SHM fvSchemes
+        cp fvSolution.SHM fvSolution
+        cd ..
+    )
+
+    # run blockMesh
+    blockMesh > ${LOGDIR}/log.M01.blockMesh 2>&1 || exit 1
+
+    # refine initial blockMesh
+    snappyHexMesh -dict system/snappyHexMeshDict.refineblockMesh -overwrite > ${LOGDIR}/log.M02.snappyHexMesh.refineblockMesh 2>&1 || exit 1
+    mv ./0/cellLevel ./constant/polyMesh/
+    mv ./0/pointLevel ./constant/polyMesh/
+    rm -r 0
+
+    # check initial blockMesh
+    checkMesh > ${LOGDIR}/log.M03.checkMesh.SHM.refineblockMesh 2>&1 || exit 1
+
+    # extrude z-patch of initial blockMesh to start grid for SHM meshing
+    extrudeMesh -dict system/extrudeMeshDict.refineblockMesh > ${LOGDIR}/log.M04.extrudeMesh.refineblockMesh 2>&1 || exit 1
+
+    rm constant/polyMesh/cellLevel
+    rm constant/polyMesh/cellZones
+    rm constant/polyMesh/pointLevel
+    rm constant/polyMesh/pointZones
+    rm constant/polyMesh/faceZones
+    rm constant/polyMesh/level0Edge
+    rm constant/polyMesh/surfaceIndex
+    sed -i s/"ff_zMin"/"ff_SAVE"/g constant/polyMesh/boundary
+    sed -i s/"ff_zMax"/"ff_zMin"/g constant/polyMesh/boundary
+    sed -i s/"ff_SAVE"/"ff_zMax"/g constant/polyMesh/boundary
+
+    # check blockMesh after extrude
+    checkMesh > ${LOGDIR}/log.M05.checkMesh.extrudeMesh.refineblockMesh 2>&1 || exit 1
+
+    # run surfaceFeatureExtract
+    surfaceFeatureExtract  > ${LOGDIR}/log.M06.surfaceFeatureExtract 2>&1 || exit 1
+
+    # run decomposePar
+    decomposePar -decomposeParDict system/decomposeParDict.SHM > ${LOGDIR}/log.M07.decomposePar.SHM 2>&1 || exit 1
+
+    # run snappyHexMesh
+    ${parEx} snappyHexMesh -parallel -decomposeParDict system/decomposeParDict.SHM -dict system/snappyHexMeshDict -overwrite > ${LOGDIR}/log.M08.snappyHexMesh 2>&1 || exit 1
+
+    # run checkMesh
+    ${parEx} checkMesh -parallel -decomposeParDict system/decomposeParDict.SHM -latestTime -meshQuality > ${LOGDIR}/log.M09.checkMesh 2>&1 || exit 1
+
+    # run reconstruct 3D mesh
+    reconstructParMesh -mergeTol 1e-08 -constant -latestTime > ${LOGDIR}/log.M10.reconstructParMesh 2>&1 || exit 1
+
+    echo -e -n '\n    Mirror 3D mesh to apply cyclic BC ...\n'
+    cp -r constant/polyMesh constant/polyMesh.origHalf
+
+    # mirror mesh at patch ff_zMax
+    mirrorMesh -overwrite > ${LOGDIR}/log.M11.mirrorMesh 2>&1 || exit 1
+
+    # create face sets with all faces of new ff_zMin and ff_zMax
+    topoSet -dict system/topoSetDict.faces.ff_zMin > ${LOGDIR}/log.M12.topoSet.faces.ff_zMin 2>&1 || exit 1
+
+    # assign new face sets to cyclic patches
+    createPatch -overwrite -dict system/createPatchDict.mirrorMesh > ${LOGDIR}/log.M13.createPatch.mirrorMesh 2>&1 || exit 1
+
+    # set spanwise BC into boundary file
+    changeDictionary -constant -dict system/changeDictionaryDict.cyclicPatches -enableFunctionEntries > ./${LOGDIR}/log.M14.changeDictionary.cyclicPatches 2>&1 || exit 1
+
+    # write faceSet with all faces on cyclicAMI patches
+    topoSet -dict system/topoSetDict.faces.cyclic > ${LOGDIR}/log.M15.topoSet.faces.cyclic 2>&1 || exit 1
+
+    # check final 3D mesh
+    checkMesh -constant > ${LOGDIR}/log.M16.checkMesh.final.3D 2>&1 || exit 1
+    cp ${LOGDIR}/log.M16.checkMesh.final.3D constant/polyMesh/log.checkMesh.final.3D
+
+    # clean up processor folders
+    rm -r processor*
+    rm -r constant/polyMesh.origHalf
+
+fi
+
+
+# decompose grid and initialise flow field
+if $decompose; then
+
+    # initialise 0 folder
+    cp -r 0.orig 0
+
+    echo -e -n '\n    Copy control files for initialisation ...\n'
+    (
+        cd system
+        cp controlDict.SHM controlDict
+        cp fvSchemes.SHM fvSchemes
+        cp fvSolution.SHM fvSolution
+        cd ..
+    )
+
+    # decompose CFD domain
+    decomposePar > ${LOGDIR}/log.R01.decomposePar.SRS 2>&1 || exit 1
+
+    # run renumberMesh
+    ${parEx} renumberMesh -parallel -overwrite > ${LOGDIR}/log.R02.renumberMesh 2>&1 || exit 1
+
+    cp system/controlDict.SRS.init system/controlDict
+    cp system/fvSolution.SRS system/fvSolution
+    cp system/fvSchemes.SRS system/fvSchemes
+
+    ${parEx} applyBoundaryLayer -parallel -ybl 0.1 > ${LOGDIR}/log.R03.applyBoundaryLayer 2>&1 || exit 1
+
+fi
+
+
+# run CFD
+if $solving; then
+
+    if $run_initial_SRS; then
+
+        echo -e -n '\n    Running initial SRS ...\n'
+	cp system/controlDict.SRS.init system/controlDict
+        cp system/fvSolution.SRS system/fvSolution
+        cp system/fvSchemes.SRS system/fvSchemes
+	TIMESTAMP=$(date "+%Y-%m-%d_%H-%M-%S")
+        ${parEx} rhoPimpleFoam -parallel > ${LOGDIR}/log.R04.rhoPimpleFoam.init.$TIMESTAMP 2>&1 || exit 1
+
+    fi
+
+    if $run_productive_SRS; then
+
+        echo -e -n '\n    Running productive SRS ...\n'
+        cp system/controlDict.SRS.avg system/controlDict
+	cp system/fvSolution.SRS system/fvSolution
+        cp system/fvSchemes.SRS system/fvSchemes
+	TIMESTAMP=$(date "+%Y-%m-%d_%H-%M-%S")
+        ${parEx} rhoPimpleFoam -parallel > ${LOGDIR}/log.R05.rhoPimpleFoam.avg.$TIMESTAMP 2>&1 || exit 1
+        ${parEx} postProcess -func sampleDict.surface.SRS -parallel -latestTime > ${LOGDIR}/log.R06.sample.surface.SRS 2>&1 || exit 1
+
+    fi
+
+fi
+
+#------------------------------------------------------------------------------

@@ -1,0 +1,82 @@
+// Centre point of airfoil leading edge:
+Xc              0.0;                // (relative to chord length)
+Yc              0.0;                // (relative to chord length)
+Zc              0.0;                // (relative to chord length)
+
+// Centre point of rotation (for Cm):
+Xr              0.25;               // (relative to chord length)
+Yr              0.5;                // (relative to chord length)
+Zr              0.0;                // (relative to chord length)
+
+// Geometrical parameters:
+Lchord          0.4572;             // chord length (in m)
+Lspan           0.125;              // spanwise domain extent (relative to chord length)
+
+// Meshing parameters (SHM):
+dimblockMesh    100.0;              // dimensional extent of blockMesh (relative to chord length)
+res0            4.0;                // base resolution of blockMesh (relative to chord length) - should be equal or greater than spanwise extent
+nCellsLevels    5;                  // number of cells between levels
+// surface parameters
+resSlat         #eval{$Lspan/128.0};    // surface resolution on airfoil slat (relative to chord length)
+resSlatUTE      #eval{$Lspan/256.0};    // surface resolution on upper trailing edge of airfoil slat (relative to chord length)
+resSlatLTE      #eval{$Lspan/512.0};    // surface resolution around lower trailing edge of airfoil slat (relative to chord length)
+distSlatLTE     0.003;                  // radius for distance based refinement around Slat LTE (relative to chord length)
+resWing         #eval{$Lspan/64.0};     // surface resolution on airfoil wing (relative to chord length)
+resWingP        #eval{$Lspan/64.0};     // surface resolution on airfoil wing pressure side (relative to chord length)
+resWingTE       #eval{$Lspan/1024.0};   // surface resolution around trailing edge of airfoil wing (relative to chord length)
+distWingTE      0.0006;                 // radius for distance based refinement around Wing TE (relative to chord length)
+resFlap         #eval{$Lspan/64.0};     // surface resolution on airfoil flap (relative to chord length)
+resFlapP        #eval{$Lspan/64.0};     // surface resolution on airfoil flap pressure side (relative to chord length)
+resFlapTE       #eval{$Lspan/64.0};     // surface resolution on trailing edge of airfoil flap (relative to chord length)
+
+// volume parameters
+resSlat1        #eval{$Lspan/128.0};    // volume resolution in slat cove and first trailing (relative to chord length)
+resSlat2        #eval{$Lspan/64.0};     // volume resolution in slat turb trailing (relative to chord length)
+resFlapCove     #eval{$Lspan/128.0};    // volume resolution in flap cove (relative to chord length)
+resFlap1        #eval{$Lspan/64.0};     // volume resolution above flap (relative to chord length)
+resFlap2        #eval{$Lspan/32.0};     // volume resolution in departure region (relative to chord length)
+resFlap3        #eval{$Lspan/16.0};     // volume resolution in far departure region (relative to chord length)
+
+resD            #eval{$Lspan/8.0};      // resolution in departure region (relative to chord length)
+VerStretch      1.2;                    // cell-to-cell stretching ratio for outer prism layers
+firstLayerTh    0.000005;               // height of first layer cell in region S (relative to chord length) - y+ ~ 1.0
+
+// Flow parameters:
+ReL             9.000000000e+06;    // Reynolds number
+Mref            2.000000000e-01;    // Mach number
+aref            3.432020833e+02;    // reference speed of sound (in m/s)
+Uref            6.864041667e+01;    // reference velocity (in m/s)
+pref            1.013250000e+05;    // reference static pressure (in kg/(m s^2))
+rhoref          1.204328093e+00;    // reference static density (in kg/m^3)
+Tref            2.931500000e+02;    // reference static temperature (in K)
+ptot            1.041905846e+05;    // reference total pressure (in kg/(m s^2))
+Ttot            2.954952000e+02;    // reference total temperature (in K)
+AoA             2.134000000e+01;    // angle of attack (in degree), xz-plane
+alphat          2.151058210e-06;    // turbulent thermal diffusivity (in kg/m/s)
+nMoles          1.000000000e+00;    // number of moles
+molWeight       2.897027898e+01;    // molecular weight (in kg/kmol)
+Cp              1.004500000e+03;    // heat capacity at constant pressure (in kJ/(kg K))
+Hf              0.000000000e+00;    // heat / enthalpy of fusion (in kJ)
+Ts              1.104000000e+02;    // Sutherland constant (in K)
+As              1.458000000e-06;    // Sutherland constant (in kg/(m s sqrt(K)))
+muref           1.813405882e-05;    // reference dynamic viscosity (in kg/m/s)
+Pr              7.000000000e-01;    // Prandtl number
+gamma           1.400000000e+00;    // adiabatic exponent (cp/cv)
+
+// Simulation settings:
+simMode         3D;                 // simulation mode, either 2D or 3D
+initTime        0.15;               // initial transient for SRS (in s)
+finalTime       0.35;               // final time after averaging (in s)
+dt              0.000002;           // time step size for DDES (in s)
+
+// Turbulence model settings:
+turbModel       kOmegaSSTIDDES;     // active turbulence model
+deltaName       IDDESDelta;         // LES filter width formulation
+viscRatio       3.0;                // turbulent viscosity ratio nut_inf/nu at farfield inlet
+Tu              0.01;               // turbulence intensity at farfield inlet
+
+// Solver settings:
+convCrit        1.0e-8;             // convergence criterion for steady-state RANS
+
+// Number of processes:
+nCores          128;

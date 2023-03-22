@@ -1,0 +1,46 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2012                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volScalarField;
+    object      k;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#include        "${FOAM_CASE}/system/include/caseDefinition"
+
+// calculate k value at inlet
+kref            #eval{ 1.5*sqr($Uref*$Tu) };
+
+dimensions      [0 2 -2 0 0 0 0];
+internalField   uniform $kref;
+
+boundaryField
+{
+    "(ff_xMin|ff_yMin)"
+    {
+        type            fixedValue;
+        value           $internalField;
+    }
+
+    "(ff_xMax|ff_yMax)"
+    {
+        type            zeroGradient;
+    }
+
+    "ww_.*"
+    {
+        type            zeroGradient;
+    }
+
+    #include            "include/spanwisePatches"
+}
+
+// ************************************************************************* //

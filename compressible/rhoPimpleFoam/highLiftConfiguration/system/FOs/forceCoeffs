@@ -1,0 +1,52 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2012                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      forceCoeffs;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+forceCoeffs
+{
+    // calculate quantities for force coefficients
+    nx                  #eval{ cos(degToRad($AoA)) };
+    ny                  #eval{ sin(degToRad($AoA)) };
+    nym                 #eval{ -sin(degToRad($AoA)) };
+    Aref                #eval{ $Lchord * $Lchord * $Lspan };
+    CofRx               #eval{ ($Xc + $Xr) * $Lchord };
+    CofRy               #eval{ ($Yc + $Yr) * $Lchord };
+    CofRz               #eval{ ($Zc * $Lchord) - (0.5 * $Lspan * $Lchord) };
+
+    type                forceCoeffs;
+    libs                ("libforces.so");
+    writeControl        timeStep;
+    writeInterval       1;
+    log                 false;
+
+    patches     
+    (
+        "ww_.*"
+    );
+
+    rho                 rhoInf;
+    rhoInf              $rhoref;
+
+    magUInf             $Uref;
+    lRef                $Lchord;
+    Aref                $Aref;
+
+    CofR                ($CofRx $CofRy $CofRz);
+    dragDir             ($nx    $ny    0     );
+    liftDir             ($nym   $nx    0     );
+    pitchAxis           (0      0      1     );
+}
+
+// ************************************************************************* //

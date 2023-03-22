@@ -1,0 +1,52 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2012                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      topoSetDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+actions
+(
+    // create face zone for patch "ff_zMin"
+    {
+        name    cyclicMinfaces;
+        type    faceSet;
+        action  new;
+        source  patchToFace;
+        patch   "ff_zMin";
+    }
+    {
+        name    cyclicMin;
+        type    faceZoneSet;
+        action  new;
+        source  setToFaceZone;
+        faceSet cyclicMinfaces;
+    }
+
+    // create face zone for patch "ff_zMax"
+    {
+        name    cyclicMaxfaces;
+        type    faceSet;
+        action  new;
+        source  patchToFace;
+        patch   "ff_zMax";
+    }
+    {
+        name    cyclicMax;
+        type    faceZoneSet;
+        action  new;
+        source  setToFaceZone;
+        faceSet cyclicMaxfaces;
+    }
+);
+
+// ************************************************************************* //

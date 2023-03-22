@@ -1,0 +1,490 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2012                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      snappyHexMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+// ***********************************************************************
+// This test case was created by Upstream CFD GmbH (www.upstream-cfd.com)
+// in the framework of the exaFOAM project (www.exafoam.eu) 
+// (see COPYING for details).
+//
+// You may use this file as you wish but we ask respectfully to credit our
+// effort by referencing Upstream CFD and the exaFOAM project.
+// The files are provided "as is", without warranty of any kind.
+// ***********************************************************************
+
+#include        "${FOAM_CASE}/system/include/caseDefinition"
+
+// Which of the steps to run
+castellatedMesh true;
+snap            true;
+addLayers       true;
+
+// spanwise domain extent
+LspanExt        #eval{$Lspan/2.0};
+
+// x/y/z-location inside domain
+xInDom          #eval{ ($Xc + 1.0e-05) * $Lchord };
+yInDom          #eval{ ($Yc * $Lchord) + ($dimblockMesh * $Lchord / 2.0) };
+zInDom          #eval{ ($Zc * $Lchord) - (($LspanExt/2.0 + 1.0e-05) * $Lchord) };
+
+// calculate refinement levels relative to L0
+LSlat           #calc "static_cast<int>(max((log($LspanExt/$resSlat) / log(2.0)) + 0.1, 0))";
+LSlatUTE        #calc "static_cast<int>(max((log($LspanExt/$resSlatUTE) / log(2.0)) + 0.1, 0))";
+LSlatLTE        #calc "static_cast<int>(max((log($LspanExt/$resSlatLTE) / log(2.0)) + 0.1, 0))";
+LWing           #calc "static_cast<int>(max((log($LspanExt/$resWing) / log(2.0)) + 0.1, 0))";
+LWingP          #calc "static_cast<int>(max((log($LspanExt/$resWingP) / log(2.0)) + 0.1, 0))";
+LWingTE         #calc "static_cast<int>(max((log($LspanExt/$resWingTE) / log(2.0)) + 0.1, 0))";
+LFlap           #calc "static_cast<int>(max((log($LspanExt/$resFlap) / log(2.0)) + 0.1, 0))";
+LFlapP          #calc "static_cast<int>(max((log($LspanExt/$resFlapP) / log(2.0)) + 0.1, 0))";
+LFlapTE         #calc "static_cast<int>(max((log($LspanExt/$resFlapTE) / log(2.0)) + 0.1, 0))";
+LD              #calc "static_cast<int>(max((log($LspanExt/$resD) / log(2.0)) + 0.1, 0))";
+
+LSlat1          #calc "static_cast<int>(max((log($LspanExt/$resSlat1) / log(2.0)) + 0.1, 0))";
+LSlat2          #calc "static_cast<int>(max((log($LspanExt/$resSlat2) / log(2.0)) + 0.1, 0))";
+LFlapCove       #calc "static_cast<int>(max((log($LspanExt/$resFlapCove) / log(2.0)) + 0.1, 0))";
+LFlap1          #calc "static_cast<int>(max((log($LspanExt/$resFlap1) / log(2.0)) + 0.1, 0))";
+LFlap2          #calc "static_cast<int>(max((log($LspanExt/$resFlap2) / log(2.0)) + 0.1, 0))";
+LFlap3          #calc "static_cast<int>(max((log($LspanExt/$resFlap3) / log(2.0)) + 0.1, 0))";
+resSg           #calc "$LspanExt / pow(2.0, $LSlat)";
+dLS             #calc "$resSlat * $Lchord / 10.0";
+
+// Parameters for prism layers:
+// parameter calculation if using firstAndExpansion or firstAndRelativeFinal
+finalLayerTh      0.6;
+N                 #calc "static_cast<int>(log10(scalar($resWingP * $finalLayerTh) / scalar($firstLayerTh)) / log10(scalar($VerStretch)) + 1.0 + 0.5)";
+
+totalLayerThS     #calc "$firstLayerTh*(1.0-pow($VerStretch,$N))/(1.0-$VerStretch)";
+totalWallLevelThS #calc "$totalLayerThS + ($resWingP * $nCellsLevels)"; 
+
+
+// Output some grid information
+#codeStream
+{
+    code
+    #{
+        Info  << endl;
+        Info  << "User-prescribed values:" << endl;
+        Info  << "    - Base resolution:                            res0        = " << $res0 << " x Lc" << endl;
+        Info  << "    - Surface resolution (Slat):                  resSlat     = " << $resSlat << " x Lc" << endl;
+        Info  << "    - Surface resolution (Slat UTE):              resSlatUTE  = " << $resSlatUTE << " x Lc" << endl;
+        Info  << "    - Surface resolution (Slat LTE):              resSlatLTE  = " << $resSlatLTE << " x Lc" << endl;
+        Info  << "    - Surface resolution (Wing):                  resWing     = " << $resWing << " x Lc" << endl;
+        Info  << "    - Surface resolution (Wing pressure side):    resWingP    = " << $resWingP << " x Lc" << endl;
+        Info  << "    - Surface resolution (Wing TE):               resWingTE   = " << $resWingTE << " x Lc" << endl;
+        Info  << "    - Surface resolution (Flap):                  resFlap     = " << $resFlap << " x Lc" << endl;
+        Info  << "    - Surface resolution (Flap pressure side):    resFlapP    = " << $resFlapP << " x Lc" << endl;
+        Info  << "    - Volume  resolution (Slat cove):             resSlatCove = " << $resSlat1 << " x Lc" << endl;
+        Info  << "    - Volume  resolution (Slat 1):                resSlat1    = " << $resSlat1 << " x Lc" << endl;
+        Info  << "    - Volume  resolution (Slat 2):                resSlat2    = " << $resSlat1 << " x Lc" << endl;
+        Info  << "    - Volume  resolution (Slat 3):                resSlat3    = " << $resSlat2 << " x Lc" << endl;
+        Info  << "    - Volume  resolution (Flap cove):             resFlapCove = " << $resFlapCove << " x Lc" << endl;
+        Info  << "    - Volume  resolution (Flap 1):                resFlap1    = " << $resFlap1 << " x Lc" << endl;
+        Info  << "    - Volume  resolution (Flap 2):                resFlap2    = " << $resFlap2 << " x Lc" << endl;
+        Info  << "    - Volume  resolution (Flap 3):                resFlap3    = " << $resFlap3 << " x Lc" << endl;
+        Info  << "Computed grid parameters (all relative to c):" << endl;
+        Info  << "    - Surface refinement level (wing):            LWing       = " << $LWing << endl;
+        Info  << "    - Actual surface resolution:                  resSg       = " << $resSg << " x Lc" << endl;
+        Info  << "    - Number of prism layers:                     N           = " << $N << endl;
+        Info  << "    - Cell-to-cell ratio:                         k           = " << $VerStretch << endl;
+        Info  << "    - Final layer thickness:                      d_th        = " << $finalLayerTh << endl;
+        Info  << "    - First layer thickness:                      y_th        = " << $firstLayerTh << endl;
+        Info  << "    - Total layer thickness (surface):            t_th        = " << $totalLayerThS << endl;
+        Info  << "    - Total wall level thickness (surface):       w_th        = " << $totalWallLevelThS << endl;
+        Info  << endl;
+    #};
+};
+
+// Geometry. Definition of all surfaces. All surfaces are of class
+// searchableSurface.
+// Surfaces are used
+// - to specify refinement for any mesh cell intersecting it
+// - to specify refinement for any mesh cell inside/outside/near
+// - to 'snap' the mesh boundary to the surface
+geometry
+{
+    profile.stl
+    {
+        type triSurfaceMesh;
+	    regions
+	    {
+            ww_slat_suctionSide
+            {
+    	        name ww_slat_suctionSide;
+            }
+            ww_slat_cove
+            {
+    	        name ww_slat_cove;
+            }
+            ww_slat_upperTE
+            {
+                name ww_slat_upperTE;
+            }
+            ww_wing_suctionSide
+            {
+                name ww_wing_suctionSide;
+            }
+            ww_wing_pressureSide
+            {
+                name ww_wing_pressureSide;
+            }
+            ww_wing_cove
+            {
+                name ww_wing_cove;
+            }
+            ww_wing_TE
+            {
+                name ww_wing_TE;
+            }
+            ww_flap_suctionSide
+            {
+                name ww_flap_suctionSide;
+            }
+            ww_flap_pressureSide
+            {
+                name ww_flap_pressureSide;
+            }
+            ww_flap_te
+            {
+                name ww_flap_te;
+            }
+        }
+    }
+
+    // refinement boxes for farfield
+    refBoxD
+    {
+        type            searchableBox;
+        min             ( #eval{ ($Xc - 0.5) * $Lchord } #eval{ ($Yc - 0.5) * $Lchord } #eval{ ($Zc - $dimblockMesh) * $Lchord } );
+        max             ( #eval{ ($Xc + 5.0) * $Lchord } #eval{ ($Yc + 1.0) * $Lchord } #eval{ ($Zc + $dimblockMesh) * $Lchord } );
+    }
+    
+    // refinement cylinders for tricky edges
+    refCylWingTE
+    {
+        type            searchableCylinder;
+        point1          (#eval{ ($Xc + 0.873998556671) * $Lchord } #eval{ ($Yc + 0.0307936491307) * $Lchord } #eval{ ($Zc - $dimblockMesh) * $Lchord });
+        point2          (#eval{ ($Xc + 0.873998556671) * $Lchord } #eval{ ($Yc + 0.0307936491307) * $Lchord } #eval{ ($Zc + $dimblockMesh) * $Lchord });
+        radius          #eval{ $distWingTE * $Lchord };
+    }
+    
+    refCylSlatLowerTE
+    {
+        type            searchableCylinder;
+        point1          (#eval{ ($Xc - 0.0267105886998) * $Lchord } #eval{ ($Yc - 0.108774130064) * $Lchord } #eval{ ($Zc - $dimblockMesh) * $Lchord });
+        point2          (#eval{ ($Xc - 0.0267105886998) * $Lchord } #eval{ ($Yc - 0.108774130064) * $Lchord } #eval{ ($Zc + $dimblockMesh) * $Lchord });
+        radius          #eval{ $distSlatLTE * $Lchord };
+    }
+
+    // refinement regions for expected turbulent regions
+    refBox_slatCove.stl
+    {
+        type triSurfaceMesh;
+    }
+    refBox_slat1.stl
+    {
+        type triSurfaceMesh;
+    }
+    refBox_slat2.stl
+    {
+        type triSurfaceMesh;
+    }
+    refBox_slat3.stl
+    {
+        type triSurfaceMesh;
+    }
+    refBox_flapCove.stl
+    {
+        type triSurfaceMesh;
+    }
+    refBox_flap1.stl
+    {
+        type triSurfaceMesh;
+    }
+    refBox_flap2.stl
+    {
+        type triSurfaceMesh;
+    }
+    refBox_flap3.stl
+    {
+        type triSurfaceMesh;
+    }
+};
+
+// Settings for the castellatedMesh generation.
+castellatedMeshControls
+{
+    maxLocalCells        10000000;
+    maxGlobalCells       200000000;
+    minRefinementCells   10;
+    maxLoadUnbalance     0.10;
+    nCellsBetweenLevels  $nCellsLevels;
+    features
+    (
+        {
+            file "profile.eMesh";
+            levels      (($dLS $LWing));
+        }
+    );
+    refinementSurfaces
+    {
+        profile.stl
+        {   
+            // Surface-wise min and max refinement level
+            level (0 0);
+
+            regions
+            {
+                ww_slat_suctionSide
+                {
+                    level ($LSlat $LSlat);
+                }
+                ww_slat_cove
+                {
+                    level ($LSlat $LSlat);
+                }
+                ww_slat_upperTE
+                {
+                    level ($LSlatUTE $LSlatUTE);
+                }
+                ww_wing_suctionSide
+                {
+                    level ($LWing $LWing);
+                }
+                ww_wing_pressureSide
+                {
+                    level ($LWingP $LWingP);
+                }
+                ww_wing_cove
+                {
+                    level ($LWing $LWing);
+                }
+                ww_wing_TE
+                {
+                    level ($LWingTE $LWingTE);
+                }
+                ww_flap_suctionSide
+                {
+                    level ($LFlap $LFlap);
+                }
+                ww_flap_pressureSide
+                {
+                    level ($LFlapP $LFlapP);
+                }
+                ww_flap_te
+                {
+                    level ($LFlapTE $LFlapTE);
+                }
+            } 
+        }
+    }
+    resolveFeatureAngle 30;
+    planarAngle 30;
+
+    refinementRegions
+    {
+        refBoxD
+        {
+            mode   inside;
+            levels ((1E15 #eval{$LD}));
+        }
+        
+        refCylWingTE
+        {
+            mode   inside;
+            levels ((1E15 #eval{$LWingTE}));
+        }
+
+        refCylSlatLowerTE
+        {
+            mode   inside;
+            levels ((1E15 #eval{$LSlatLTE}));
+        }
+
+        // refinement regions for expected turbulent regions
+        refBox_slatCove.stl
+        {
+            mode   inside;
+            levels ((1E15 $LSlat1));
+        }
+        refBox_slat1.stl
+        {
+            mode   inside;
+            levels ((1E15 $LSlat1));
+        }
+        refBox_slat2.stl
+        {
+            mode   inside;
+            levels ((1E15 $LSlat1));
+        }
+        refBox_slat3.stl
+        {
+            mode   inside;
+            levels ((1E15 $LSlat2));
+        }
+        refBox_flapCove.stl
+        {
+            mode   inside;
+            levels ((1E15 $LFlapCove));
+        }
+        refBox_flap1.stl
+        {
+            mode   inside;
+            levels ((1E15 $LFlap1));
+        }
+        refBox_flap2.stl
+        {
+            mode   inside;
+            levels ((1E15 $LFlap2));
+        }
+        refBox_flap3.stl
+        {
+            mode   inside;
+            levels ((1E15 $LFlap3));
+        }
+    }
+
+    locationInMesh             ($xInDom $yInDom $zInDom);
+    allowFreeStandingZoneFaces false;
+}
+
+
+// Settings for the snapping.
+snapControls
+{
+    nSmoothPatch            3;
+    tolerance               1.0;
+    nSolveIter              30;
+    nRelaxIter              5;
+    nFeatureSnapIter        10;
+    implicitFeatureSnap     false;
+    explicitFeatureSnap     true;
+    multiRegionFeatureSnap  true;
+}
+
+
+// Settings for the layer addition.
+addLayersControls
+{
+    relativeSizes               false;
+    thicknessModel              firstAndRelativeFinal;
+    //thicknessModel              firstAndExpansion;    
+    layers
+    {
+        ww_slat_suctionSide
+        {
+            nSurfaceLayers $N;
+        }
+        ww_slat_cove
+        {
+            nSurfaceLayers $N;
+        }
+        ww_slat_upperTE
+        {
+            nSurfaceLayers $N;
+        }
+        ww_wing_suctionSide
+        {
+            nSurfaceLayers $N;
+        }
+        ww_wing_pressureSide
+        {
+            nSurfaceLayers $N;
+        }
+        ww_wing_cove
+        {
+            nSurfaceLayers $N;
+        }
+        ww_wing_TE
+        {
+            nSurfaceLayers $N;
+        }
+        ww_flap_suctionSide
+        {
+            nSurfaceLayers $N;
+        }
+        ww_flap_pressureSide
+        {
+            nSurfaceLayers $N;
+        }
+        ww_flap_te
+        {
+            nSurfaceLayers $N;
+        }
+    }
+    
+    finalLayerThickness        $finalLayerTh;
+    firstLayerThickness        $firstLayerTh;
+    expansionRatio             $VerStretch;
+    minThickness               1.0E-10;
+    nGrow                      3;
+    featureAngle               180;
+    slipFeatureAngle           30;
+    nSmoothSurfaceNormals      1;
+    nSmoothNormals             3;
+    nSmoothThickness           30;
+    nSmoothDisplacement        90;
+    maxFaceThicknessRatio      0.5;
+    maxThicknessToMedialRatio  0.3;
+    minMedialAxisAngle         130;
+    nMedialAxisIter            10;
+    slipFeatureAngle           30;
+    nRelaxIter                 3;
+    nBufferCellsNoExtrude      0;
+    nLayerIter                 50;
+    nRelaxedIter               0;
+
+    meshShrinker        displacementMotionSolver;
+    solver              displacementLaplacian;
+    displacementLaplacianCoeffs
+    {
+        //- Increase diffusivity close to all walls
+        diffusivity         inverseVolume;
+    }
+
+    layerTerminationAngle      -180;
+//    detectExtrusionIsland      true;
+}
+
+// Generic mesh quality settings. At any undoable phase these determine
+// where to undo.
+meshQualityControls
+{
+
+    // Specify mesh quality constraints in separate dictionary so can
+    // be reused (e.g. checkMesh -meshQuality)
+    #include                   "meshQualityDict"
+    nSmoothScale               4;
+    minDeterminant             1e-8;
+    errorReduction             0.75;
+}
+
+// Advanced
+// Write flags
+writeFlags
+(
+    scalarLevels
+    layerSets
+    layerFields     // write volScalarField for layer coverage
+);
+
+// Merge tolerance. Is fraction of overall bounding box of initial mesh.
+// Note: the write tolerance needs to be higher than this.
+mergeTolerance 1e-6;
+
+// Optional: avoid patch-face merging. Allows mesh to be used for
+//           refinement/unrefinement
+mergePatchFaces off; // default on
+
+// ************************************************************************* //
