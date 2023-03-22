@@ -1,0 +1,91 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2106                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      fvSolution;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+solvers
+{
+    p
+    {
+        solver          PCG;
+        preconditioner
+        {
+            preconditioner GAMG;
+	    nVcycles       2;
+            smoother       DICGaussSeidel;
+            coarsestLevelCorr
+            {
+                solver          PCG;
+                preconditioner  DIC;
+                minIter         154;
+                maxIter         154;
+            }
+            cacheAgglomeration         on;
+            nPreSweeps                 1;
+            preSweepsLevelMultiplier   1;
+            maxPreSweeps               2;
+            nPostSweeps                2;
+            postSweepsLevelMultiplier  1;
+            maxPostSweeps              2;
+            nFinestSweeps              2;
+            interpolateCorrection      off;
+            scaleCorrection            on;
+            directSolveCoarsest        off;
+            agglomerator               faceAreaPair;
+            mergeLevels                1;
+        }
+        minIter         1;
+        maxIter         1;
+    };
+
+    pFinal
+    {
+        $p;
+    }
+
+    Phi
+    {
+        $p
+    };
+
+    U
+    {
+        solver          smoothSolver;
+        smoother        symGaussSeidel;
+        minIter         2;
+        maxIter         2;
+    }
+
+    UFinal
+    {
+        $U;
+    }
+}
+
+PIMPLE
+{
+    nOuterCorrectors         1;
+    nCorrectors              2;
+    nNonOrthogonalCorrectors 0;
+    pRefCell                 0;
+    pRefValue                0;
+}
+
+potentialFlow
+{
+    nNonOrthogonalCorrectors 10;
+}
+
+
+// ************************************************************************* //
