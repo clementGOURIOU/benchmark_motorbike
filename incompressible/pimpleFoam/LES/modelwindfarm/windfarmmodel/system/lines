@@ -1,0 +1,53 @@
+lines
+{
+  enabled        true;
+  type           sets;
+  libs           ("libsampling.so");
+  interpolationScheme cellPoint;
+  setFormat      raw;
+
+  writeControl   adjustableRunTime;
+  writeInterval  5;
+  fields         (U UMean UPrime2Mean);
+
+  setConfig
+  {
+     type uniform;
+     axis distance;
+     nPoints 100;
+  }
+
+  sets
+  (
+     line_initial
+     {
+         $setConfig;
+         start (0.150 0.9005 0   );
+         end   (0.150 0.9005 0.30);
+     }
+     line_1D
+     {
+         $setConfig;
+         start (3.15 0.9005 0   );
+         end   (3.15 0.9005 0.30);
+     }
+     line_2D
+     {
+         $setConfig;
+         start (3.30 0.9005 0   );
+         end   (3.30 0.9005 0.30);
+     }
+     line_3D
+     {
+         $setConfig;
+         start (3.45 0.9005 0   );
+         end   (3.45 0.9005 0.30);
+     }
+     line_4D
+     {
+         $setConfig;
+         start (3.60 0.9005 0   );
+         end   (3.60 0.9005 0.30);
+     }
+  );
+}

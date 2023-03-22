@@ -1,0 +1,45 @@
+#!/bin/sh
+
+# Require gnuplot
+command -v gnuplot >/dev/null || {
+    echo "FOAM FATAL ERROR: gnuplot not found - skipping graph creation" 1>&2
+    exit 1
+}
+
+pPFolder="../postProcessing/lines/10"
+
+#- U
+for i in 1D 2D 3D 4D
+do
+gnuplot<<EOF
+    set terminal pngcairo
+    set output "Line_U_${i}_Row1.png"
+    set title  "Wind Farm U ${i} Row 1" font "Helvetica,24"
+    set xlabel "U/U_{hub} [-]" font "Helvetica,24"
+    set ylabel "height/D [-]" font "Helvetica,24"
+    set key right top
+    set xrange [0.25:1.25]
+    plot \
+        "data/Data_U_${i}_Row1.txt" u 1:(\$2/0.15) t "Wu 2013" with points lt 1 pt 6 ps 1.5,\
+        "$pPFolder/line_${i}_U_UMean_UPrime2Mean.xy" u (\$5/2.6):(\$1/0.15) with lines title "simulation" lt 1
+EOF
+done
+
+#- TI
+for i in 1D 2D 3D 4D
+do
+gnuplot<<EOF
+    set terminal pngcairo
+    set output "Line_TI_${i}_Row1.png"
+    set title  "Wind Farm TI ${i} Row 1" font "Helvetica,24"
+    set xlabel "U_{rms}/U_{hub} [-]" font "Helvetica,24"
+    set ylabel "height/D [-]" font "Helvetica,24"
+    set key right top
+    set xrange [0:0.2]
+    plot \
+        "data/Data_TI_${i}_Row1.txt" u 1:(\$2/0.15) t "Wu 2013" with points lt 1 pt 6 ps 1.5,\
+        "$pPFolder/line_${i}_U_UMean_UPrime2Mean.xy" u (sqrt(\$8)/2.6):(\$1/0.15) with lines title "simulation" lt 1
+EOF
+done
+#------------------------------------------------------------------------------
+
