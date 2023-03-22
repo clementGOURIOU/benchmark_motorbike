@@ -1,0 +1,64 @@
+#
+# Automatic post processing by Hakan Nilsson, Maryse Page and Martin Beaudoin
+#
+# 1.0.1 2008-03-14 Maryse Page, Hydro-Quebec
+#     Correction for the k experimental values:
+#     ($ARG2/100) instead of ($ARG2/U0/U0)
+#
+# Modified for the compatibility with gnuplot 5.2 by
+#     Sergey Lesnik, Wikki GmbH, Germany, 2021
+#
+# ARG0: 1st argument, position
+# ARG1: 2st argument, angle of diffuser in degrees
+# ARG2: 3rd argument, radius at cross-section
+# ARG3: 4th argument, case name of solution 1
+# ARG4: 5th argument, time of sample for solution 1
+#
+
+pause 0 sprintf("arg0 : %s", ARG0)
+pause 0 sprintf("arg1 : %s", ARG1)
+pause 0 sprintf("arg2 : %s", ARG2)
+pause 0 sprintf("arg3 : %s", ARG3)
+pause 0 sprintf("arg4 : %s", ARG4)
+pause 0 sprintf("arg5 : %s", ARG5)
+
+angle = ARG2*3.141592654/180.  # angle of diffuser in radians
+U0    = 11.6                 # axial mean velocity [m/s]
+
+set output sprintf('k%s.png', ARG1)
+set terminal png medium
+#set output 'k$0.eps'
+#set term postscript color  # color
+#set term postscript        # black and white
+#Enhanced Metafile Format, for vectorized MS Win32 plots:
+#set terminal emf monochrome dashed 'Times' 20
+#set output 'k$0.emf'
+
+#
+# ERCOFTAC TESTCASE 3: Swirling boundary layer in conical diffuser
+#
+# k/(U0^2) as a function of y (m), at corresponding sections
+#
+
+set autoscale
+set noarrow
+set nolabel
+set nogrid
+set grid
+
+set xlabel 'y (mm)'
+set ylabel 'k/(U_0^2)'
+set title sprintf("Section z = %smm", ARG1)
+set xrange [0:220]
+set xtics 0,20,220
+set yrange [0:0.020]
+set ytics 0,0.0025,0.020
+
+#
+plot \
+     sprintf("../../measurements/test60/k%s.dat", ARG1) \
+     using (column(1)):(column(2)/100) title "Measured k" \
+     ,\
+     sprintf("./sampleDict/%s/Comp%s_Y_k_p.xy", ARG5, ARG1) \
+     using ((ARG3-column(1))*1000/cos(angle)):(column(2)/U0/U0) \
+     title sprintf("%s, k", ARG4) with lines linewidth 2 \

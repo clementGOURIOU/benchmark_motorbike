@@ -1,0 +1,22 @@
+#!/bin/bash
+
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+#We stop this script when we encounter a problem
+trap "exit -1" ERR
+
+export caseName=`basename $PWD`
+
+echo "$caseName: Creating file blockMeshDict using m4"
+pushd system/ >& /dev/null
+m4 -P blockMeshDict.m4 > blockMeshDict
+popd >& /dev/null
+
+runApplication blockMesh
+
+echo "$caseName: Copying time directory 0_orig to 0"
+cp -r 0_orig 0
+
+runApplication addSwirlAndRotation
+
+runApplication decomposePar
