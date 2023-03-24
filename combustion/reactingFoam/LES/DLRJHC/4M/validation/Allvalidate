@@ -1,0 +1,71 @@
+#!/bin/sh
+
+# Require gnuplot
+command -v gnuplot >/dev/null || {
+    echo "FOAM FATAL ERROR: gnuplot not found - skipping graph creation" 1>&2
+    exit 1
+}
+
+time="0.005"
+mesh="1M"
+
+gnuplot<<EOF
+    set terminal pngcairo 
+    set output "lineA.png"
+    set xlabel "Position [m]" font "Times,20"
+    set ylabel "Temperature [K]" font "Times,20"
+    set key right bottom font "Times,20"
+    set xrange [0:0.03]
+    set yrange [350:2200]
+    set ytic 200 font "Times,16"
+    set xtic font "Times,16"
+    plot \
+        "../postProcessing/validationLines/$time/lineA_CH3_CH4_CO_CO2_H2_O2_OH_Qdot_T_p_U.xy" u 1:10 t "present analysis" with lines lt -1,\
+        "$mesh/lineA_CH3_CH4_CO_CO2_H2_O2_OH_Qdot_T_p_U.xy" u 1:10 t "validation" with points lt -1 pt 6 ps 1.5
+EOF
+
+gnuplot<<EOF
+    set terminal pngcairo 
+    set output "lineB.png"
+    set xlabel "Position [m]" font "Times,20"
+    set ylabel "Temperature [K]" font "Times,20"
+    set key right bottom font "Times,20"
+    set xrange [0:0.03]
+    set yrange [350:2200]
+    set ytic 200 font "Times,16"
+    set xtic font "Times,16"
+    plot \
+        "../postProcessing/validationLines/$time/lineB_CH3_CH4_CO_CO2_H2_O2_OH_Qdot_T_p_U.xy" u 1:10 t "present analysis" with lines lt -1 ,\
+        "$mesh/lineB_CH3_CH4_CO_CO2_H2_O2_OH_Qdot_T_p_U.xy" u 1:10 t "validation" with points lt -1 pt 6 ps 1.5
+EOF
+
+gnuplot<<EOF
+    set terminal pngcairo 
+    set output "lineC.png"
+    set xlabel "Position [m]" font "Times,20"
+    set ylabel "Temperature [K]" font "Times,20"
+    set key right bottom font "Times,20"
+    set xrange [0:0.03]
+    set yrange [350:2200]
+    set ytic 200 font "Times,16"
+    set xtic font "Times,16"
+    plot \
+        "../postProcessing/validationLines/$time/lineC_CH3_CH4_CO_CO2_H2_O2_OH_Qdot_T_p_U.xy" u 1:10 t "present analysis" with lines lt -1,\
+        "$mesh/lineC_CH3_CH4_CO_CO2_H2_O2_OH_Qdot_T_p_U.xy" u 1:10 t "validation" with points lt -1 pt 6 ps 1.5
+EOF
+
+gnuplot<<EOF
+    set terminal pngcairo 
+    set output "lineD.png"
+    set xlabel "Position [m]" font "Times,20"
+    set ylabel "Temperature [K]" font "Times,20"
+    set key right bottom font "Times,20"
+    set xrange [0:0.03]
+    set yrange [350:2200]
+    set ytic 200 font "Times,16"
+    set xtic font "Times,16"
+    plot \
+        "../postProcessing/validationLines/$time/lineD_CH3_CH4_CO_CO2_H2_O2_OH_Qdot_T_p_U.xy" u 1:10 t "present analysis" with lines lt -1,\
+        "$mesh/lineD_CH3_CH4_CO_CO2_H2_O2_OH_Qdot_T_p_U.xy" u 1:10 t "validation" with points lt -1 pt 6 ps 1.5
+EOF
+

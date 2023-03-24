@@ -1,0 +1,59 @@
+#!/bin/sh
+
+set -e
+
+# user param set 
+logFile="log.rhoPimpleFoam"
+reference="/home/fede/OpenFOAM/fede-7/run/myRun/compressible/rhoPimpleFoam/forcedPlume/run"
+checkKey="Version: "
+
+local="logs"
+
+[ -f $logFile ] || "file $logFile"
+[ -d $local ] || foamLog $logFile
+
+[ -d $reference ] || " directory $reference "
+[ -f "$reference/$logFile" ] || "reference file $logFile in $reference"
+[ -d "$reference/logs" ] || (cd $reference; foamLog $logFile )
+
+
+nCores=$(grep "nProcs " log.rhoPimpleFoam | sed 's/[^0-9]*//g')
+nCells=$(grep nCells log.blockMesh | sed 's/[^0-9]*//g')
+nCoresRef=$(grep "nProcs " "$reference/log.rhoPimpleFoam" | sed 's/[^0-9]*//g')
+nCellsRef=$(grep nCells "$reference/log.blockMesh" | sed 's/[^0-9]*//g')
+# nSteps=$(grep "" -c logs/Time_0)
+
+localKey=$(grep "Version: " log.rhoPimpleFoam | sed 's/[^0-9]*//g')
+refKey=$(grep "Version: " $reference/log.rhoPimpleFoam | sed 's/[^0-9]*//g')
+
+echo "$checkKey $localKey "
+echo "nCores Tot: $nCores"
+echo "nCells Tot: $nCells"
+# echo "nSteps: $nSteps"
+echo " "
+echo "reference $checkKey $refKey "
+echo "reference nCores Tot: $nCoresRef"
+echo "reference nCells Tot: $nCellsRef"
+
+# Acoustic Probes
+gnuplot -p << eof
+
+# unset xtics
+# set ytics 2e3  scale 0.5 font ",6"
+# unset title
+# set format y "%.2e" 
+# set border 2
+# set key left top
+# set nokey
+
+set title "Computational Speed" font ",12"
+# set xtics nomirror
+# set xtics scale 1 font ",6"  
+
+set xlabel "Simulation Time (s)" font ",12"
+set ylabel "nCells/(s*core*iter)" font ",12" offset 1,0,0
+plot '$local/executionTime_0' using 1:((\$0/\$2)*$nCells/$nCores) with linespoints lt 3 pi -15 title "$checkKey $localKey", '$reference/logs/executionTime_0' using 1:((\$0/\$2)*$nCellsRef/$nCoresRef) with lines lt 3 title "$checkKey $refKey"
+
+
+eof
+

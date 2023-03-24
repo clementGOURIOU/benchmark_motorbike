@@ -1,0 +1,22 @@
+#!/bin/bash
+cd "${0%/*}" || exit                                # Run from this directory
+. ${WM_PROJECT_DIR:?}/bin/tools/RunFunctions        # Tutorial run functions
+#------------------------------------------------------------------------------
+
+# We stop this script when we encounter a problem
+trap "exit -1" ERR
+
+runParallel renumberMesh -overwrite
+
+echo ""
+echo "HINT: If you want to set or map fields, uncomment one of the"
+echo "  corresponding commands in the Allrun script. Make sure to use a linear"
+echo "  ramp from pure Euler to Crank-Nicolson for the time discretization"
+echo "  scheme in fvSchemes due to stability considerations."
+echo ""
+
+# runParallel setFields
+# runParallel mapFieldsPar -parallel -sourceTime latestTime \
+#    ../sourceCase
+
+runParallel XiFoam

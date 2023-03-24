@@ -1,0 +1,7 @@
+fieldValues
+(
+    volScalarFieldValue b $bInlets
+    volScalarFieldValue ft $ftInletsPilots
+    volScalarFieldValue T $TInletsPilots
+    volVectorFieldValue U $UAngledPilots
+);

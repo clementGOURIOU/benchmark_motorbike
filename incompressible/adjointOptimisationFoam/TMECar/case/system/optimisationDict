@@ -1,0 +1,164 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2206                                  |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+FoamFile
+{
+    version         2;
+    format          ascii;
+    class           dictionary;
+    object          optimisationDict;
+}
+
+optimisationManager unsteadyOptimisation;
+
+primalSolvers
+{
+    p1
+    {
+        active          true;
+        type            incompressible;
+        solver          pimple;
+        useSolverNameForFields false;
+        writeFields     false;
+        solutionControls
+        {
+            nOuterCorrectors 1;
+            nCorrectors     6;
+            nNonOrthogonalCorrectors 1;
+            pRefCell        0;
+            pRefValue       0;
+            turbOnFinalIterOnly no;
+            finalOnLastPimpleIterOnly yes;
+            consistent      true;
+            residualControl
+            {
+                "U.*"
+                {
+                    tolerance       1e-07;
+                    relTol          0;
+                }
+                "p.*"
+                {
+                    tolerance       1e-07;
+                    relTol          0;
+                }
+                "nuTilda.*"
+                {
+                    tolerance       1e-07;
+                    relTol          0;
+                }
+            }
+        }
+        storage
+        {
+            type            compressedFullStorage;
+            storageParameters
+            {
+                algorithm       short;
+            }
+        }
+    }
+}
+
+adjointManagers
+{
+    am1
+    {
+        primalSolver    p1;
+        adjointSolvers
+        {
+            as1
+            {
+                active          true;
+                type            incompressible;
+                solver          adjointPimple;
+                useSolverNameForFields false;
+                computeSensitivities true;
+                writeFields     false;
+                objectives
+                {
+                    type            incompressible;
+                    objectiveNames
+                    {
+                        drag
+                        {
+                            weight          1;
+                            type            force;
+                            direction       ( 1 0 0 );
+                            Aref            1.18224;
+                            rhoInf          1.205;
+                            UInf            30;
+                            patches         ( "car.*" "wheels.*" );
+                            integrationStartTime 0.0003;
+                            integrationEndTime 0.0001;
+                        }
+                    }
+                }
+                ATCModel
+                {
+                    ATCModel        standard;
+                    extraConvection 0;
+                    nSmooth         12;
+                    zeroATCPatchTypes ( wall patch symmetry );
+                    maskType        pointCells;
+                }
+                solutionControls
+                {
+                    printMaxMags    true;
+                    nOuterCorrectors 1;
+                    nCorrectors     6;
+                    nNonOrthogonalCorrectors 1;
+                    pRefCell        0;
+                    pRefValue       0;
+                    turbOnFinalIterOnly no;
+                    finalOnLastPimpleIterOnly yes;
+                    consistent      true;
+                    residualControl
+                    {
+                        "Ua.*"
+                        {
+                            tolerance       1e-06;
+                            relTol          0;
+                        }
+                        "pa.*"
+                        {
+                            tolerance       1e-05;
+                            relTol          0;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+optimisation
+{
+    optimisationType
+    {
+        type            shapeOptimisation;
+        writeEachMesh   true;
+    }
+    sensitivities
+    {
+        type            volumetricBSplines;
+        patches         ( "car.*" );
+    }
+    updateMethod
+    {
+        method          conjugateGradient;
+    }
+    meshMovement
+    {
+        type            volumetricBSplines;
+        maxAllowedDisplacement 0.01;
+    }
+}
+
+
+// ************************************************************************* //

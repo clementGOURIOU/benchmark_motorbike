@@ -1,0 +1,25 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # Run from this directory
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+outFile="probeLocations.csv"
+outDir="postProcessing"
+
+output="$outDir/$outFile"
+[ -d $outDir ] ||  mkdir  $outDir
+[ -f $output ] && rm $output
+
+# probe location csv file for paraview
+foamDictionary system/sampleDict # avoid ouput in probe file 
+foamDictionary system/sampleDict -entry "centerlineProbes.probeLocations" -value > $output
+foamDictionary system/sampleDict -entry "shearlayerProbes.probeLocations" -value >> $output
+foamDictionary system/sampleDict -entry "acousticProbes.probeLocations" -value >> $output
+sed -i '/Using/d' $output
+sed -i '1i x,y,z' $output
+sed -i 's/( ( /\n/g; s/ ) )/\n/g; s/ ) ( /\n/g' $output
+sed -i 's/ /,/g' $output
+grep "\S" $output > tmp
+mv tmp $output
+#------------------------------------------------------------------------------

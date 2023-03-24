@@ -1,0 +1,6 @@
+    extractionMethod        extractFromSurface;
+    extractFromSurfaceCoeffs
+    {
+        includedAngle   179;
+    }
+    writeObj        false;

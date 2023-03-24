@@ -1,0 +1,28 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2.0.1                                 |
+|   \\  /    A nd           | Web:      www.OpenFOAM.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      blockMeshDict;
+}
+// ************************************************************************* //
+#include "myDict"
+
+/// Derived param
+
+radius #calc "0.5*$jetDiameter";
+
+probeDistanceZ1 #calc "$jetDiameter*$probeDistanceZ1_D";
+probeDistanceZ2 #calc "$jetDiameter*$probeDistanceZ2_D";
+probeDistanceX #calc "$jetDiameter*$probeDistanceX_D";
+
+Re #calc "$jetDiameter*364.1/1.8e-5";
+// Mach # calc 
+// ************************************************************************* //

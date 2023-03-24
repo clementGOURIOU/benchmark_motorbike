@@ -1,0 +1,61 @@
+// --------------------------------*- C++ -*-------------------------------- //
+//
+// File
+//     OpenFOAM coded function object
+//
+// Description
+//     Write relative rotational speed
+//
+// ------------------------------------------------------------------------- //
+
+calcTKE
+{
+    type coded;
+    name calcTKE;
+    libs ( utilityFunctionObjects );
+
+    // Additional context for code execute/write
+    codeContext
+    {
+        verbose true;
+    }
+    
+    codeOptions
+    #{
+        -I$(LIB_SRC)/TurbulenceModels/turbulenceModels/lnInclude
+    #};
+    
+    codeInclude
+    #{
+        #include "turbulenceModel.H"
+    #};
+    
+    codeLibs
+    #{
+        -lturbulenceModels \
+        -lincompressibleTurbulenceModels
+    #};
+
+    codeData
+    #{
+        // Pointer to the k Field which lives at run time and keeps the field
+        // registered in the database, so that averaging function object is
+        // able to find it.
+        autoPtr<volScalarField> kSGSPtr_;
+    #};
+        
+    codeExecute
+    #{
+        // Get the turbulence model from the registry.
+        // Note that turbulenceProperties can be cast to turbulenceModel since
+        // the class enherits from the IOdictionary.
+        const turbulenceModel& tm =
+            mesh().lookupObject<turbulenceModel>("turbulenceProperties");
+
+        // Evaluate (SGS) TKE and set the autoPtr to point to the field.
+        kSGSPtr_.set(tm.k().ptr());
+    #};
+}
+
+
+// ************************************************************************* //

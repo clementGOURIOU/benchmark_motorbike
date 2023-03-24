@@ -1,0 +1,29 @@
+#!/bin/bash
+cd "${0%/*}" || exit                                # Run from this directory
+. ${WM_PROJECT_DIR:?}/bin/tools/RunFunctions        # Tutorial run functions
+#------------------------------------------------------------------------------
+
+export caseName=`basename $PWD`
+
+# We stop this script when we encounter a problem
+trap "exit -1" ERR
+
+if [ -d 0 ]; then
+    echo "$caseName: Time directory 0 exists and will be used for a restart."
+else
+    echo "$caseName: ERROR No time directory 0 found."
+    echo "  Please download and unpack restart fields into directory 0."
+    echo "  See README for further details."
+    echo "  Aborting."
+    exit 1
+fi
+
+if [ ! -d "constant/polyMesh" ]; then
+    echo "$caseName: ERROR No directory constant/polyMesh found."
+    echo "  Please download and unpack the mesh."
+    echo "  See README for further details."
+    echo "  Aborting."
+    exit 1
+fi
+
+runApplication decomposePar

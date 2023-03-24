@@ -1,0 +1,32 @@
+#!/bin/bash
+#
+
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+#We stop this script when we encounter a problem
+trap "exit -1" ERR
+
+runApplication reconstructPar -latestTime
+
+echo "$caseName: Postprocessing"
+cd postProcessing
+
+# Find latest time directory
+latestAvailTimeDir=`foamListTimes -case .. | tail -1`
+
+echo "Analysing results for time: $latestAvailTimeDir"
+
+# Run sample
+runApplication postProcess -func sampleDict -case .. -latestTime
+
+# Adjust compareAll.gplt: replace "Computed" "??" by "Computed" "$latestAvailTimeDir"
+sed -i "s/\"Computed\".*$/\"Computed\" \"$latestAvailTimeDir\"/g" compareAll.gplt
+
+# Run gnuplot to generate the comparison charts
+runApplication gnuplot compareAll.gplt; mv log.gnuplot log.gnuplotCompareAll
+
+# Run foamLog
+runApplication foamLog ../log.simpleFoam
+
+# Run gnuplot for the residuals
+runApplication gnuplot plotResiduals.gplt; mv log.gnuplot log.gnuplotPlotResiduals

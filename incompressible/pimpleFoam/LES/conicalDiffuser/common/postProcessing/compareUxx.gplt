@@ -1,0 +1,83 @@
+#
+# Automatic post processing by Hakan Nilsson, Maryse Page and Martin Beaudoin
+#
+# 1.0.1 2008-03-14 Maryse Page, Hydro-Quebec
+#     Correction for the k experimental values:
+#     ($ARG2/100) instead of ($ARG2/U0/U0)
+#
+# Modified for the compatibility with gnuplot 5.2 by
+#     Sergey Lesnik, Wikki GmbH, Germany, 2021
+#
+# ARG0: function name
+# ARG1: position
+# ARG2: angle of diffuser in degrees
+# ARG3: radius at cross-section
+# ARG4: case name of solution 1
+# ARG5: time of sample for solution 1
+# ARG6: path to the folder with the measurements data
+
+pause 0 sprintf("ARG0 : %s", ARG0)
+pause 0 sprintf("ARG1 : %s", ARG1)
+pause 0 sprintf("ARG2 : %s", ARG2)
+pause 0 sprintf("ARG3 : %s", ARG3)
+pause 0 sprintf("ARG4 : %s", ARG4)
+pause 0 sprintf("ARG5 : %s", ARG5)
+pause 0 sprintf("ARG6 : %s", ARG6)
+
+angle = ARG2*3.141592654/180.  # angle of diffuser in radians
+U0    = 11.6                 # axial mean velocity [m/s]
+dR    = ARG1*cos(angle) > 0 ? ARG1*cos(angle) : 0
+print("dR = ", dR)
+R     = 130 + dR
+
+set output sprintf('uu%s.png', ARG1)
+set terminal png medium
+#set output 'k$0.eps'
+#set term postscript color  # color
+#set term postscript        # black and white
+#Enhanced Metafile Format, for vectorized MS Win32 plots:
+#set terminal emf monochrome dashed 'Times' 20
+#set output 'k$0.emf'
+
+#
+# ERCOFTAC TESTCASE 3: Swirling boundary layer in conical diffuser
+#
+# uu/(U0^2) as a function of y (m), at corresponding sections
+#
+
+set autoscale
+set noarrow
+set nolabel
+set nogrid
+set grid
+
+set xlabel 'y (mm)'
+set ylabel 'uu/(U_0^2)'
+set title sprintf("Section z = %smm", ARG1)
+set xrange [0:60]
+set xtics 0,20,60
+set yrange [0:0.02]
+set ytics 0,0.0025,0.02
+
+#
+plot \
+     sprintf("%s/test60/usq%s.dat", ARG6, ARG1) \
+     using (column(1)):(column(2)/100) title "Measured uu" \
+     ,\
+     sprintf("./sampleDict/%s/Comp%s_Y_UPrime2Mean.xy", ARG5, ARG1) \
+     using ((ARG3-column(1))*1000/cos(angle)):(column(2)/U0/U0) \
+     title sprintf("%s uu", ARG4) with lines linewidth 2 \
+     ,\
+     sprintf("%s/test60/vsq%s.dat", ARG6, ARG1) \
+     using (column(1)):(column(2)/100) title "Measured vv" \
+     ,\
+     sprintf("./sampleDict/%s/Comp%s_Y_UPrime2Mean.xy", ARG5, ARG1) \
+     using ((ARG3-column(1))*1000/cos(angle)):(column(5)/U0/U0) \
+     title sprintf("%s vv", ARG4) with lines linewidth 2 \
+     ,\
+     sprintf("%s/test60/wsq%s.dat", ARG6, ARG1) \
+     using (column(1)):(column(2)/100) title "Measured ww" \
+     ,\
+     sprintf("./sampleDict/%s/Comp%s_Y_UPrime2Mean.xy", ARG5, ARG1) \
+     using ((ARG3-column(1))*1000/cos(angle)):(column(7)/U0/U0) \
+     title sprintf("%s ww", ARG4) with lines linewidth 2 \

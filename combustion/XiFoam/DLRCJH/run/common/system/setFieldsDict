@@ -1,0 +1,131 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2106                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      setFieldsDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#include        "${FOAM_CASE}/includeSetup"
+
+regions
+(
+    // Jet from the inlet pipe extending into the chamber
+    cylinderToCell
+    {
+        p1 (-0.4 -0.01 0);
+        p2 (0.11 -0.01 0);
+        radius 0.022;
+        fieldValues
+        (
+            volScalarFieldValue b 0.5
+            volScalarFieldValue T 1800
+            volScalarFieldValue Xi 2
+            volVectorFieldValue U (65 0 0)
+        );
+    }
+
+    cylinderToCell
+    {
+        p1 (-0.4 -0.01 0);
+        p2 (0.1 -0.01 0);
+        radius 0.02;
+        fieldValues
+        (
+            volScalarFieldValue b $bInlets
+            volScalarFieldValue T $TInletMain
+            volScalarFieldValue Xi 1
+            volVectorFieldValue U $UInletMain
+        );
+    }
+
+    // * Angled pilot sections jet penetrating the chamber * //
+    // Pilot nozzle at z = -30 mm
+    cylinderToCell
+    {
+        p1 (-0.015 0.05098 -0.03);
+        p2 (0.005 0.01634 -0.03);
+        radius 0.0024;
+        #include "includeAngledPilotsFields";
+    }
+
+    // Pilot nozzle at z = -20 mm
+    cylinderToCell
+    {
+        p1 (-0.015 0.05098 -0.02);
+        p2 (0.005 0.01634 -0.02);
+        radius 0.0024;
+        #include "includeAngledPilotsFields";
+    }
+
+    // Pilot nozzle at z = -10 mm
+    cylinderToCell
+    {
+        p1 (-0.015 0.05098 -0.01);
+        p2 (0.005 0.01634 -0.01);
+        radius 0.0024;
+        #include "includeAngledPilotsFields";
+    }
+
+    // Pilot nozzle at z = 0 mm
+    cylinderToCell
+    {
+        p1 (-0.015 0.05098 0);
+        p2 (0.005 0.01634 0);
+        radius 0.0024;
+        #include "includeAngledPilotsFields";
+    }
+
+    // Pilot nozzle at z = 10 mm
+    cylinderToCell
+    {
+        p1 (-0.015 0.05098 0.01);
+        p2 (0.005 0.01634 0.01);
+        radius 0.0024;
+        #include "includeAngledPilotsFields";
+    }
+
+    // Pilot nozzle at z = 20 mm
+    cylinderToCell
+    {
+        p1 (-0.015 0.05098 0.02);
+        p2 (0.005 0.01634 0.02);
+        radius 0.0024;
+        #include "includeAngledPilotsFields";
+    }
+
+    // Pilot nozzle at z = 30 mm
+    cylinderToCell
+    {
+        p1 (-0.015 0.05098 0.03);
+        p2 (0.005 0.01634 0.03);
+        radius 0.0024;
+        #include "includeAngledPilotsFields";
+    }
+
+
+    // Horizontal pilot section
+    boxToCell
+    {
+        min (-0.1 0.015 -0.05);
+        max (-0.011  0.05  0.05);
+        fieldValues
+        (
+            volScalarFieldValue b $bInlets
+            volScalarFieldValue ft $ftInletsPilots
+            volScalarFieldValue T $TInletsPilots
+            volVectorFieldValue U $UInletsPilots
+        );
+    }
+
+);
+
+// ************************************************************************* //

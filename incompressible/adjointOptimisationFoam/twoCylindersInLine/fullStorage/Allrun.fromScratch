@@ -1,0 +1,56 @@
+#!/bin/sh
+cd "${0%/*}" || exit                                # Run from this directory
+. ${WM_PROJECT_DIR:?}/bin/tools/RunFunctions        # Tutorial run functions
+#------------------------------------------------------------------------------
+
+function cleanup()
+{
+    rm -rf optimisation
+    rm -rf postProcessing
+    rm -rf processor*/{[1-9]*,0\.[0-9]*}
+    rm -rf [1-9]* 0\.[0-9]*
+}
+
+runApplication blockMesh
+runApplication mirrorMesh -overwrite
+runApplication createPatch -overwrite
+restore0Dir
+runApplication decomposePar
+
+echo "Running the flow solver to get rid of the transient phase"
+
+#- Dictionaries and entries
+optimisationDict="system/optimisationDict"
+controlDict="system/controlDict"
+nProcs=$(getNumberOfProcessors)
+
+# First phase, first part, discard the transient phase
+echo "->Running flow for 60 sec without tight convergence criteria"
+foamDictionary -entry endTime -set 60 $controlDict > /dev/null
+cp system/optimisationDict.phase0 $optimisationDict
+runParallel $(getApplication)
+mv log.adjointOptimisationFoam log.adjointOptimisationFoamFirstPhase_0
+
+# First phase, second part, increase the number of correctors
+echo "->Running flow for 4  sec with final convergence criteria"
+foamDictionary -entry endTime -set 64 $controlDict > /dev/null
+cp system/optimisationDict.phase1 $optimisationDict
+runParallel $(getApplication)
+mv log.adjointOptimisationFoam log.adjointOptimisationFoamFirstPhase_1
+mv optimisation optimisationFirstPhase
+for ((i=0; i<$nProcs; i++))
+do
+    mv processor$i/64/{U.gz,U_0.gz,p.gz,phi.gz,phi_0.gz} processor$i/0/
+done
+# Clean up the files related to the transient phase
+cleanup
+
+# Second phase, run the primal & adjoint part related to the objective function
+echo "Running primal and adjoint solver to compute sensitivities"
+foamDictionary -entry endTime -set 1.348 $controlDict > /dev/null
+cp system/optimisationDict.finalPhase $optimisationDict
+runParallel $(getApplication)
+mv log.adjointOptimisationFoam log.adjointOptimisationFoamSecondPhase
+mv optimisation optimisationSecondPhase
+
+#------------------------------------------------------------------------------

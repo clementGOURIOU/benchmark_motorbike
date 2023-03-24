@@ -1,0 +1,172 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2106                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volVectorField;
+    object      U;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [0 1 -1 0 0 0 0];
+
+internalField   uniform (0 0 1);
+
+boundaryField
+{
+    inlet
+    {
+        name            swirlInlet;
+        type            codedFixedValue;
+        value           uniform (0 0 11.6);
+        
+        codeInclude
+        #{
+            bool evaluatedInlet = false;
+        #};
+
+        code
+        #{
+            // Execute only once
+            if (!evaluatedInlet)
+            {
+                fixedValueFvPatchVectorField alteredField(*this);
+                
+                const fvMesh& mesh =
+                    this->db().parent().lookupObject<fvMesh>("region0");
+
+                IOdictionary swirlDict
+                (
+                    IOobject
+                    {
+                        "swirlAndRotationProperties",
+                        mesh.time().constant(),
+                        mesh,
+                        IOobject::MUST_READ,
+                        IOobject::NO_WRITE
+                    }
+                );
+                
+                const label nFaces = this->patch().Cf().size();
+
+                // Execute only if the proc has any corresponding faces
+                if (nFaces)
+                {
+                    vector omega =
+                        dimensionedVector("omega", inv(dimTime), swirlDict).value();
+                    vector origin =
+                        dimensionedVector("center", dimless, swirlDict).value();
+                    scalar Uax =
+                        dimensionedScalar
+                        (
+                            "meanAxialVelocity",
+                            dimVelocity,
+                            swirlDict
+                        ).value();
+                    
+                    forAll(this->patch().Cf(), faceI)
+                    {
+                        point faceC = this->patch().Cf()[faceI];
+                        // Assume that the provided origin lies in the center 
+                        // of the patch
+                        alteredField[faceI] = omega^(faceC - origin);
+                        alteredField[faceI].z() = Uax;
+                    }
+
+                    operator==(alteredField);
+                }
+                evaluatedInlet = true;
+            }
+        #};
+    }
+    rotSwirlWall
+    {
+        // type            fixedValue;
+        // value           uniform (0 0 0);
+        name            rotatingWall;
+        type            codedFixedValue;
+        value           uniform (0 0 0);
+        
+        codeInclude
+        #{
+            bool evaluatedRotWall = false;
+        #};
+
+        code
+        #{
+            // Execute only once
+            if (!evaluatedRotWall)
+            {
+                const fvMesh& mesh =
+                    this->db().parent().lookupObject<fvMesh>("region0");
+                
+                // Use the original dictionary to read the swirl properties
+                IOdictionary swirlDict
+                (
+                    IOobject
+                    {
+                        "swirlAndRotationProperties",
+                        mesh.time().constant(),
+                        mesh,
+                        IOobject::MUST_READ,
+                        IOobject::NO_WRITE
+                    }
+                );
+                
+                const vector omega =
+                    dimensionedVector("omega", inv(dimTime), swirlDict).value();
+                const vector origin =
+                    dimensionedVector("center", dimless, swirlDict).value();
+                const vector rotAxis =
+                    dimensionedVector("rotAxis", dimless, swirlDict).value();
+
+                fixedValueFvPatchVectorField alteredField(*this);
+                
+                forAll(this->patch().Cf(), faceI)
+                {
+                    const point& faceC = this->patch().Cf()[faceI];
+                    const vector vecToCenter = faceC - origin;
+
+                    // Project the origin-faceCenter vector on to the rotation
+                    // axis and calculate the radial vector to the face origin
+                    // in the corresponding plane.
+                    const vector localR =
+                        vecToCenter - (vecToCenter&rotAxis)*rotAxis;
+                    alteredField[faceI] = omega^localR;
+                }
+
+                operator==(alteredField);
+                evaluatedRotWall = true;
+            }
+        #};
+    }
+    statSwirlWall
+    {
+        type            fixedValue;
+        value           uniform (0 0 0);
+    }
+    wallDiffuser
+    {
+        type            fixedValue;
+        value           uniform (0 0 0);
+    }
+    wallOutletPipe
+    {
+        type            fixedValue;
+        value           uniform (0 0 0);
+    }
+    outlet
+    {
+        type            inletOutlet;
+        inletValue      uniform (0 0 0);
+        value           $internalField;
+    }
+}
+
+// ************************************************************************* //

@@ -1,0 +1,49 @@
+#
+# Automatic post processing by Hakan Nilsson, Maryse Page and Martin Beaudoin
+#
+# Modified for the compatibility with gnuplot 5.2 by
+#     Sergey Lesnik, Wikki GmbH, Germany, 2021
+#
+# ARG0: 1st argument, position
+# ARG1: 2st argument, angle of diffuser in degrees
+# ARG2: 3rd argument, radius at cross-section
+# ARG3: 4th argument, case name of solution 1
+# ARG4: 5th argument, time of sample for solution 1
+#
+
+pause 0 sprintf("arg0 : %s", ARG0)
+pause 0 sprintf("arg1 : %s", ARG1)
+pause 0 sprintf("arg2 : %s", ARG2)
+pause 0 sprintf("arg3 : %s", ARG3)
+pause 0 sprintf("arg4 : %s", ARG4)
+pause 0 sprintf("arg5 : %s", ARG5)
+
+U0    = 13.3                 # mean velocity in x-direction [m/s]
+H     = 0.025               # step height
+
+set output sprintf('V%s.png', ARG1)
+set terminal png medium font "Helvetica,14"
+set autoscale
+set noarrow
+set nolabel
+set nogrid
+set grid
+set key left top
+
+set xlabel 'V/U_0'
+set ylabel 'y/H'
+set title sprintf('Plane x/H = %s', ARG1)
+set xrange [-0.12:0.15]
+#set xtics 0,20,220
+set yrange [-1:1]
+#set ytics -0.2,0.1,1.3
+
+#
+plot \
+     sprintf("../measurementData/VMean_plane%s.csv", ARG1) \
+     using (column(1)):(column(2)) title "Measured" \
+     with points linewidth 2 \
+     , \
+     sprintf("./sampleDict/%s/plane%s_Yaxis_UMean.xy", ARG5, ARG1) \
+     using (column(3)/U0):(column(1)/H) \
+     title sprintf("%s", ARG4) with lines linewidth 2

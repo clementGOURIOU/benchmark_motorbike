@@ -1,0 +1,4 @@
+#!/bin/sh
+
+rm log.* 
+rm -fr logs FIGS processor* 0

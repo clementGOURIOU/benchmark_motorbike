@@ -1,0 +1,90 @@
+// --------------------------------*- C++ -*-------------------------------- //
+//
+// File
+//     OpenFOAM coded function object
+//
+// Description
+//     Write relative rotational speed
+//
+// ------------------------------------------------------------------------- //
+
+wallClockTimeStatistics
+{
+    type coded;
+    name wallClockTimeStatistics;
+    libs ( utilityFunctionObjects );
+
+    // Additional context for code execute/write
+    codeContext
+    {
+        verbose true;
+    }
+    
+    codeInclude
+    #{
+        #include "clockValue.H"
+    #};
+
+    codeData
+    #{
+        clockValue wallClock;
+        DynamicList<double> times;
+        double sum = 0.0;
+    #};
+    
+    codeExecute
+    #{
+        // Ignore the first time step since no correct measurement may be
+        // executed.
+        if (mesh().time().timeIndex() != 1)
+        {
+            const double dt = wallClock.elapsedTime(); 
+            Info<< "Wall clock time elapsed during the current time step = "
+                << dt << nl << endl;
+            times.append(dt);
+            sum += dt;
+        }
+        wallClock.update();
+    #};
+    
+    codeEnd
+    #{
+        const double n = times.size();
+        const double mean = sum/n;
+        const double err = 0.01;  // statistical error
+        
+        // Compute standard deviation
+        double stdDev = 0.0;
+        forAll(times, i)
+        {
+            stdDev += (times[i] - mean)*(times[i] - mean);
+        }
+        stdDev = sqrt(stdDev/n);
+        
+        // Compute number of time steps needed for stastical time measurement
+        // with 1% error at 95% confidence level. Add 1 because the first time
+        // step is not measured.
+        const label minN = round(sqr(1.96*stdDev/(err*mean))) + 1;
+
+        Info<< "Statistics:" << nl
+            << "    Average wall clock time per time step = "
+            << mean << nl
+            << "    Standard deviation of wall clock time per time step = "
+            << stdDev << nl
+            << "    Minimum number of time steps for 1% error at the 95% "
+            << "confidence level = "
+            << minN << nl << endl;
+
+        if (mesh().time().timeIndex() < minN)
+        {
+            WarningInFunction
+                << "Number of time steps of the current run is smaller than "
+                << "the calculated one by the statistical analysis. "
+                << "Consider to raise endTime in controlDict."
+                << nl << endl;
+        }
+    #};
+}
+
+
+// ************************************************************************* //

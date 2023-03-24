@@ -1,0 +1,165 @@
+#!/bin/bash
+
+set -e
+
+runDir="../run"
+
+error()
+{
+  echo ERROR: $1
+  exit 0
+}
+
+usage() {
+    exec 1>&2
+    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
+    cat<<USAGE
+
+ATTENTION:  case  directory with 'Allclean' and 'Allrun.pre' script inside WILL BE CLEANED.  Backup your previous runs!
+
+usage: ${0##*/} [OPTION]  parameterName  path/dictionary "value1 value2 ... vauleN"
+
+e.g  ${0##*/}  maxCo  system/controlDict "0.5,0.25,0.1"
+ 
+
+options:
+-h | -help                         print usage
+-d | -dirRun                      specify case directory (default is "../run")  containing: 0, system, constant, Allclean, Allrun.pre
+-p | -parallel <"p1,p2, ... pN">   set application for each test case as parallel run with "p1 p2 ... pN" processors
+-r | -refine  <"p1,p2, ... pN">    refine mesh for each test case "p1 p2 ... pN" times
+-o | -other  <"-l -n ...">         other options for Allrun.pre. These are the same for each test case.
+-s | -submit  <"p1,p2 ...pN"> <c>     submit job for each test case with "p1 p2 ... pN" number of nodes and c cores
+-q | -queue  <"p1,p2 ...pN">      select for each test case  queue "p1 p2 ... pN"
+USAGE
+    exit 1
+}  
+
+# Parse options
+while [ "$#" -gt 3 ]
+do
+    case "$1" in
+    -h | -help)
+        usage
+        ;;
+    -d | -dirRun)
+        [ "$#" -ge 2 ] || usage "'$1' option requires an argument"
+        runDir="$2"
+        shift 2
+        ;;
+    -n | -norun)
+     noRun=true
+     shift 1
+        ;;
+    -p | -parallel)
+     [ "$#" -ge 2 ] || usage "'$1' option requires an argument"    
+      nCore=($(echo "$2" | tr ',' '\n'))
+     shift 2 
+        ;;
+    -r | -refine)
+     [ "$#" -ge 2 ] || usage "'$1' option requires an argument"    
+      nRefine=($(echo "$2" | tr ',' '\n'))
+     shift 2 
+        ;;
+    -o | -other)
+     [ "$#" -ge 2 ] || usage "'$1' option requires an argument"    
+      OPTIONS=$2 
+     shift 2 
+       ;;
+    -s | -submit)
+     [ "$#" -ge 3 ] || usage "'$1' option requires two argument"    
+      nNodes=($(echo "$2" | tr ',' '\n')) 
+      nodeCores=$3
+     shift 3 
+       ;;
+    -q | -queue)
+     [ "$#" -ge 2 ] || usage "'$1' option requires two argument"    
+      nQueue=($(echo "$2" | tr ',' '\n')) 
+     shift 2 
+       ;;
+    *)
+        usage "unknown option/argument: '$*'"
+        ;;
+    esac
+done
+
+# check user input
+# ...................
+if [ $# -ne 3 ]
+then
+    usage "missing input arguments"
+fi
+paramName=$1
+paramDict=$2
+paramValues=($(echo "$3" | tr ',' '\n'))
+if [ ${#nRefine[@]} -gt 0 ]; then
+      	[ ${#nRefine[@]} -ne ${#paramValues[@]} ] && error " -r | -refine option with incorrect number of values."
+fi
+if [ ${#nCore[@]} -gt 0 ]; then
+      	[ ${#nCore[@]} -ne ${#paramValues[@]} ] && error " -p | -parallel  option with incorrect number of values."
+fi
+if [ ${#nNodes[@]} -gt 0 ]; then
+      	[ ${#nNodes[@]} -ne ${#paramValues[@]} ] && error " -s | -submit  option with incorrect number of values."
+fi
+if [ ${#nQueue[@]} -gt 0 ]; then
+      	[ ${#nQueue[@]} -ne ${#paramValues[@]} ] && error " -q | -queue  option with incorrect number of values."
+fi
+
+# clean base run directory to be copied 
+[ -d "$runDir/constant/polyMesh" ] && error " $runDir is not clean. please clean it with ./Allclean " 
+
+
+# set base name
+caseBaseName="test_$paramName"
+
+
+#  start loop on all test cases
+for (( i=0; i<=$(( ${#paramValues[@]} -1 )); i++ ))
+do
+
+    #  case name
+    caseName=$caseBaseName"_${paramValues[$i]}"
+    [ ${#nRefine[@]} -gt 0 ] && caseName=$caseName"_nRefine_"${nRefine[$i]}
+    [ ${#nCore[@]} -gt 0 ] && caseName=$caseName"_nCore_"${nCore[$i]} 
+
+    # check for previous test
+    if [ -d "$caseName" ]; then
+       error " Test directory $caseName already exist. Please clean and try again!"  
+    fi
+
+    # print info
+    echo " " 
+    echo " " 
+    echo ".........................."
+    echo "case n." $(( i + 1 ))
+    echo "name  $caseName  "
+    echo ".........................."
+
+    # copy run dir with new name
+    cp -r $runDir $caseName || exit 0
+
+    # Set Allrun.pre entries
+    DICT="-dict $paramName $paramDict ${paramValues[$i]}"
+    [ ${#nRefine[@]} -gt 0 ] && REFINE="-r ${nRefine[$i]}" || REFINE=''
+    [ ${#nCore[@]} -gt 0 ] && CORES="-p ${nCore[$i]}" || CORES=''
+    [ ${#nQueue[@]} -gt 0 ] && QUEUE="-q ${nQueue[$i]}" || QUEUE=''
+    
+
+    # submit job to queque system         
+    if [ ${#nNodes[@]} -gt 0 ] 
+    then
+       if [ ${nCore[$i]} -gt $nodeCores ]
+       then
+          [ $(expr ${nNodes[$i]} \* $nodeCores) -ne ${nCore[$i]} ] && error " number of cores is not equal to nodes*nodeCores and bigger than nodeCores " 
+       fi
+       echo $checkCores
+       NODES="nodes=${nNodes[$i]}:ppn=$nodeCores"
+       echo $QUEUE 
+       echo $NODES
+       ( cd $caseName &&  qsub -l $NODES $QUEUE -v ALLOPTIONS="$OPTIONS $REFINE $CORES $DICT" ncore_template.pbs )
+
+   # prepare case
+   else
+       ( cd $caseName && ./Allclean && ./Allrun.pre $OPTIONS $REFINE $CORES $DICT )
+   fi
+
+done

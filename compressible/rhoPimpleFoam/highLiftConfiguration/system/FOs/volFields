@@ -1,0 +1,45 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2012                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+
+vorticity
+{
+    type            vorticity;
+    libs            ("libfieldFunctionObjects.so");
+
+    enabled         true;
+    writeControl    writeTime;
+}
+
+Q
+{
+    type            Q;
+    libs            ("libfieldFunctionObjects.so");
+
+    enabled         true;
+    writeControl    writeTime;
+}
+
+CourantNo
+{
+    type            CourantNo;
+    libs            ("libfieldFunctionObjects.so");
+
+    enabled         true;
+    writeControl    writeTime;
+}
+
+MachNo
+{
+    type            MachNo;
+    libs            ("libfieldFunctionObjects.so");
+
+    enabled         true;
+    writeControl    writeTime;
+}
+
+// ************************************************************************* //

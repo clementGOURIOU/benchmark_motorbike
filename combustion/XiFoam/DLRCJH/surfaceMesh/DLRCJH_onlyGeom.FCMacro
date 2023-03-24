@@ -1,0 +1,277 @@
+"""************************************************************************
+*   Copyright (c) 2022 Sergey Lesnik, Wikki GmbH,                         *
+*       <sergey.lesnik@wikki-gmbh.de>                                     *
+*                                                                         *
+*   This file is part of the FreeCAD CAx development system.              *
+*                                                                         *
+*   This program is free software; you can redistribute it and/or modify  *
+*   it under the terms of the GNU Library General Public License (LGPL)   *
+*   as published by the Free Software Foundation; either version 2 of     *
+*   the License, or (at your option) any later version.                   *
+*   for detail see the LICENCE text file.                                 *
+*                                                                         *
+*   FreeCAD is distributed in the hope that it will be useful,            *
+*   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+*   GNU Library General Public License for more details.                  *
+*                                                                         *
+*   You should have received a copy of the GNU Library General Public     *
+*   License along with FreeCAD; if not, write to the Free Software        *
+*   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  *
+*   USA                                                                   *
+*                                                                         *
+************************************************************************"""
+
+""" This script produces colored surface mesh of the DLR Confined Jet
+High pressure combustor geometry from
+    Ax, H., Lammel, O., Lückerath, R., & Severin, M. (2020). High-Momentum Jet
+    Flames at Elevated Pressure, C: Statistical Distribution of Thermochemical
+    States Obtained From Laser-Raman Measurements. Journal of Engineering for
+    Gas Turbines and Power, 142(7), 071011.
+and
+    Severin, M. (2019). Analyse der Flammenstabilisierung intensiv mischender
+    Jetflammen für Gasturbinenbrennkammern.
+
+After the script is run, further steps need to be done via GUI
+- Export DLRCJH mesh as an .obj file in the "Mesh Design" workbench (NOT File->Export)
+- Export DLRCJH mesh as an ASCII .stl file in "Mesh Design" workbench
+  (NOT File->Export). Needed for edge mesh extraction.
+- Load the .obj file and view which "patch*" correspond to which boundary
+- Rename the patches in the .obj file with correct boundary names with a text
+  editor
+- Export meshes of the pipe and pilots walls separately as ASCII .stl via
+  "Mesh Design". Needed for region refinement.
+
+The meshes are meant to be used for the OpenFOAM's mesher snappyHexMesh.
+The script is known to work with FreeCAD version 0.20.29177 (Git) AppImage.
+"""
+
+import FreeCAD
+import FreeCAD as App
+import FreeCADGui as Gui
+import Sketcher
+import Part
+
+
+def toStrMm(number):
+    return str(number) + ' mm'
+
+
+# Path for saving STL files
+pathSave = "./"
+
+# General parameters
+chamberLength = '843 mm'
+chamberWidth = '95 mm'
+chamberHeight = '95 mm'
+chamberOffset = App.Vector(0,-47.5,-47.5)
+inletPipeVerticalOffset = -10
+inletPipeR = 20
+inletPipeL = 20*inletPipeR
+pilotPipeVerticalOffset = '25 mm'
+pilotDictanceInbetween = 10
+pilotR = 2.35
+pilotAngL = 25
+pilotHorL = 20*pilotR
+
+# Convert to strings with dimension
+inletPipeRadius = toStrMm(inletPipeR)
+inletPipeLength = toStrMm(inletPipeL)
+pilotNozzleRadius = toStrMm(pilotR)
+pilotAngledSectionLength = toStrMm(pilotAngL)
+pilotHorizontalLength = toStrMm(pilotHorL)
+
+# Order is important
+meshLabels = ["wallsChamberLateral", "inletsPilots", "inletMain", "wallsPilots", "wallInletPipe", "outlet", "wallChamberFront"]
+
+
+# Chamber
+doc = App.newDocument("geometry")
+doc.addObject("Part::Box","Box")
+doc.ActiveObject.Label = "Cube"
+doc.recompute()
+doc.getObject("Box").Placement = App.Placement(chamberOffset,App.Rotation(App.Vector(0,0,1),0))
+doc.getObject("Box").Length = chamberLength
+doc.getObject("Box").Width = chamberWidth
+doc.getObject("Box").Height = chamberHeight
+
+# Inlet pipe
+doc.addObject("Part::Cylinder","Cylinder")
+doc.ActiveObject.Label = "Cylinder"
+doc.recompute()
+doc.getObject("Cylinder").Placement = \
+    App.Placement(App.Vector(0,inletPipeVerticalOffset,0),App.Rotation(App.Vector(0,1,0),-90))
+doc.getObject("Cylinder").Radius = inletPipeRadius
+doc.getObject("Cylinder").Height = inletPipeLength
+
+doc.addObject('Sketcher::SketchObject','Sketch')
+doc.Sketch.Label = "pilotNozzleProfile"
+doc.Sketch.Placement = \
+    App.Placement(App.Vector(0,0,0),App.Rotation(App.Vector(-1,0,0),0))
+doc.Sketch.MapMode = "Deactivated"
+
+doc.Sketch.addGeometry(Part.LineSegment(App.Vector(-46.903130,58.057983,0),App.Vector(-46.903130,51.909637,0)),False)
+doc.Sketch.addGeometry(Part.LineSegment(App.Vector(-42.862782,51.558304,0),App.Vector(-13.702036,51.206974,0)),False)
+doc.Sketch.addGeometry(Part.LineSegment(App.Vector(-8.256355,50.152969,0),App.Vector(15.107368,25.208237,0)),False)
+doc.Sketch.addConstraint(Sketcher.Constraint('Coincident',0,2,1,1))
+doc.Sketch.addConstraint(Sketcher.Constraint('Coincident',1,2,2,1))
+doc.Sketch.addGeometry(Part.Point(App.Vector(12.472363,46.815292,0)))
+doc.Sketch.addConstraint(Sketcher.Constraint('PointOnObject',3,1,2))
+doc.Sketch.addConstraint(Sketcher.Constraint('PointOnObject',3,1,-2))
+doc.Sketch.addConstraint(Sketcher.Constraint('DistanceY',-1,1,3,1,43.580568))
+doc.Sketch.setDatum(4,App.Units.Quantity(pilotPipeVerticalOffset))
+doc.Sketch.renameConstraint(4, u'offsetOriginY')
+doc.Sketch.addConstraint(Sketcher.Constraint('Horizontal',1))
+doc.Sketch.addConstraint(Sketcher.Constraint('Vertical',0))
+doc.Sketch.addConstraint(Sketcher.Constraint('Distance',0,6.146412))
+doc.Sketch.setDatum(7,App.Units.Quantity(pilotNozzleRadius))
+doc.Sketch.renameConstraint(7, u'nozzleRadius')
+doc.Sketch.addConstraint(Sketcher.Constraint('Distance',1,34.214239))
+doc.Sketch.setDatum(8,App.Units.Quantity(pilotHorizontalLength))
+doc.Sketch.renameConstraint(8, u'horizontalLength')
+doc.Sketch.addConstraint(Sketcher.Constraint('Distance',2,54.314803))
+doc.Sketch.setDatum(9,App.Units.Quantity(pilotAngledSectionLength))
+doc.Sketch.renameConstraint(9, u'angledSectionLength')
+doc.Sketch.addConstraint(Sketcher.Constraint('Angle',2,2,-1,2,0.330757))
+doc.Sketch.setDatum(10,App.Units.Quantity('60.000000 deg'))
+doc.Sketch.addConstraint(Sketcher.Constraint('DistanceX',3,1,2,2,2.791766))
+doc.Sketch.setExpression('Constraints[11]', u'pilotNozzleProfile.Constraints.nozzleRadius')
+doc.Sketch.addConstraint(Sketcher.Constraint('DistanceX',0,2,-1,1,35.150000))
+# Convert the constraint to a reference
+doc.Sketch.setDriving(12,False)
+doc.Sketch.renameConstraint(12, u'inletPositionX')
+
+
+# Pilot cross-section
+doc.addObject('Sketcher::SketchObject','Sketch001')
+doc.Sketch001.MapMode = "ObjectYZ"
+doc.Sketch001.Support = [(doc.Sketch,'')]
+doc.recompute()
+ActiveSketch = doc.getObject('Sketch001')
+ActiveSketch.setExpression('AttachmentOffset.Base.z', u'-pilotNozzleProfile.Constraints.inletPositionX')
+ActiveSketch.Label = "pilotNozzleCrossSection"
+doc.Sketch001.addExternal("Sketch","Vertex2")
+doc.Sketch001.addGeometry(Part.Circle(App.Vector(33.609108,11.889753,0),App.Vector(0,0,1),9.736151),False)
+doc.Sketch001.addConstraint(Sketcher.Constraint('Coincident', -3, 1, 0, 3))
+doc.Sketch001.addConstraint(Sketcher.Constraint('Radius',0,9.736151))
+doc.Sketch001.setExpression('Constraints[1]', u'pilotNozzleProfile.Constraints.nozzleRadius')
+
+
+# Part Sweep
+doc.addObject('Part::Sweep','Sweep')
+doc.ActiveObject.Sections=[doc.Sketch001, ]
+doc.ActiveObject.Spine=(doc.Sketch,["Edge2","Edge3"])
+doc.ActiveObject.Solid=True
+doc.ActiveObject.Frenet=False
+doc.getObject("Sweep").Solid = True
+doc.recompute()
+
+
+# Array Part
+import Draft
+_obj_ = Draft.make_ortho_array(doc.Sweep, v_x=FreeCAD.Vector(0.0, 0.0, 0.0), v_y=FreeCAD.Vector(0.0, 0.0, 0.0), v_z=FreeCAD.Vector(0.0, 0.0, pilotDictanceInbetween), n_x=1, n_y=1, n_z=4, use_link=True)
+_obj_.Fuse = False
+Draft.autogroup(_obj_)
+_obj_ = Draft.make_ortho_array(doc.Sweep, v_x=FreeCAD.Vector(0.0, 0.0, 0.0), v_y=FreeCAD.Vector(0.0, 0.0, 0.0), v_z=FreeCAD.Vector(0.0, 0.0, -pilotDictanceInbetween), n_x=1, n_y=1, n_z=4, use_link=True)
+_obj_.Fuse = False
+Draft.autogroup(_obj_)
+
+
+# Fuse
+doc.addObject("Part::Fuse","Fusion")
+doc.Fusion.Base = doc.Box
+doc.Fusion.Tool = doc.Cylinder
+doc.addObject("Part::Fuse","Fusion001")
+doc.Fusion001.Base = doc.Fusion
+doc.Fusion001.Tool = doc.Array
+doc.addObject("Part::Fuse","Fusion002")
+doc.Fusion002.Base = doc.Fusion001
+doc.Fusion002.Tool = doc.Array001
+doc.recompute(None,True,True)
+
+
+# Colorize faces
+import random
+patches =\
+{\
+    "wallsChamberLateral": [2, 3, 4, 5],\
+    "inletsPilots": [23, 24, 25, 26, 27, 28, 29],\
+    "inletMain": [22],\
+    "wallsPilots": [6, 7, 8, 9, 10, 11, 12, 15, 16, 17, 18, 19, 20, 21],\
+    "wallInletPipe": [13],\
+    "outlet": [14],\
+    "wallChamberFront": [1]\
+}
+nFaces = 0
+for patch, pFaces in patches.items():
+    nFaces += len(pFaces)
+
+diffuseColorList = [None]*nFaces
+random.seed(2)
+for patch, pFaces in patches.items():
+    color = tuple(random.random() for _ in range(3))
+    # Add opacity value to the tuple
+    color += (0.0,)
+    for face in pFaces:
+        diffuseColorList[face - 1] = color
+
+doc.Fusion002.ViewObject.DiffuseColor = diffuseColorList
+Gui.Selection.setPreselection(doc.Fusion002,'',tp=2)
+Gui.SendMsgToActiveView("ViewSelection")
+
+# STL meshing
+import MeshPartGui, FreeCADGui
+import Mesh, Part, PartGui
+import MeshPart
+__doc__=doc
+__mesh__=__doc__.addObject("Mesh::Feature","Mesh")
+__part__=__doc__.getObject("Fusion002")
+__shape__=Part.getShape(doc.Fusion002,"")
+__mesh__.Mesh=\
+    MeshPart.meshFromShape\
+    (\
+        Shape=__shape__,\
+        LinearDeflection=0.01,\
+        AngularDeflection=0.0174533,\
+        Relative=False,\
+        Segments=True,\
+        GroupColors=doc.Fusion002.ViewObject.DiffuseColor\
+    )
+__mesh__.Label="DLRCJH"
+
+# During the export no patches are produced in the .obj file - bug?
+# Mesh.export([__mesh__], "test2.obj")
+
+del __mesh__, __part__, __shape__
+
+### Create surface meshes for main pipe and pilot walls
+
+## Bind faces
+s = FreeCADGui.Selection.getSelectionEx()
+# Pilot walls
+facebinder = Draft.makeFacebinder(s)
+doc.getObject('Facebinder').Faces = (doc.getObject('Fusion002'), [u'Face15',u'Face16',u'Face17',u'Face18',u'Face19',u'Face20',u'Face21',u'Face6',u'Face7',u'Face8',u'Face9',u'Face10',u'Face11',u'Face12',])
+# Inlet pipe walls
+facebinder = Draft.makeFacebinder(s)
+doc.getObject('Facebinder001').Faces = (doc.getObject('Fusion002'),u'Face13')
+
+doc.recompute(None,True,True)
+
+## Create meshes from the facesbinders
+__doc__=doc
+
+__mesh__=__doc__.addObject("Mesh::Feature","Mesh")
+__part__=__doc__.getObject("Facebinder")
+__shape__=Part.getShape(__part__,"")
+__mesh__.Mesh=MeshPart.meshFromShape(Shape=__shape__, LinearDeflection=0.01, AngularDeflection=0.0174533)
+__mesh__.Label='wallsPilots'
+del __mesh__, __part__, __shape__
+
+__mesh__=__doc__.addObject("Mesh::Feature","Mesh")
+__part__=__doc__.getObject("Facebinder001")
+__shape__=Part.getShape(__part__,"")
+__mesh__.Mesh=MeshPart.meshFromShape(Shape=__shape__, LinearDeflection=0.01, AngularDeflection=0.0174533)
+__mesh__.Label='wallInletPipe'
+del __mesh__, __part__, __shape__
+
+doc.recompute(None,True,True)

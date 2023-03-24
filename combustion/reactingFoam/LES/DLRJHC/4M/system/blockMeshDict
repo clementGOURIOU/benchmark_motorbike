@@ -1,0 +1,298 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2106                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      blockMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+avgMeshSize 0.35;
+
+scale   0.001;
+
+d           2;   //nozzle diameter
+wallThick   0.5; //nozzle wall thickness
+W           37.5;  //width of the chamber
+H           120; //height of the chamber
+nozTip      8;   //height of the nozzle
+
+bottomNoz -2;
+gradingX  8;
+gradingY  $gradingX;
+gradingZ   0.5;
+gradingZ2  2.5;
+
+//- do not modify
+sqr #calc "$d / 2.0 * 0.5";   //internal square
+R #calc "$d / 2.0";           //radius
+extR #calc "$R + $wallThick"; //external radius
+
+Rcos45 #calc "$R * cos(degToRad(45))";
+Rsin45 #calc "$R * sin(degToRad(45))";
+Rcos30 #calc "$R * cos(degToRad(30))";
+Rsin30 #calc "$R * sin(degToRad(30))";
+Rcos60 #calc "$R * cos(degToRad(60))";
+Rsin60 #calc "$R * sin(degToRad(60))";
+
+extRcos45 #calc "$extR * cos(degToRad(45))";
+extRsin45 #calc "$extR * sin(degToRad(45))";
+extRcos30 #calc "$extR * cos(degToRad(30))";
+extRsin30 #calc "$extR * sin(degToRad(30))";
+extRcos60 #calc "$extR * cos(degToRad(60))";
+extRsin60 #calc "$extR * sin(degToRad(60))";
+
+nCellsZ1 #calc "max(abs($bottomNoz / $avgMeshSize),1)";
+nCellsZ2 #calc "max(abs($nozTip / $avgMeshSize),1)";
+nCellsZ3 #calc "max(abs(($H-$nozTip) / $avgMeshSize),1)";
+
+nCellsX1 #calc "max(abs($sqr / $avgMeshSize),5)";
+nCellsX2 #calc "max(abs(($R-$sqr) / $avgMeshSize),5)";
+nCellsX3 #calc "max(abs(($extR-$R) / $avgMeshSize),5)";
+nCellsX4 #calc "max(abs(($W-$extR) / $avgMeshSize),1)";
+
+vertices
+(
+
+    //- bottom nozzle
+    (0       0        $bottomNoz)   // 0
+    ($sqr    0        $bottomNoz)   // 1
+    ($sqr    $sqr     $bottomNoz)   // 2
+    (0       $sqr     $bottomNoz)   // 3
+
+    ($R      0        $bottomNoz)   // 4
+    ($Rcos45 $Rsin45  $bottomNoz)   // 5
+    (0       $R       $bottomNoz)   // 6
+
+    ($extR      0           $bottomNoz)   // 7
+    ($extRcos45 $extRsin45  $bottomNoz)   // 8
+    (0          $extR       $bottomNoz)   // 9
+
+    ($W         0           $bottomNoz)   // 10
+    ($W         $extRsin45  $bottomNoz)   // 11
+    ($W         $W          $bottomNoz)   // 12
+    ($extRcos45 $W          $bottomNoz)   // 13
+    (0          $W          $bottomNoz)   // 14
+
+
+    //- height 0: bottom chamber
+    (0       0        0)   // 15
+    ($sqr    0        0)   // 16
+    ($sqr    $sqr     0)   // 17
+    (0       $sqr     0)   // 18
+
+    ($R      0        0)   // 19
+    ($Rcos45 $Rsin45  0)   // 20
+    (0       $R       0)   // 21
+
+    ($extR      0           0)   // 22
+    ($extRcos45 $extRsin45  0)   // 23
+    (0          $extR       0)   // 24
+
+    ($W         0           0)   // 25
+    ($W         $extRsin45  0)   // 26
+    ($W         $W          0)   // 27
+    ($extRcos45 $W          0)   // 28
+    (0          $W          0)   // 29
+
+
+    //- height 2: nozTip
+    (0       0        $nozTip)   //30
+    ($sqr    0        $nozTip)   
+    ($sqr    $sqr     $nozTip)   
+    (0       $sqr     $nozTip)   
+
+    ($R      0        $nozTip)   
+    ($Rcos45 $Rsin45  $nozTip)   
+    (0       $R       $nozTip)   
+
+    ($extR      0           $nozTip)   
+    ($extRcos45 $extRsin45  $nozTip)   
+    (0          $extR       $nozTip)   
+
+    ($W         0           $nozTip)   
+    ($W         $extRsin45  $nozTip)   
+    ($W         $W          $nozTip)   
+    ($extRcos45 $W          $nozTip)   
+    (0          $W          $nozTip)   
+
+
+    //- height 2: H
+    (0       0        $H)   //45
+    ($sqr    0        $H)   
+    ($sqr    $sqr     $H)   
+    (0       $sqr     $H)   
+
+    ($R      0        $H)   
+    ($Rcos45 $Rsin45  $H)   
+    (0       $R       $H)   
+
+    ($extR      0           $H)   
+    ($extRcos45 $extRsin45  $H)   
+    (0          $extR       $H)   
+
+    ($W         0           $H)   
+    ($W         $extRsin45  $H)   
+    ($W         $W          $H)   
+    ($extRcos45 $W          $H)   
+    (0          $W          $H)   
+
+);
+
+blocks
+(
+    //layer 0
+    name block1 hex (0 1 2 3 15 16 17 18) ($nCellsX1 $nCellsX1 $nCellsZ1) 
+        simpleGrading (1 1 1)
+    name block2 hex (1 4 5 2 16 19 20 17) ($nCellsX2 $nCellsX1 $nCellsZ1) 
+        simpleGrading (1 1 1)
+    name block3 hex (3 2 5 6 18 17 20 21) ($nCellsX1 $nCellsX2 $nCellsZ1) 
+        simpleGrading (1 1 1)    
+
+    //layer 1
+    name fuel1 hex (15 16 17 18 30 31 32 33) ($nCellsX1 $nCellsX1 $nCellsZ2) 
+        simpleGrading (1 1 $gradingZ)
+    name fuel2 hex (16 19 20 17 31 34 35 32) ($nCellsX2 $nCellsX1 $nCellsZ2) 
+        simpleGrading (1 1 $gradingZ)
+    name fuel3 hex (18 17 20 21 33 32 35 36) ($nCellsX1 $nCellsX2 $nCellsZ2) 
+        simpleGrading (1 1 $gradingZ)    
+    name air1 hex (22 25 26 23 37 40 41 38) ($nCellsX4 $nCellsX1 $nCellsZ2) 
+        simpleGrading ($gradingX 1 $gradingZ)
+    name air2 hex (23 26 27 28 38 41 42 43) ($nCellsX4 $nCellsX4 $nCellsZ2) 
+        simpleGrading ($gradingX $gradingY $gradingZ)
+    name air3 hex (24 23 28 29 39 38 43 44) ($nCellsX1 $nCellsX4 $nCellsZ2) 
+        simpleGrading (1 $gradingY $gradingZ)    
+
+    //layer 2
+    name chamber1 hex (30 31 32 33 45 46 47 48) ($nCellsX1 $nCellsX1 $nCellsZ3) 
+        simpleGrading (1 1 $gradingZ2)
+    name chamber2 hex (31 34 35 32 46 49 50 47) ($nCellsX2 $nCellsX1 $nCellsZ3) 
+        simpleGrading (1 1 $gradingZ2)
+    name chamber3 hex (33 32 35 36 48 47 50 51) ($nCellsX1 $nCellsX2 $nCellsZ3) 
+        simpleGrading (1 1 $gradingZ2)    
+    name chamber4 hex (34 37 38 35 49 52 53 50) ($nCellsX3 $nCellsX1 $nCellsZ3) 
+        simpleGrading (1 1 $gradingZ2)
+    name chamber5 hex (36 35 38 39 51 50 53 54) ($nCellsX1 $nCellsX3 $nCellsZ3) 
+        simpleGrading (1 1 $gradingZ2)
+    name chamber6 hex (37 40 41 38 52 55 56 53) ($nCellsX4 $nCellsX1 $nCellsZ3) 
+        simpleGrading ($gradingX 1 $gradingZ2)
+    name chamber7 hex (38 41 42 43 53 56 57 58) ($nCellsX4 $nCellsX4 $nCellsZ3) 
+        simpleGrading ($gradingX $gradingY $gradingZ2)
+    name chamber8 hex (39 38 43 44 54 53 58 59) ($nCellsX1 $nCellsX4 $nCellsZ3) 
+        simpleGrading (1 $gradingY $gradingZ2)
+);
+
+edges
+(
+    arc 4 5 ($Rcos30 $Rsin30 $bottomNoz)
+    arc 5 6 ($Rcos60 $Rsin60 $bottomNoz)
+    arc 19 20 ($Rcos30 $Rsin30 0)
+    arc 20 21 ($Rcos60 $Rsin60 0)
+    arc 34 35 ($Rcos30 $Rsin30 $nozTip)
+    arc 35 36 ($Rcos60 $Rsin60 $nozTip)
+    arc 49 50 ($Rcos30 $Rsin30 $H)
+    arc 50 51 ($Rcos60 $Rsin60 $H)
+
+    arc 22 23 ($extRcos30 $extRsin30 0)
+    arc 23 24 ($extRcos60 $extRsin60 0)
+    arc 37 38 ($extRcos30 $extRsin30 $nozTip)
+    arc 38 39 ($extRcos60 $extRsin60 $nozTip)
+    arc 52 53 ($extRcos30 $extRsin30 $H)
+    arc 53 54 ($extRcos60 $extRsin60 $H)
+);
+
+boundary
+( 
+    fuel_inlet
+    {
+        type patch; 
+        faces 
+        ( 
+            (block1 4)
+            (block2 4)
+            (block3 4) 
+        );
+    }
+    
+    air_inlet
+    {
+        type patch; 
+        faces 
+        ( 
+            (air1 4)
+            (air2 4)
+            (air3 4) 
+        );
+    }
+    
+    outlet
+    {
+        type patch;
+        faces 
+        ( 
+            (chamber1 5)
+            (chamber2 5)
+            (chamber3 5) 
+            (chamber4 5)
+            (chamber5 5)
+            (chamber6 5) 
+            (chamber7 5)
+            (chamber8 5)
+        );
+    }
+    
+    sides
+    {
+        type symmetry; 
+        faces 
+        ( 
+            (block1 0)
+            (block1 2)
+            (block2 2)
+            (block3 0) 
+            
+            (fuel1 0)
+            (fuel1 2)
+            (fuel2 2)
+            (fuel3 0)
+            
+            (air1 1)
+            (air1 2)
+            (air2 1)
+            (air2 3)
+            (air3 0) 
+            (air3 3) 
+            (chamber1 0)
+            (chamber1 2)
+            (chamber2 2)
+            (chamber3 0)
+            (chamber4 2)
+            (chamber5 0)
+            (chamber6 1)
+            (chamber6 2)
+            (chamber7 3)
+            (chamber7 1)
+            (chamber8 3)
+            (chamber8 0)
+        );
+    }
+       
+);
+
+mergePatchPairs
+();
+
+defaultPatch
+{
+    name walls;
+    type wall;
+}
+
+// ************************************************************************* //

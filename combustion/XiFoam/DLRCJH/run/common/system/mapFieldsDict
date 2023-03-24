@@ -1,0 +1,35 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2106                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      mapFieldsDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+// List of pairs of source/target patches for mapping
+patchMap
+(
+    // Map outlet patch since the values on the patch are required by
+    // waveTransmissive BC for pressure for a clean restart. Otherwise pressure
+    // waves originating from the outlet may be produced.
+    outlet outlet
+
+    // Do not map other patches. The values of fixedValue BCs need to be
+    // prescribed via 0 folder.
+);
+
+// List of target patches cutting the source domain (these need to be
+// handled specially e.g. interpolated from internal values)
+cuttingPatches
+(
+);
+
+// ************************************************************************* //

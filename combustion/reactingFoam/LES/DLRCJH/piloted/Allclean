@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# Source cleaning functions
+. $WM_PROJECT_DIR/bin/tools/CleanFunctions
+
+
+# Cleaning up the case
+cleanCase
+
+rm -rf 0 constant/polyMesh

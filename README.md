@@ -1,4 +1,10 @@
+MOVED TO the WIKI -->>> https://develop.openfoam.com/committees/hpc/-/wikis/home
+
+WORK IN PROPGRESS
+
+
 **Code repository for the High Performance Computing Technical Committee**
+
 
 [[_TOC_]]
 
@@ -10,7 +16,9 @@ The repository is intended to be a shared repository with relevant data-sets and
 - Provide the community an homogeneous term of reference to compare different hardware architectures, software environments, configurations, etc.
 - Define a common set of metrics/KPI (Key Performance Indicators) to measure performances
 
+See [wiki](https://develop.openfoam.com/committees/hpc/-/wikis/home) for details on the bechmarch suite 
 
+##############################################################################################################################
 ## 3-D Lid Driven cavity flow
 
 [//]: <>  (**3-D Lid Driven cavity flow**)
@@ -30,6 +38,7 @@ Three different sizes have been selected:
 - Small (S)
 - Medium (M)
 - Extra-Large (XL)
+- Extra-extra Large (XXL)
 
 The following table shows the geometrical and physical properties of the different test-cases, which have an increasing number of cells: 1 million (m) (S), 8 m (M) and 64 m (XL) of cells, obtained by halving ∆x when moving from the smaller to the bigger test-case.
 The Courant number Co=(U ∆t)/∆x is kept under the stability limit, and it is halved when moving to bigger test-cases.
@@ -80,8 +89,7 @@ The following Table summarizes the different preconditioner/solver pairs used to
 
 The iterative method can be run using two different convergence criteria:
 
-1. `fixedITER`: In this case the computational load is fixed, when running with the given solver.
-   This case is useful for comparing different hardware configurations by keeping constant the computational load.
+1. `fixedITER`: In this case the computational load is fixed, when running with the given solver. It is NOT representative of the real set-up. Used only for preliminary tests in the development phase or stress HPC architectures. This case is useful for comparing different hardware configurations by keeping constant the computational load. 
 2. `fixedNORM`: in this case the exit norm is fixed.
 
 The two different options are selected by choosing one of the two configurations files, where <Method> keyword is selected according to the previous Table:
@@ -94,15 +102,67 @@ To use one of the selected method copy/rename the chosen file in
 For example,
 ```
 cd system
-ln -s fvSolution.<Method>.fixedITER fvSolution`
+ln -s fvSolution.<Method>.fixedITER fvSolution
 ```
 
-![Figure](Lid_driven_cavity-3d/assets/time_3d.png "total time for PISO solver")
+![Figure](Lid_driven_cavity-3d/assets/time_3d.png "total time for PISO solver, XL Test case")
 
-This figure shows the total time for solving PISO with different preconditioner/solver pairs reported in the Table above.
+This figure shows the total time for solving PISO with different preconditioner/solver pairs reported in the Table above, for the XL test-case, with fixed exit norm cofiguration. 
+
+## 3-D Lid Driven microbenchmark
+
+
 
 ## HPC motorbike
 
+
+***HPC modification of motorbike tutorial***
+
+
+#OpenFoam used version:
+v1912
+
+#rationale:
+Three different meshes are proposed, with increasing number of cells. The number of mesh 
+cells is increased not through a mesh refinement operation, but by increasing the size of
+the domain.
+Meshes are built as follows:
+
+- S mesh is built using the motorbike tutorial setup, with the following characteristics:
+    * the background mesh is finer than the one used in the tutorial: generated cells have
+      a 0.4 meter side, instead of 1 meter
+    * the snappyHexMeshDict is the same as in the tutorial
+- M and L are obtained using the mirroMesh functionality starting from the S mesh so that 
+  M is 2xS and L is 2xM
+
+   
+   
+- Mesh calculation is performed using snappyHexMesh in parallel, with 16 tasks   
+   
+#how to build the S,M,L meshes:
+- load you OpenFOAM env
+- get into the desired mesh dir
+- launch ./AllmeshX script, with X=S,M,L
+
+#how to run the case
+- the cases can be run in the same folder where the meshes have been computed
+- edit the decomposeParDict to change the number of tasks 
+- launch ./Allrun
+
+#info on S,M,L mehses:
+- S: 8.5 mln cells
+- M: 17 mln cells
+- L: 34 mln cells
+
+#notes:
+- consider an average execution time of about 35 minutes using 16 cores fro S mesh.
+- M and L meshes will be done in few more minutes thanks to the mirroMesh function.
+- if you like to activate the checkMesh option please consider more time as overall execution time
+- Other larger meshes can be built using the same approach
+
+# 3D Cylinder@Re=3900
+
+taken from [Yann Delorme's repo](https://github.com/TRC-HPC/OpenFOAM-HPC)
 
 ## References
 

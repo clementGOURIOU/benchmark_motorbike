@@ -1,0 +1,30 @@
+#!/bin/bash
+
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+#We stop this script when we encounter a problem
+trap "exit -1" ERR
+
+export caseName=`basename $PWD`
+
+echo "$caseName: Creating blockMeshDict using m4"
+pushd system/ >& /dev/null
+m4 -P blockMeshDict.m4 > blockMeshDict
+popd >& /dev/null
+
+runApplication blockMesh
+
+if [ -d 0 ]; then
+    echo "$caseName: Time directory 0 exists and will be used for a restart."
+else
+    echo "$caseName: No time directory 0 found."
+    echo "  Creating it from 0_orig with non-initilized fields."
+    echo "  Consider using restart files if the run fails."
+    cp -r 0_orig 0
+fi
+
+runApplication decomposePar
+
+# Create a .foam file for paraview
+folderName=${PWD##*/}
+touch $folderName.foam

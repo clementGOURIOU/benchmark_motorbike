@@ -1,0 +1,97 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2004                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      fvSchemes;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+ddtSchemes
+{
+    default         backward;
+}
+
+gradSchemes
+{
+    default          Gauss linear;
+    gradUConv        cellLimited Gauss linear 1;
+    gradUaConv       cellLimited Gauss linear 1;
+    //gradUConv        faceMDLimited Gauss linear 1;
+    //gradUaConv       faceMDLimited Gauss linear 1;
+
+    gradUATC         faceMDLimited Gauss linear 1;
+    gradUaATC        faceMDLimited Gauss linear 1;
+
+    gradNuTilda      cellLimited Gauss linear 1;
+    gradNuaTilda     cellLimited Gauss linear 1;
+
+    gradDConv        cellLimited Gauss linear 1;
+    gradDaConv       cellLimited Gauss linear 1;
+}
+
+divSchemes
+{
+    default                     Gauss linear;
+
+    div(phi,U)                  bounded Gauss linearUpwindV gradUConv;
+    div(phi,nuTilda)            bounded Gauss linearUpwind  gradNuTilda;
+    div(yPhi,yWall)                     Gauss linearUpwind  gradDConv;
+
+    //div(-phi,Ua)                bounded Gauss linearUpwindV gradUaConv;
+    div(-phi,Ua)                bounded Gauss upwind;
+
+    div(-yPhi,da)               Gauss linearUpwind gradDaConv;
+}
+
+laplacianSchemes
+{
+    default         Gauss linear limited 0.333;
+}
+
+interpolationSchemes
+{
+    default         linear;
+}
+
+snGradSchemes
+{
+    default         limited 0.333;
+}
+
+fluxRequired
+{
+    default         no;
+    "p.*"           ;
+    "pa.*"          ;
+}
+
+wallDist
+{
+    method    meshWave;
+    /*
+    Note: Though in adjoint simulations we prefer the eikonal PDE for computing
+    distances, since it can be differentiated, if enabled it takes up a huge
+    part of the micro-benchmark time, due its relatively high cost compared to
+    the very few primal/adjoint time-steps executed here.  Hence, for the needs
+    to the micro-benchmark, meshWave is used
+
+    method advectionDiffusion;
+    advectionDiffusionCoeffs
+    {
+        method    meshWave;
+        tolerance 6.e-5;
+        epsilon   0.1;
+        maxIter   1000;
+    }
+    */
+}
+
+// ************************************************************************* //

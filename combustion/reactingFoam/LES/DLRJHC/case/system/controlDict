@@ -1,0 +1,130 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2106                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+FoamFile
+{
+    version         2;
+    format          ascii;
+    class           dictionary;
+    object          controlDict;
+}
+
+application     reactingFoam;
+
+startFrom       latestTime;
+
+startTime       0;
+
+stopAt          endTime;
+
+endTime         5e-3;
+
+deltaT          1e-6;
+
+writeControl    adjustable;
+
+writeInterval   2e-5;
+
+purgeWrite      0;
+
+writeFormat     binary;
+
+writePrecision  8;
+
+writeCompression off;
+
+timeFormat      general;
+
+timePrecision   6;
+
+adjustTimeStep    true;
+
+runTimeModifiable true;
+
+maxCo               0.4;
+
+functions
+{
+    cuttingPlane
+    {
+        type            surfaces;
+        libs            (sampling);
+
+        writeControl    writeTime;
+
+        surfaceFormat   vtk;
+        fields          ( p U T Qdot CH4 O2 H2 CH3 OH CO2 CO);
+
+        interpolationScheme cellPoint;
+
+        surfaces
+        {
+            chamberSlice
+            {
+                type            cuttingPlane;
+                planeType       pointAndNormal;
+                pointAndNormalDict
+                {
+                    point   (0.02 0.02 0.059);
+                    normal  (1 -1 0);
+                }
+                interpolate     true;
+            }
+        }
+    }
+
+
+    validationLines
+    {
+        // Sampling and I/O settings
+        #includeEtc "caseDicts/postProcessing/graphs/sampleDict.cfg"
+
+        type            sets;
+        libs            (sampling);
+
+        writeControl    writeTime;
+
+        interpolationScheme cellPoint;
+        setFormat       raw;
+        fields          ( U T p Qdot CH4 O2 H2 CH3 OH CO2 CO );
+
+        sets
+        (
+            lineA
+            {
+                type    midPoint;
+                axis    distance;
+                start (0    0    0.02);
+                end   (0.04 0.04 0.02);
+            }
+            lineB
+            {
+                type    midPoint;
+                axis    distance;
+                start (0    0    0.03);
+                end   (0.04 0.04 0.03);
+            }
+            lineC
+            {
+                type    midPoint;
+                axis    distance;
+                start (0    0    0.04);
+                end   (0.04 0.04 0.04);
+            }
+            lineD
+            {
+                type    midPoint;
+                axis    distance;
+                start (0    0    0.05);
+                end   (0.04 0.04 0.05);
+            }
+        );
+    }
+}
+
+// ************************************************************************* //

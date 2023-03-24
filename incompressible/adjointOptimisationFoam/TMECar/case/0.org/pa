@@ -1,0 +1,105 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2004                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volScalarField;
+    object      pa;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions [0 2 -2 0 0 0 0];
+
+internalField uniform 0.;
+
+boundaryField
+{
+	"car_.*"
+	{
+		type    zeroGradient;
+	}
+
+	wheels_MRF_front
+	{
+		type    zeroGradient;
+	}
+
+	wheels_MRF_rear
+	{
+		type    zeroGradient;
+	}
+
+	wheels_rims_front
+	{
+		type    zeroGradient;
+	}
+
+	wheels_rims_rear
+	{
+		type    zeroGradient;
+	}
+
+	wheels_tyres_front
+	{
+		type    zeroGradient;
+	}
+
+	wheels_tyres_front_no_layers
+	{
+		type    zeroGradient;
+	}
+
+	wheels_tyres_rear
+	{
+		type    zeroGradient;
+	}
+
+	wheels_tyres_rear_no_layers
+	{
+		type    zeroGradient;
+	}
+
+	windtunnel_inlet
+	{
+		type    zeroGradient;
+	}
+
+	windtunnel_outlet
+	{
+		type    adjointOutletPressure;
+		value   uniform 0.;
+	}
+
+	windtunnel_road
+	{
+		type    zeroGradient;
+	}
+
+	windtunnel_road_no_layers
+	{
+		type    zeroGradient;
+	}
+
+	windtunnel_side_1
+	{
+		type    symmetry;
+	}
+
+	windtunnel_top
+	{
+		type    symmetry;
+	}
+
+	windtunnel_symmetry
+	{
+		type    symmetry;
+	}
+}
+
+// ************************************************************************* //

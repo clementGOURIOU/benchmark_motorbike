@@ -1,0 +1,53 @@
+#
+# Automatic post processing by Hakan Nilsson, Maryse Page and Martin Beaudoin
+#
+# 1.0.1 2008-03-14 Maryse Page, Hydro-Quebec
+#     Correction for the k experimental values:
+#     ($ARG2/100) instead of ($ARG2/U0/U0)
+#
+# Modified for the compatibility with gnuplot 5.2 by
+#     Sergey Lesnik, Wikki GmbH, Germany, 2021
+#
+# ARG0: 1st argument, position
+# ARG1: 2st argument, angle of diffuser in degrees
+# ARG2: 3st argument, radius at cross-section
+# ARG3: 4rd argument, case name of solution 1
+# ARG4: 5th argument, time of sample for solution 1
+#
+
+pause 0 sprintf("arg0 : %s", ARG0)
+pause 0 sprintf("arg1 : %s", ARG1)
+pause 0 sprintf("arg2 : %s", ARG2)
+pause 0 sprintf("arg3 : %s", ARG3)
+pause 0 sprintf("arg4 : %s", ARG4)
+pause 0 sprintf("arg5 : %s", ARG5)
+
+U0    = 13.3                 # mean velocity in x-direction [m/s]
+H     = 0.025               # step height
+
+set output sprintf('uRms%s.png', ARG1)
+set terminal png medium font "Helvetica,14"
+set autoscale
+set noarrow
+set nolabel
+set nogrid
+set grid
+
+set xlabel 'u_r_m_s/U_0'
+set ylabel 'y/H'
+set title sprintf("Plane x/H = %s", ARG1)
+set key top right
+set xrange [0:0.3]
+#set xtics 0,20,60
+set yrange [-1:1]
+#set ytics 0,0.0025,0.02
+
+#
+plot \
+     sprintf("../measurementData/uRms_plane%s.csv", ARG1) \
+     using (column(1)):(column(2)) title "Measured" \
+     with points linewidth 2 \
+     , \
+     sprintf("./sampleDict/%s/plane%s_Yaxis_UPrime2Mean.xy", ARG5, ARG1) \
+     using (sqrt(column(2))/U0):(column(1)/H) \
+     title sprintf("%s", ARG4) with lines linewidth 2

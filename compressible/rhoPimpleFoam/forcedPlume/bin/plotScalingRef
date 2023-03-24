@@ -1,0 +1,97 @@
+#!/bin/sh
+
+set -e
+
+# user param set 
+# dataFile="example.dat"
+# dataFile="interNode.dat"
+
+dataFile="$1"
+
+key="OF 5"
+keyRef="OF 7"
+
+
+xlogscale=""
+ylogscal=""
+
+# xlogscale="set logscale x"
+# ylogscale="set logscale y"
+
+[ -f $dataFile ] || "file $dataFile"
+
+# Execution Time 
+gnuplot -p << eof
+
+# unset xtics
+# set ytics 2e3  scale 0.5 font ",6"
+# unset title
+# set format y "%.2e" 
+# set border 2
+# set key left top
+set nokey
+
+# set title "Performance: Scaling" font ",12"
+# set xtics nomirror
+# set xtics scale 1 font ",6"  
+
+set xlabel "number of tasks" font ",12"
+set ylabel "execution time (s)" font ",12" offset 1,0,0
+
+plot '$dataFile' using 1:2 with linespoint lw 2 pt 11 
+eof
+
+# Speedup 
+gnuplot -p << eof
+
+# unset xtics
+# set ytics 2e3  scale 0.5 font ",6"
+# unset title
+# set format y "%.2e" 
+# set border 2
+set key left top
+# set nokey
+
+# set title "Performance: Scaling" font ",12"
+# set xtics nomirror
+# set xtics (10 100 1000 10000) 
+
+set xlabel "number of tasks" font ",12"
+set ytics  nomirror tc lt 1
+set ylabel "Speedup" font ",12" offset 1,0,0
+# set y2tics nomirror tc lt 2
+# set y2label 'Efficiency' tc lt 2
+
+$xlogscale
+$ylogscale
+
+# Functions for scaling metrics
+speedup(t_ref,t) = t_ref/t
+eff(t_ref,Np_ref,t,Np) = (t_ref/t)/(Np/Np_ref)
+ideal(Np_ref,Np)=Np/Np_ref
+
+refTime=system("awk 'FNR == 1 {print \$2}' $dataFile")
+refNproc=system("awk 'FNR == 1 {print \$1}' $dataFile")
+print("reference time")
+print(refTime)
+print("reference number of processor")
+print(refNproc)
+
+plot '$dataFile' u 1:(speedup(refTime,\$2)) with linespoint lw 2 pt 11 title "$key" , '$dataFile' u 1:(speedup(refTime,\$3)) with linespoint lw 2 pt 11 title "$keyRef", \
+ '$dataFile' u 1:(ideal(refNproc,\$1))  with lines lt -1 dt ".-" title "ideal"
+ set yr [GPVAL_DATA_Y_MIN:GPVAL_DATA_Y_MAX]
+ replot
+
+# '$dataFile' u 1:(eff(refTime,refNproc,\$2,\$1)) with linespoint lw 2 axes x1y2, \
+
+# '$dataFile' u 1:(ideal(refNproc,\$1))  with lines lt -1 dt ".-"  axes x1y1,
+# ideal(refNproc,\$1) with lines
+
+# plot '$dataFile' using 1:(eff(refTime,refNproc,\$2,\$1)) with linespoint lw 2 pt 11 
+
+# try labeling nCells/core
+# plot '$dataFile' using 1:(speedup(ref,\$2)):(sprintf("(%d, %d)", \$1, (f(ref,\$2)) )) with linespoint pt 11 , '' with labels
+# offset char 1,1 
+
+eof
+

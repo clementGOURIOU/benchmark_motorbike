@@ -1,0 +1,40 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2012                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      changeDictionaryDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#include        "${FOAM_CASE}/system/include/caseDefinition"
+
+boundary
+{
+    ff_zMin
+    {
+        type                cyclic;
+        neighbourPatch      ff_zMax;
+        inGroups            1(cyclic);
+        transform           translational;
+        separationVector    ( 0.0 0.0 #eval{ $Lspan*$Lchord } );
+    }
+
+    ff_zMax
+    {
+        type                cyclic;
+        neighbourPatch      ff_zMin;
+        inGroups            1(cyclic);
+        transform           translational;
+        separationVector    ( 0.0 0.0 #eval{ (-1.)*$Lspan*$Lchord } );
+    }
+}
+
+// ************************************************************************* //

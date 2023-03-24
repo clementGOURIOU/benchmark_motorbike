@@ -1,0 +1,93 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+ =========                |
+ \      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+  \    /   O peration     | Website:  https://openfoam.org
+   \  /    A nd           | Version:  dev                                   
+    \/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    object      blockMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#include "${FOAM_CASE}/constant/caseSettings"
+
+scale 0.001;
+
+//- INPUT
+xGradingChamber 5;
+
+//- CONSTANT DATA
+
+// box
+xMin -0.0003;
+xMax 830;
+
+yMin -47.5;
+yMax 47.5;
+
+zMin -47.5;
+zMax 47.5;
+
+//- AUTOMATIC CELLS
+additionalCells 12;
+nCellsXTank #calc "int( ($xMax - $xMin) / $:mesh.avgMeshSize + $additionalCells)";
+nCellsYTank #calc "int( ($yMax - $yMin) / $:mesh.avgMeshSize + $additionalCells)";
+
+//- GRADING
+xGradingChamberRev #calc "1.0 / $xGradingChamber";
+
+vertices
+(
+    //- chamber
+    ($xMin $yMin $zMin)
+    ($xMax $yMin $zMin)
+    ($xMax $yMax $zMin)
+    ($xMin $yMax $zMin)
+
+    ($xMin $yMin $zMax)
+    ($xMax $yMin $zMax)
+    ($xMax $yMax $zMax)
+    ($xMin $yMax $zMax)
+);
+
+blocks
+(
+    hex ( 0 1 2 3 4 5 6 7 ) ($nCellsXTank $nCellsYTank $nCellsYTank) simpleGrading ($xGradingChamber 1.0 1.0)
+);
+
+edges
+();
+
+boundary
+(
+    outlet
+    {
+        type    patch;
+        faces   
+        (
+            (1 5 6 2)
+        );
+    }
+
+    baseFront
+    {
+        type    wall;
+        faces   
+        (
+            (0 4 7 3)
+        );
+    }
+);
+
+defaultPatch
+{
+    type wall;
+    name baseBack;
+}
+
+mergePatchPairs
+();

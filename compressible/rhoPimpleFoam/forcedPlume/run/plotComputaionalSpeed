@@ -1,0 +1,48 @@
+#!/bin/sh
+
+set -e
+PERSIST=""  # "-p" for the plot image to persist on the screen
+IMAGE_FORMAT="png"
+
+# user param set 
+logFile="log.rhoPimpleFoam"
+local="logs"
+
+[ -f $logFile ] || "file $logFile"
+[ -d $local ] && rm -r $local
+foamLog log.rhoPimpleFoam
+
+nCores=$(grep "nProcs " log.rhoPimpleFoam | sed 's/[^0-9]*//g')
+nCells=$(grep nCells log.blockMesh | sed 's/[^0-9]*//g')
+# nSteps=$(grep "" -c logs/Time_0)
+
+echo "nCores Tot: $nCores"
+echo "nCells Tot: $nCells"
+# echo "nSteps: $nSteps"
+
+# Acoustic Probes
+gnuplot $PERSIST << eof
+
+# unset xtics
+# set ytics 2e3  scale 0.5 font ",6"
+# unset title
+# set format y "%.2e" 
+# set border 2
+# set key left top
+set nokey
+
+set title "Computational Speed" font ",12"
+# set xtics nomirror
+# set xtics scale 1 font ",6"  
+
+set xlabel "Simulation Time (s)" font ",12"
+set ylabel "nCells/(s*core*iter)" font ",12" offset 1,0,0
+plot '$local/executionTime_0' using 1:((\$0/\$2)*$nCells/$nCores) with lines lt 3 
+
+# print figure
+set terminal png
+set output "speedup.$IMAGE_FORMAT"
+replot
+
+eof
+

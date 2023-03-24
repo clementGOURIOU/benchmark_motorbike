@@ -1,0 +1,16 @@
+#!/bin/sh
+cd "${0%/*}" || exit                                # Run from this directory
+. ${WM_PROJECT_DIR:?}/bin/tools/RunFunctions        # Tutorial run functions
+#------------------------------------------------------------------------------
+
+runApplication blockMesh
+runApplication mirrorMesh -overwrite
+runApplication createPatch -overwrite
+cp -r 0.restart 0
+runApplication decomposePar
+
+echo "Running primal and adjoint solver to compute sensitivities"
+cp system/optimisationDict.finalPhase system/optimisationDict
+runParallel $(getApplication)
+
+#------------------------------------------------------------------------------

@@ -1,0 +1,13 @@
+This test case was created by Upstream CFD GmbH (www.upstream-cfd.com) in the framework of the exaFOAM project (www.exafoam.eu) funded by the JU, the EU and national funding agencies (see below).
+
+If a file or folder provides no other license, you may use the files as you wish but we ask respectfully to credit our effort by referencing Upstream CFD and the exaFOAM project.
+
+The files are provided "as is", without warranty of any kind.
+
+The case contains contributions from the "4th AIAA CFD High Lift Prediction Workshop" esp. the STL file was generated based on data taken from the workshop's homepage.
+
+This application has been developed as part of the exaFOAM Project https://www.exafoam.eu,
+which has received funding from the European High-Performance Computing Joint
+Undertaking (JU) under grant agreement No 956416. The JU receives support from the
+European Union's Horizon 2020 research and innovation programme and France, Germany,
+Italy, Croatia, Spain, Greece, and Portugal.
