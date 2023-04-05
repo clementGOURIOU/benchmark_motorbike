@@ -1,0 +1,209 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2012                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      snappyHexMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+// ***********************************************************************
+// This test case was created by Upstream CFD GmbH (www.upstream-cfd.com)
+// in the framework of the exaFOAM project (www.exafoam.eu) 
+// (see COPYING for details).
+//
+// You may use this file as you wish but we ask respectfully to credit our
+// effort by referencing Upstream CFD and the exaFOAM project.
+// The files are provided "as is", without warranty of any kind.
+// ***********************************************************************
+
+// Which of the steps to run
+castellatedMesh true;
+snap            true;
+addLayers       true;
+
+geometry
+{
+    AMI_outer.obj
+    {
+        type        triSurfaceMesh;
+        name        AMI_outer_rota;
+    }
+    AMI_inner.obj
+    {
+        type        triSurfaceMesh;
+        name        AMI_inner_rota;
+    }    
+    WALL_Rim_Brakedisc_fixed.obj
+    {
+        type        triSurfaceMesh;
+        name        WALL_Rim_Brakedisc_fixed;
+    }
+    shape.obj
+    {
+        type        triSurfaceMesh;
+        name        shape;
+    }
+
+    ground_layer
+    {
+        type            searchablePlate;
+        origin          (-0.48 -1.221 -0.3176);
+        span            (4.46 0.92 0);
+    }
+}
+
+castellatedMeshControls
+{
+
+    maxLocalCells 100000;
+    maxGlobalCells 20000000;
+    minRefinementCells 0;
+    maxLoadUnbalance 0.10;
+    nCellsBetweenLevels 5;
+    features
+    (
+        {
+            file        "shape.eMesh";
+            level       10;
+        }
+        {
+            file        "../extendedFeatureEdgeMesh/shape_multipleEdges.obj";
+            level       11;
+        }
+        {
+            file        "max_ref_rim.obj";
+            level       12;
+        }
+
+    );
+
+    refinementSurfaces
+    {
+        
+        WALL_Rim_Brakedisc_fixed
+        {
+            level       (9 10);              // was 7 in original case
+            patchInfo { type wall; }
+        }
+       AMI_outer_rota
+        {
+            level       (8 8);
+
+        }
+        AMI_inner_rota
+        {
+            level       (10 10);
+        }
+
+    }
+
+    resolveFeatureAngle 30;
+
+    refinementRegions
+    {
+       AMI_outer_rota
+        {
+            mode        distance;
+           levels       ((0.15 8)); // within first 1.0 m refinement level 4
+        }
+
+    }
+
+    locationInMesh (0 -0.881 0);
+    allowFreeStandingZoneFaces true;
+}
+// Settings for the snapping.
+snapControls
+{
+    nSmoothPatch 3;
+    tolerance 2.0;
+
+    nSolveIter 10;
+
+    nRelaxIter 10; 
+    nFeatureSnapIter 10;
+    implicitFeatureSnap false;
+    explicitFeatureSnap true;
+}
+
+addLayersControls
+{
+    layers
+    {
+        WALL_Rim_Brakedisc_fixed
+        {
+            nSurfaceLayers 5;
+            relativeSizes true;
+            thicknessModel finalAndExpansion;
+            finalLayerThickness 0.75;
+            expansionRatio 1.1;
+            minThickness 1e-10;
+        } 
+    }
+    relativeSizes true;
+    thicknessModel finalAndExpansion;
+    finalLayerThickness 0.75;
+    expansionRatio 1.1;
+    minThickness 1e-10;
+    featureAngle 180;
+    mergePatchFacesAngle 60;
+    layerTerminationAngle 30;
+    slipFeatureAngle 30;
+    nGrow 0;
+    nRelaxIter 20;
+
+    nSmoothSurfaceNormals 1;
+    nSmoothThickness 10;
+    maxFaceThicknessRatio 0.3;
+    maxThicknessToMedialRatio 0.3;
+    minMedialAxisAngle 130;
+    nMedialAxisIter 10;
+
+
+    nBufferCellsNoExtrude 0;
+    nLayerIter 50;
+    meshShrinker        displacementMotionSolver;
+    solver              displacementLaplacian;
+    displacementLaplacianCoeffs
+    {
+        //- Increase diffusivity close to all walls
+        diffusivity         quadratic inverseDistance 1(WALL_Rim_Brakedisc_fixed); 
+    }
+}
+meshQualityControls
+{
+           maxNonOrtho 75;
+           maxBoundarySkewness 3;
+           maxInternalSkewness 5;
+
+           maxConcave 180;
+           minFlatness 0.5;
+           minVol 1e-30;
+           minTetQuality -1e+30;
+           minArea -1;
+
+           minTwist 0.0001;
+           minDeterminant 0.0001;
+           minFaceWeight 0.002;
+           minVolRatio 0.001;
+           minTriangleTwist -1;
+
+           nSmoothScale 4;
+           errorReduction 0.75;
+}
+writeFlags
+(
+    scalarLevels
+    layerSets
+    layerFields
+);
+
+mergeTolerance 1e-6;
