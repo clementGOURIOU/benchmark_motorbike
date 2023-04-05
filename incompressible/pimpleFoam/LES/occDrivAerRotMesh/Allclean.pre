@@ -1,0 +1,2 @@
+#!/bin/bash
+rm -r occDrivAerRotMesh occDrivAerRotMeshBlock occDrivAerRotMeshRot occDrivAerRotMeshStatic slurm-*.out images/*.png images/*.pdf

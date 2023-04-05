@@ -1,0 +1,555 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2012                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      snappyHexMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+// ***********************************************************************
+// This test case was created by Upstream CFD GmbH (www.upstream-cfd.com)
+// in the framework of the exaFOAM project (www.exafoam.eu) 
+// (see COPYING for details).
+//
+// You may use this file as you wish but we ask respectfully to credit our
+// effort by referencing Upstream CFD and the exaFOAM project.
+// The files are provided "as is", without warranty of any kind.
+// ***********************************************************************
+
+// Which of the steps to run
+castellatedMesh true;
+snap            true;
+addLayers       true;
+
+geometry
+{
+    OC_DrivAer_CC_NB_210512_A.stl
+    {
+        type triSurfaceMesh;
+        regions
+        {
+            BodyA-Pillar    { name BodyA-Pillar; }
+            BodyDoorhandles { name BodyDoorhandles; }
+            BodyFasciafront1  { name BodyFasciafront1; }
+            BodyFasciafront2  { name BodyFasciafront2; }
+	    BodyFender   { name BodyFender; }
+	    BodyHeadlamps   { name BodyHeadlamps; } 
+	    BodyHood        { name BodyHood; }
+	    BodyRear        { name BodyRear; }
+	    BodyRearAccess  { name BodyRearAccess; }
+	    BodyRocker      { name BodyRocker; }
+	    BodyRoof        { name BodyRoof; }
+	    BodySide        { name BodySide; }
+	    BodyWindowfront        { name BodyWindowfront; }
+	    BodyWindowfrontframe   { name BodyWindowfrontframe; }
+	    BodyWindowSide         { name BodyWindowSide; }
+	    BodyWindowsideframe    { name BodyWindowsideframe; }
+	    Mirrors1               { name Mirrors1; }
+	    Mirrors2               { name Mirrors2; }
+	    ClosedGrillLowerInsert { name ClosedGrillLowerInsert; }
+	    ClosedGrillUpperInsert { name ClosedGrillUpperInsert; }
+	    OCDADetailedUnderbody  { name OCDADetailedUnderbody; }
+	    EngineUndershield      { name EngineUndershield; }
+	    Tiresfront             { name Tiresfront; }
+	    Tiresrear              { name Tiresrear; }
+	    WheelSupportfront1     { name WheelSupportfront1; }
+	    WheelSupportfront2     { name WheelSupportfront2; }
+	    WheelSupportrear       { name WheelSupportrear; }
+	    Powertrain             { name Powertrain; }
+	    ExhaustSystem1         { name ExhaustSystem1; }
+	    ExhaustSystem2         { name ExhaustSystem2; }
+	    ExhaustSystem3         { name ExhaustSystem3; }
+	    NotchbackB-Pillar      { name NotchbackB-Pillar; } 
+	    NotchbackBodyside      { name NotchbackBodyside; }
+	    NotchbackC-Pillar      { name NotchbackC-Pillar; }
+	    NotchbackRoof          { name NotchbackRoof; }
+	    NotchbackTrunk         { name NotchbackTrunk; }
+	    NotchbackWindowrear    { name NotchbackWindowrear; }
+	    NotchbackWindowrearframe  { name NotchbackWindowrearframe; }
+	    NotchbackWindowside       { name NotchbackWindowside; }
+	    NotchbackWindowsideframe  { name NotchbackWindowsideframe; }
+	    CTRL_SURFACE_Outlet             { name CTRL_SURFACE_Outlet; }
+	    CTRL_SURFACE_Wheelhouse_LHS     { name CTRL_SURFACE_Wheelhouse_LHS; }
+	    CTRL_SURFACE_Wheelshouse_RHS    { name CTRL_SURFACE_Wheelshouse_RHS; }
+        }
+    }
+    Rimsfront.stl
+    {
+        type triSurfaceMesh;
+        name Rimsfront;
+    }
+    Rimsrear.stl
+    {
+        type triSurfaceMesh;
+        name Rimsrear;
+    }
+    BrakeDiscfront.stl
+    {
+        type triSurfaceMesh;
+        name BrakeDiscfront;
+    }
+    BrakeDiscrear.stl
+    {
+        type triSurfaceMesh;
+        name BrakeDiscrear;
+    }
+    AMI_IN_FL.stl
+    {
+        type triSurfaceMesh;
+        name AMI_IN_FL;
+    }
+    AMI_IN_FR.stl
+    {
+        type triSurfaceMesh;
+        name AMI_IN_FR;
+    }
+    AMI_OUT_FL.stl
+    {
+        type triSurfaceMesh;
+        name AMI_OUT_FL;
+    }
+    AMI_OUT_FR.stl
+    {
+        type triSurfaceMesh;
+        name AMI_OUT_FR;
+    }
+    AMI_IN_RL.stl
+    {
+        type triSurfaceMesh;
+        name AMI_IN_RL;
+    }
+    AMI_IN_RR.stl
+    {
+        type triSurfaceMesh;
+        name AMI_IN_RR;
+    }
+    AMI_OUT_RL.stl
+    {
+        type triSurfaceMesh;
+        name AMI_OUT_RL;
+    }
+    AMI_OUT_RR.stl
+    {
+        type triSurfaceMesh;
+        name AMI_OUT_RR;
+    }
+
+    box_L3
+    {
+        type searchableBox;
+        min (-6 -2.5  -1);
+        max ( 48.0 2.5  2.7);
+    }
+    box_L4
+    {
+        type searchableBox;
+        min (-4.5 -2.5  -1);
+        max ( 24.0 2.5  2.7);
+    }
+    box_L5
+    {
+        type searchableBox;
+        min (-3 -1.8  -1);
+        max ( 16 1.8  1.8);
+    }
+    box_L6
+    {
+        type searchableBox;
+        min ( 3 -1.2  -1);
+        max ( 8.0 1.2  1.5);
+    }
+    box_L7_rearwindow_departure
+    {
+        type searchableRotatedBox;
+        origin (2.2 -1.15  -0.3185);
+        span (3.0 2.3  1.6);
+     		e1 (0.992 0 -0.12); //7 deg
+        e3 (0.12 0 0.992); //7 deg
+    }
+    box_L7_departure
+    {
+        type searchableBox;
+        min (4.5 -1.15  -0.32);
+        max (7.0 1.15  1.0);
+    }
+    box_L7_wheels
+    {
+        type searchableBox;
+        min (-0.56 -1.4  -1);
+        max (3.7 1.4  0.475);
+    }
+    box_L7_mirrors
+    {
+        type searchableBox;
+        min (0.95 -1.15  0.475);
+        max (3.7 1.15  0.95);
+    }
+    box_L7_carfloor
+    {
+        type searchableBox;
+        min (-0.56 -1.50  -0.32);
+        max (5.0 1.50  0.1);
+    }
+    box_L8_wheel_sideline_L
+    {
+        type searchableBox;
+        min (-0.4 -0.98 -0.4);
+        max ( 4   -0.75  0.5);
+    }
+    box_L8_wheel_sideline_R
+    {
+        type searchableBox;
+        min (-0.4 0.75 -0.4);
+        max ( 4   0.98  0.5);
+    }
+    box_L8_wheel_mirror_sideline_L
+    {
+        type searchableBox;
+        min (0.83 -1.1  -0.4);
+        max ( 4   -0.75  0.84);
+    }
+    box_L8_wheel_mirror_sideline_R
+    {
+        type searchableBox;
+        min (0.83 0.75 -0.4);
+        max ( 4   1.1  0.84);
+    }
+    ground_layer
+    {
+        type            searchablePlate;
+        origin          (-2.34 -2.5 -0.3176);
+        span            (20 5 0);
+    }
+    engine_undershield.stl
+    {
+        type triSurfaceMesh;
+        name engine_undershield;
+    }
+    windows_trunk_rear.stl
+    {
+        type triSurfaceMesh;
+        name windows_trunk_rear;
+    }
+    NotchbackWindowrear.stl
+    {
+        type triSurfaceMesh;
+        name NotchbackWindowrear;
+    }
+    TirePlinthfront.stl
+    {
+        type triSurfaceMesh;
+        name TirePlinthfront;
+    }
+    TirePlinthrear.stl
+    {
+        type triSurfaceMesh;
+        name TirePlinthrear;
+    }
+    Plinths_adapted.stl
+    {
+        type triSurfaceMesh;
+        name Plinths_adapted;
+    }
+
+}
+
+castellatedMeshControls
+{
+
+    maxLocalCells 100000000;
+    maxGlobalCells 500000000;
+    minRefinementCells 16;
+    maxLoadUnbalance 0.2;
+    nCellsBetweenLevels 5;
+    features
+    (
+        {
+            file        "OC_DrivAer_CC_NB_210512_A.eMesh";
+            level       10;
+        }
+        {
+            file        "Rimsfront.eMesh";
+            level       10;
+        }
+        {
+            file        "Rimsrear.eMesh";
+            level       10;
+        }
+        {
+            file        "Plinths_adapted.eMesh";
+            level       10;
+        }  
+        {
+            file        "BrakeDiscfront.eMesh";
+            level       10;
+        }
+        {
+            file        "BrakeDiscrear.eMesh";
+            level       10;
+        }
+        {
+            file        "AMI_IN_RL.eMesh";
+            level       10;
+        }
+        {
+            file        "AMI_IN_RR.eMesh";
+            level       10;
+        }
+        {
+            file        "AMI_IN_FL.eMesh";
+            level       10;
+        }
+        {
+            file        "AMI_IN_FR.eMesh";
+            level       10;
+        }
+        {
+            file        "AMI_OUT_RL.eMesh";
+            level       10;
+        }
+        {
+            file        "AMI_OUT_RR.eMesh";
+            level       10;
+        }
+        {
+            file        "AMI_OUT_FL.eMesh";
+            level       10;
+        }
+        {
+            file        "AMI_OUT_FR.eMesh";
+            level       10;
+        }
+        {
+            file        "../extendedFeatureEdgeMesh/AMI_IN_RL_openEdges.obj";
+            level       11;
+        }
+        {
+            file        "../extendedFeatureEdgeMesh/AMI_IN_RR_openEdges.obj";
+            level       11;
+        }
+        {
+            file        "../extendedFeatureEdgeMesh/AMI_IN_FL_openEdges.obj";
+            level       11;
+        }
+        {
+            file        "../extendedFeatureEdgeMesh/AMI_IN_FR_openEdges.obj";
+            level       11;
+        }
+        {
+            file        "../extendedFeatureEdgeMesh/AMI_OUT_RL_openEdges.obj";
+            level       11;
+        }
+        {
+            file        "../extendedFeatureEdgeMesh/AMI_OUT_RR_openEdges.obj";
+            level       11;
+        }
+        {
+            file        "../extendedFeatureEdgeMesh/AMI_OUT_FL_openEdges.obj";
+            level       11;
+        }
+        {
+            file        "../extendedFeatureEdgeMesh/AMI_OUT_FR_openEdges.obj";
+            level       11;
+        }
+
+    );
+
+    refinementSurfaces
+    {
+        OC_DrivAer_CC_NB_210512_A.stl
+        {
+            level (6 6);
+            regions
+            {
+                "(Body.*|Notchback.*|Exhaust.*|Powertrain|Wheel.*|Engine.*|OCDA.*|Closed.*|CTRL.*|Mirr.*)"        
+                { 
+                      level (9 10); 
+                      patchInfo { type wall; }
+                }
+                "Tires.*"
+                {
+                       level       (9 9);
+                       patchInfo { type wall; }
+                }
+            }
+        }
+        Plinths_adapted
+        {
+            level       (11 11);
+            patchInfo { type wall; }
+            blockLevel 5;
+        }
+
+        "Brake.*"
+        {
+            level       (9 9);
+            patchInfo { type wall; }
+        }
+        "Rim.*"
+        {
+            level       (10 10);
+            patchInfo { type wall; }
+        }
+       "(ground|ground_layer)"
+        {
+            level       (7 7);
+            patchInfo { type wall; }
+        }
+       "AMI_OUT.*"
+        {
+            level       (8 8);
+
+        }
+        "AMI_IN.*"
+        {
+            level       (10 10);
+        }
+
+    }
+
+    resolveFeatureAngle 20;
+
+    refinementRegions
+    {
+        box_L3
+        {
+            mode        inside;
+            levels      ((1E15 3));
+        }
+        box_L4
+        {
+            mode        inside;
+            levels      ((1E15 4));
+        }
+        box_L5
+        {
+            mode        inside;
+            levels      ((1E15 5));
+        }
+        box_L6
+        {
+            mode        inside;
+            levels      ((1E15 6));
+        }
+        "box_L7.*"
+        {
+            mode        inside;
+            levels      ((1E15 7));
+        }
+        "box_L8_wheel_.*"
+        {
+            mode        inside;
+            levels      ((1E15 8));
+        }
+        engine_undershield
+        {
+            mode        distance;
+            levels       ((0.05 8));
+        }
+        windows_trunk_rear
+        {
+            mode        distance;
+            levels       ((0.15 8));
+        }
+        NotchbackWindowrear
+        {
+            mode        distance;
+            levels       ((0.2 8));
+        }
+        Plinths_adapted
+        {
+            mode        distance;
+            levels       ((0.02 11)(0.06 9));
+        }
+        OC_DrivAer_CC_NB_210512_A.stl
+        {
+            mode        distance;
+            levels       ((0.065 8) (0.2 7));
+            regions
+            {
+            }
+        }
+    }
+
+    locationInMesh (0 -1.13 0);
+    locationsOutsideMesh ((-0.023 -0.7815 -0.3146) (-0.023 0.7815 -0.3146) (2.822 -0.784 -0.3146) (2.822 0.784 -0.3146));
+    allowFreeStandingZoneFaces true;
+}
+
+// Settings for the snapping.
+snapControls
+{
+    nSmoothPatch 3;
+    tolerance 2.0;
+    nSolveIter 30;
+    nRelaxIter 5;  
+    nFeatureSnapIter 10;
+    implicitFeatureSnap false;
+    explicitFeatureSnap true;
+}
+
+addLayersControls
+{
+    layers
+    {
+        "Body.*|Notch.*|Exhaust.*|Powertrain|Wheel.*|Engine.*|OCDA.*|Closed.*|CTRL.*|Mirr.*|ground_layer"
+        {
+            nSurfaceLayers 2;
+        }
+        "Rim.*|Brake.*|Plinth.*|Tires.*"
+        {
+            nSurfaceLayers 2;
+        }
+    }
+    relativeSizes true;
+    expansionRatio 1.2;
+    finalLayerThickness 0.5;
+    minThickness 1e-10;
+    featureAngle 120;
+    nGrow 0;
+    slipFeatureAngle 30;
+
+    nRelaxIter 3;
+    nSmoothSurfaceNormals 1;
+    nSmoothNormals 3;
+    nSmoothThickness 10;
+    maxFaceThicknessRatio 0.5;
+    maxThicknessToMedialRatio 0.3;
+    minMedialAxisAngle 90;
+    nMedialAxisIter 10;
+
+    nBufferCellsNoExtrude 0;
+    nLayerIter 50;
+}
+meshQualityControls
+{
+    #include "meshQualityDict"
+
+    relaxed
+    {
+         // Maximum non-orthogonality allowed. Set to 180 to disable.
+         maxNonOrtho 75;
+         minTetQuality -1e30;
+         minTwist    -1;
+    }
+
+    nSmoothScale 4;
+    errorReduction 0.75;
+}
+writeFlags
+(
+    scalarLevels
+    layerSets
+    layerFields
+);
+
+
+mergeTolerance 1e-6;

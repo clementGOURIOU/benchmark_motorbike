@@ -1,0 +1,139 @@
+#!/bin/bash -l
+### Script for meshing the open-closed coolings DrivAer with a
+### rotating mesh
+### Upstream CFD, 2021-2023
+
+# The project leading to this application has received funding from
+# the European High-Performance Computing Joint Undertaking Joint
+# Undertaking (JU) under grant agreement No 956416. The JU receives
+# support from the European Union's Horizon 2020 research and
+# innovation programme and France, United Kingdom, Germany, Italy,
+# Croatia, Spain, Greece, Portugal
+#
+# Based on the geometry of the AutoCFD3 Workshop:
+# Hupertz, B., Chalupa, K., Krueger, L., Howard, K., Glueck, H.-D., Lewington, N., . . . Shin, Y.-s. (2021). On the Aerodynamics of the Notchback Open Cooling DrivAer: A Detailed Investigation of Wind Tunnel Data for Improved Correlation and Reference. SAE Int. J. Adv. & Curr. Prac. in Mobility, 3(4), 1726-1747. doi:https://doi.org/10.4271/2021-01-0958
+
+### The final mesh is located in occDrivAerRotMesh
+### Meshing tested using 128 cores
+### with gnu/11, openmpi/3 and OpenFOAM/v2106
+
+### example for slurm submission
+# adapt to your needs or ignore if not submitting to a queuing system
+#SBATCH --job-name "Mesh_occDrivAerRotMesh"
+#SBATCH --nodes=4
+#SBATCH --ntasks-per-node=32
+#SBATCH --time=12:00:00
+#SBATCH --partition=long
+#SBATCH --mail-type=NONE
+#SBATCH --account=eubm_2021_exafoam
+
+# EXIT ON ERROR
+set -e
+
+### Select the meshing stages
+##  set all to true for full meshing cycles
+##  reentry possible
+
+# blockmesh and feature extraction
+prepareMesh=true
+
+# mesh the full car with static meshing of the wheels
+# requires results of prepareMesh
+# runs about 6h on 128 cores
+staticMesh=true
+
+# mesh the wheels for mesh rotation
+# requires results of prepareMesh
+rotMesh=true
+
+# merge the meshes
+# requires results of staticMesh and rotMesh
+mergeMesh=true
+
+
+### Set nice level if required
+NI=" "
+#NI="nice -n 19"
+
+### directories
+logDir="logFiles"
+srcDir="occDrivAerRotMesh.orig"
+blockDir="occDrivAerRotMeshBlock"
+staticDir="occDrivAerRotMeshStatic"
+rotDir="occDrivAerRotMeshRot"
+mergeDir="occDrivAerRotMesh"
+
+### mpi command to run on your machine (mpirun or equivalent)
+parEx="srun"
+
+use_control="system/controlDict.DDES.init"
+use_decompose="-decomposeParDict system/decomposeParDict.meshing"
+use_parallel="-parallel $use_decompose"
+
+if $prepareMesh; then
+   time (
+   echo "Prepare meshing ..."
+   rm -rf $blockDir
+   cp -a $srcDir $blockDir
+   cd $blockDir
+   cp system/fvSchemes.pre system/fvSchemes
+   cp $use_control system/controlDict
+   mkdir -p $logDir
+   $NI blockMesh > $logDir/00_blockMesh.log 2>&1 || exit 1
+   $NI decomposePar $use_decompose > $logDir/01_decomposePar.log 2>&1 || exit 1
+   surfaceFeatureExtract > $logDir/02_surfaceFeatureExtract.log 2>&1 || exit 1
+   )
+   echo
+fi
+
+if $staticMesh; then
+   time (
+   echo "Meshing static region ..."
+   rm -rf $staticDir
+   cp -a $blockDir $staticDir
+   cd $staticDir
+   cp system/fvSchemes.mesh system/fvSchemes
+   mkdir -p $logDir
+   cp $use_control system/controlDict
+   $parEx snappyHexMesh -overwrite -dict ./system/snappyHexMeshDict.full $use_parallel > $logDir/03_snappyHexMesh_stat.log 2>&1 || exit 1
+   $parEx checkMesh $use_parallel > $logDir/04_checkMesh_stat.log 2>&1 || exit 1
+   )
+   echo
+fi
+
+if $rotMesh; then
+   time (
+   echo "Meshing rotating region ..."
+   rm -rf $rotDir
+   cp -a $blockDir $rotDir
+   cd $rotDir
+   cp system/fvSchemes.mesh system/fvSchemes
+   mkdir -p $logDir
+   cp $use_control system/controlDict
+   $NI $parEx snappyHexMesh -overwrite -dict ./system/snappyHexMeshDict.rota $use_decompose -parallel > $logDir/05_snappyHexMesh_rota.log 2>&1 || exit 1
+   $parEx checkMesh -parallel $use_decompose > $logDir/06_checkMesh_rota.log 2>&1 || exit 1
+   )
+   echo
+fi
+
+if $mergeMesh; then
+   time (
+   echo "Merging static and rotating Mesh ..."
+   rm -rf $mergeDir
+   cp -a $staticDir $mergeDir
+   cd $mergeDir
+   cp system/fvSchemes.pre system/fvSchemes
+   $parEx mergeMeshes -overwrite -parallel $use_decompose . ../$rotDir > $logDir/08_mergeMeshes.log 2>&1 || exit 1
+   rm processor*/0/* 
+   $parEx topoSet -parallel $use_decompose > $logDir/09_topoSet_stat.log 2>&1 || exit 1
+   $parEx topoSet -parallel -dict ./system/topoSetDict.rear $use_decompose >> $logDir/09_topoSet_stat.log 2>&1 || exit 1
+   $parEx createBaffles -parallel -dict ./system/createBafflesDict.FL -overwrite $use_decompose > $logDir/10_createBaffles.log 2>&1 || exit 1
+   $parEx createBaffles -parallel -dict ./system/createBafflesDict.FR -overwrite $use_decompose >> $logDir/10_createBaffles.log 2>&1 || exit 1
+   $parEx createBaffles -parallel -dict ./system/createBafflesDict.RL -overwrite $use_decompose >> $logDir/10_createBaffles.log 2>&1 || exit 1
+   $parEx createBaffles -parallel -dict ./system/createBafflesDict.RR -overwrite $use_decompose >> $logDir/10_createBaffles.log 2>&1 || exit 1
+   $parEx checkMesh -parallel $use_decompose > $logDir/11_checkMesh_merged.log 2>&1 || exit 1
+   )
+   echo
+fi
+echo "Finished."
+

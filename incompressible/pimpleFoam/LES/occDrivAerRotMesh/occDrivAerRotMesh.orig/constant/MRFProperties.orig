@@ -1,0 +1,58 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2012                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      dynamicMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+MRF_FL
+{
+    cellZone        rotatingCells_FL;
+    active          yes;
+
+    nonRotatingPatches ();
+    origin      (0.007 0 0);
+    axis        (0 1 0);
+    omega       -122.899552; // rad/s
+}
+MRF_FR
+{
+    cellZone        rotatingCells_FR;
+    active          yes;
+
+    nonRotatingPatches ();
+    origin      (0.007 0 0);
+    axis        (0 1 0);
+    omega       -122.899552; // rad/s
+}
+MRF_RL
+{
+    cellZone        rotatingCells_RL;
+    active          yes;
+
+    nonRotatingPatches ();
+    origin      (2.79318452 0 0);
+    axis        (0 1 0);
+    omega       -122.899552; // rad/s
+}
+MRF_RR
+{
+    cellZone        rotatingCells_RR;
+    active          yes;
+
+    nonRotatingPatches ();
+    origin      (2.79318452 0 0);
+    axis        (0 1 0);
+    omega       -122.899552; // rad/s
+}
+// ************************************************************************* //

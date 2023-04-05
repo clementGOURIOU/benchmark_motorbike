@@ -1,0 +1,91 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2012                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      surfaceFeatureExtractDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+OC_DrivAer_CC_NB_210512_A.stl
+{
+    #include "surfaceFeatureExtractDictDefaultsNoEdges"
+}
+TirePlinthfront.stl
+{
+    #include "surfaceFeatureExtractDictDefaults"
+}
+TirePlinthrear.stl
+{
+    #include "surfaceFeatureExtractDictDefaults"
+}
+Plinths_adapted.stl
+{
+    #include "surfaceFeatureExtractDictDefaults"
+}
+
+AMI_IN_FL.stl
+{
+    #include "surfaceFeatureExtractDictDefaults"
+}
+
+AMI_IN_FR.stl
+{
+    #include "surfaceFeatureExtractDictDefaults"
+}
+
+AMI_OUT_FL.stl
+{
+    #include "surfaceFeatureExtractDictDefaults"
+}
+
+AMI_OUT_FR.stl
+{
+    #include "surfaceFeatureExtractDictDefaults"
+}
+
+AMI_IN_RL.stl
+{
+    #include "surfaceFeatureExtractDictDefaults"
+}
+
+AMI_IN_RR.stl
+{
+    #include "surfaceFeatureExtractDictDefaults"
+}
+
+AMI_OUT_RL.stl
+{
+    #include "surfaceFeatureExtractDictDefaults"
+}
+
+AMI_OUT_RR.stl
+{
+    #include "surfaceFeatureExtractDictDefaults"
+}
+Rimsfront.stl
+{
+    #include "surfaceFeatureExtractDictDefaults"
+}
+Rimsrear.stl
+{
+    #include "surfaceFeatureExtractDictDefaults"
+}
+
+BrakeDiscfront.stl
+{
+    #include "surfaceFeatureExtractDictDefaults"
+}
+BrakeDiscrear.stl
+{
+    #include "surfaceFeatureExtractDictDefaults"
+}
+
+// ************************************************************************* //

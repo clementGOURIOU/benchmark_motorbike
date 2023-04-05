@@ -1,0 +1,201 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  9                                     |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      createBafflesDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+// Whether to convert internal faces only (so leave boundary faces intact).
+// This is only relevant if your face selection type can pick up boundary
+// faces.
+internalFacesOnly false;
+
+
+// Baffles to create.
+baffles
+{
+    // NOTE: cyclicAMI patches MUST BE defined PRIOR to their associted
+    //       blockage patches
+
+    ACMI_IN_RL_S 
+    {
+        //- Use predefined faceZone to select faces and orientation.
+        type        faceZone;
+        zoneName    AMI_IN_RLZone;
+
+        patches
+        {
+            master
+            {
+                //- Master side patch
+                name            ACMI_IN_RL_S_couple;
+                type            cyclicACMI;
+                matchTolerance  0.0001;
+                neighbourPatch  ACMI_IN_RL_R_couple;
+                nonOverlapPatch ACMI_IN_RL_S_blockage;
+                transform       noOrdering;
+            }
+
+            slave // not used since we're manipulating a boundary patch
+            {
+                //- Slave side patch
+                name            ACMI_IN_RL_S_couple;
+                type            patch;
+            }
+
+            master2
+            {
+                //- Master side patch
+                name            ACMI_IN_RL_S_blockage;
+                type            symmetry;
+            }
+
+            slave2 // not used since we're manipulating a boundary patch
+            {
+                //- Slave side patch
+                name            ACMI_IN_RL_S_blockage;
+                type            symmetry;
+            }
+
+        }
+    }
+    ACMI_IN_RL_R
+    {
+        //- Use predefined faceZone to select faces and orientation.
+        type        faceZone;
+        zoneName    AMI_IN_RLZone_rota;
+
+        patches
+        {
+            master
+            {
+                //- Master side patch
+                name            ACMI_IN_RL_R_couple;
+                type            cyclicACMI;
+                matchTolerance  0.0001;
+                neighbourPatch  ACMI_IN_RL_S_couple;
+                nonOverlapPatch ACMI_IN_RL_R_blockage;
+                transform       noOrdering;
+            }
+
+            slave // not used since we're manipulating a boundary patch
+            {
+                //- Slave side patch
+                name            ACMI_IN_RL_R_couple;
+                type            patch;
+            }
+
+            master2
+            {
+                //- Master side patch
+                name            ACMI_IN_RL_R_blockage;
+                type            symmetry;
+            }
+
+            slave2 // not used since we're manipulating a boundary patch
+            {
+                //- Slave side patch
+                name            ACMI_IN_RL_R_blockage;
+                type            symmetry;
+            }
+
+        }
+    }
+    ACMI_OUT_RL_S
+    {
+        //- Use predefined faceZone to select faces and orientation.
+        type        faceZone;
+        zoneName    AMI_OUT_RLZone;
+
+        patches
+        {
+            master
+            {
+                //- Master side patch
+                name            ACMI_OUT_RL_S_couple;
+                type            cyclicACMI;
+                matchTolerance  0.0001;
+                neighbourPatch  ACMI_OUT_RL_R_couple;
+                nonOverlapPatch ACMI_OUT_RL_S_blockage;
+                transform       noOrdering;
+            }
+
+            slave // not used since we're manipulating a boundary patch
+            {
+                //- Slave side patch
+                name            ACMI_OUT_RL_S_couple;
+                type            patch;
+            }
+
+            master2
+            {
+                //- Master side patch
+                name            ACMI_OUT_RL_S_blockage;
+                type            symmetry;
+            }
+
+            slave2 // not used since we're manipulating a boundary patch
+            {
+                //- Slave side patch
+                name            ACMI_OUT_RL_S_blockage;
+                type            symmetry;
+            }
+
+        }
+    }
+    ACMI_OUT_RL_R
+    {
+        //- Use predefined faceZone to select faces and orientation.
+        type        faceZone;
+        zoneName    AMI_OUT_RLZone_rota;
+
+        patches
+        {
+            master
+            {
+                //- Master side patch
+                name            ACMI_OUT_RL_R_couple;
+                type            cyclicACMI;
+                matchTolerance  0.0001;
+                neighbourPatch  ACMI_OUT_RL_S_couple;
+                nonOverlapPatch ACMI_OUT_RL_R_blockage;
+                transform       noOrdering;
+            }
+
+            slave // not used since we're manipulating a boundary patch
+            {
+                //- Slave side patch
+                name            ACMI_OUT_RL_R_couple;
+                type            patch;
+            }
+
+            master2
+            {
+                //- Master side patch
+                name            ACMI_OUT_RL_R_blockage;
+                type            symmetry;
+            }
+
+            slave2 // not used since we're manipulating a boundary patch
+            {
+                //- Slave side patch
+                name            ACMI_OUT_RL_R_blockage;
+                type            symmetry;
+            }
+
+        }
+    }
+
+}
+
+
+// ************************************************************************* //
