@@ -1,0 +1,189 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2012                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      topoSetDict;
+}
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+actions
+(
+    {
+        name    AMI_IN_FLSet;
+        type    faceSet;
+        action  new;
+        source  patchToFace;
+        sourceInfo
+        {
+            patch    AMI_IN_FL;
+        }
+    }
+    {
+        name    AMI_IN_FLZone;
+        type    faceZoneSet;
+        action  new;
+        source  setToFaceZone;
+        sourceInfo
+        {
+            faceSet AMI_IN_FLSet;
+        }
+    }
+    {
+        name    AMI_IN_FLSet_rota;
+        type    faceSet;
+        action  new;
+        source  patchToFace;
+        sourceInfo
+        {
+            patch    AMI_IN_FL_rota;
+        }
+    }
+    {
+        name    AMI_IN_FLZone_rota;
+        type    faceZoneSet;
+        action  new;
+        source  setToFaceZone;
+        sourceInfo
+        {
+            faceSet AMI_IN_FLSet_rota;
+        }
+    }
+/////////////////////////////////////////////
+
+    {
+        name    AMI_IN_FRSet;
+        type    faceSet;
+        action  new;
+        source  patchToFace;
+        sourceInfo
+        {
+            patch    AMI_IN_FR;
+        }
+    }
+    {
+        name    AMI_IN_FRZone;
+        type    faceZoneSet;
+        action  new;
+        source  setToFaceZone;
+        sourceInfo
+        {
+            faceSet AMI_IN_FRSet;
+        }
+    }
+    {
+        name    AMI_IN_FRSet_rota;
+        type    faceSet;
+        action  new;
+        source  patchToFace;
+        sourceInfo
+        {
+            patch    AMI_IN_FR_rota;
+        }
+    }
+    {
+        name    AMI_IN_FRZone_rota;
+        type    faceZoneSet;
+        action  new;
+        source  setToFaceZone;
+        sourceInfo
+        {
+            faceSet AMI_IN_FRSet_rota;
+        }
+    }
+////////////////////////////////////////
+
+    {
+        name    AMI_OUT_FLSet;
+        type    faceSet;
+        action  new;
+        source  patchToFace;
+        sourceInfo
+        {
+            patch    AMI_OUT_FL;
+        }
+    }
+    {
+        name    AMI_OUT_FLZone;
+        type    faceZoneSet;
+        action  new;
+        source  setToFaceZone;
+        sourceInfo
+        {
+            faceSet AMI_OUT_FLSet;
+        }
+    }
+    {
+        name    AMI_OUT_FLSet_rota;
+        type    faceSet;
+        action  new;
+        source  patchToFace;
+        sourceInfo
+        {
+            patch    AMI_OUT_FL_rota;
+        }
+    }
+    {
+        name    AMI_OUT_FLZone_rota;
+        type    faceZoneSet;
+        action  new;
+        source  setToFaceZone;
+        sourceInfo
+        {
+            faceSet AMI_OUT_FLSet_rota;
+        }
+    }
+///////////////////////////////////////
+    {
+        name    AMI_OUT_FRSet;
+        type    faceSet;
+        action  new;
+        source  patchToFace;
+        sourceInfo
+        {
+            patch    AMI_OUT_FR;
+        }
+    }
+    {
+        name    AMI_OUT_FRZone;
+        type    faceZoneSet;
+        action  new;
+        source  setToFaceZone;
+        sourceInfo
+        {
+            faceSet AMI_OUT_FRSet;
+        }
+    }
+    {
+        name    AMI_OUT_FRSet_rota;
+        type    faceSet;
+        action  new;
+        source  patchToFace;
+        sourceInfo
+        {
+            patch    AMI_OUT_FR_rota;
+        }
+    }
+    {
+        name    AMI_OUT_FRZone_rota;
+        type    faceZoneSet;
+        action  new;
+        source  setToFaceZone;
+        sourceInfo
+        {
+            faceSet AMI_OUT_FRSet_rota;
+        }
+    }
+
+
+);
+
+// ************************************************************************* //

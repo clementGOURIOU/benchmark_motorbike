@@ -1,0 +1,110 @@
+#!/bin/bash -l
+
+### Script for meshing a single rotating wheel isolated from the
+### Ford DrivAer model (AutoCFD2 workshop, 2021)
+### Upstream CFD, 2021
+
+# The project leading to this application has received funding from
+# the European High-Performance Computing Joint Undertaking Joint
+# Undertaking (JU) under grant agreement No 956416. The JU receives
+# support from the European Union’s Horizon 2020 research and
+# innovation programme and France, United Kingdom, Germany, Italy,
+# Croatia, Spain, Greece, Portugal
+
+### The final mesh is located in mergeDir (wheelRotMesh)
+### Meshing tested using 18 cores.
+
+
+### Select the meshing stages
+##  set all to true for full meshing cycles
+##  reentry possible
+
+# Prepare the mesh (blockMesh etc.)
+# --> blockDir; runtime approx. 5min
+prepareMesh=true
+
+# Mesh the static region (requires results from prepareMesh)
+# --> staticDir; runtime approx. 1h
+staticMesh=true
+
+# Mesh the rotating part (requires results from prepareMesh) 6min
+# --> rotDir; runtime approx. 6min 
+rotMesh=true
+
+# merge the meshes (requires results from staticMesh and rotMesh) 1min
+# --> mergeDir; runtime approx. 1min
+mergeMesh=true
+
+### Used directories
+logDir="logFiles"
+srcDir="wheelRotMesh.orig"
+blockDir="wheelRotMeshBlock"
+staticDir="wheelRotMeshStatic"
+rotDir="wheelRotMeshRot"
+mergeDir="wheelRotMesh"
+
+### Parallel execution command
+parEx="mpirun -np 18"
+
+use_control="system/controlDict.DDES.init"
+use_decompose="-decomposeParDict system/decomposeParDict.meshing"
+use_parallel="-parallel $use_decompose"
+
+if $prepareMesh; then
+   echo "Prepare meshing..."
+   time (
+   rm -rf $blockDir
+   cp -a $srcDir $blockDir
+   cd $blockDir
+   cp $use_control system/controlDict
+   mkdir -p $logDir
+   blockMesh > $logDir/00_blockMesh.log 2>&1 || exit 1
+   decomposePar $use_decompose > $logDir/01_decomposePar.log 2>&1 || exit 1
+   surfaceFeatureExtract > $logDir/02_surfaceFeatureExtract.log 2>&1 || exit 1
+   )
+   echo
+fi
+
+if $staticMesh; then
+   echo "Meshing static region ..."
+   time (
+   rm -rf $staticDir
+   cp -a $blockDir $staticDir
+   cd $staticDir
+   mkdir -p $logDir
+   cp $use_control system/controlDict
+   $parEx snappyHexMesh -overwrite -dict ./system/snappyHexMeshDict.stat $use_parallel > $logDir/03_snappyHexMesh_stat.log 2>&1 || exit 1
+   $parEx checkMesh $use_parallel > $logDir/04_checkMesh_stat.log 2>&1 || exit 1
+   )
+   echo
+fi
+
+if $rotMesh; then
+   echo "Meshing rotating region ..."
+   time (
+   rm -rf $rotDir
+   cp -a $blockDir $rotDir
+   cd $rotDir
+   mkdir -p $logDir
+   cp $use_control system/controlDict
+   $parEx snappyHexMesh -overwrite -dict ./system/snappyHexMeshDict.rota $use_parallel > $logDir/05_snappyHexMesh_rota.log 2>&1 || exit 1
+   $parEx checkMesh $use_parallel > $logDir/06_checkMesh_rota.log 2>&1 || exit 1
+   )
+   echo
+fi
+
+if $mergeMesh; then
+   echo "Merging static and rotating Mesh ..."
+   time (
+   rm -rf $mergeDir
+   cp -a $staticDir $mergeDir
+   cd $mergeDir
+   $parEx mergeMeshes $use_parallel -overwrite . ../$rotDir > $logDir/07_mergeMeshes.log 2>&1 || exit 1
+   rm -f processor*/0/*
+   $parEx topoSet $use_parallel > $logDir/08_topoSet_stat.log 2>&1 || exit 1
+   $parEx createBaffles -overwrite $use_parallel > $logDir/09_createBaffles.log 2>&1 || exit 1
+   $parEx checkMesh $use_parallel > $logDir/11_checkMesh_merged.log 2>&1 || exit 1
+   $parEx topoSet -dict ./system/topoSetDict.region $use_parallel > $logDir/10_topoSet_merged.log 2>&1 || exit 1
+   )
+fi
+echo "Finished."

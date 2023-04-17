@@ -1,0 +1,70 @@
+#!/bin/bash -l
+
+### Script for running a single rotating wheel (isolated from the
+### Ford DrivAer model, AutoCFD2 workshop, 2021)
+### Upstream CFD, 2021
+
+# This application has been developed as part of the exaFOAM Project
+# https://www.exafoam.eu, which has received funding from the European
+# High-Performance Computing Joint Undertaking (JU) under grant
+# agreement No 956416. The JU receives support from the European Union's
+# Horizon 2020 research and innovation programme and France, Germany,
+# Italy, Croatia, Spain, Greece, and Portugal.
+
+### example for slurm submission
+# adapt to your needs or ignore if not submitting to a queuing system
+#SBATCH --job-name "wheelRotMesh"
+#SBATCH --nodes=4
+#SBATCH --ntasks-per-node=32
+#SBATCH --time=12:00:00
+#SBATCH --partition=long
+#SBATCH --mail-type=NONE
+#SBATCH --account=eubm_2021_exafoam
+
+### What to run ...
+run_initial_DDES=true
+run_productive_DDES=false
+
+### Solver
+solverLES="pimpleFoam"
+
+### Used directories
+logDir="logFiles"
+
+TIMESTAMP=$(date "+%Y-%m-%d_%H-%M-%S")
+
+. ${WM_PROJECT_DIR:?}/bin/tools/RunFunctions
+#parEx="mpirun -np 128"
+parEx="srun"
+
+if $run_initial_DDES; then
+    echo "Running initial DDES ..."
+    mkdir -p $logDir
+    
+    cp system/controlDict.DDES.init system/controlDict
+    cp constant/dynamicMeshDict.orig constant/dynamicMeshDict
+
+    restore0Dir -processor
+    $parEx redistributePar -overwrite -parallel >\
+        $logDir/20_redistributePar.log 2>&1 || exit 1
+    $parEx potentialFoam -initialiseUBCs -parallel >\
+        $logDir/21_potentialFoam.log 2>&1 || exit 1
+    $parEx applyBoundaryLayer -ybl "0.0450244" -parallel >\
+        $logDir/22_applyBoundaryLayer.log 2>&1 || exit 1
+
+    $parEx $solverLES -parallel >\
+        $logDir/23_$solverLES.$TIMESTAMP.log 2>&1 || exit 1
+    echo "... done!"
+fi
+
+if $run_productive_DDES; then
+    echo "Running productive DDES ..."
+    
+    cp system/controlDict.DDES.avg system/controlDict
+
+    $parEx $solverLES -parallel >\
+        $logDir/24_$solverLES.$TIMESTAMP.log 2>&1 || exit 1
+
+    echo "... done!"
+fi
+echo "... finished!"
