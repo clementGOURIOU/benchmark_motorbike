@@ -1,0 +1,9 @@
+options
+{
+    ksp_type cg;
+    pc_type bjacobi;
+    sub_pc_type icc;
+    ksp_cg_single_reduction true;
+    mat_type mpiaij;
+    sub_pc_factor_shift_type none;
+}
