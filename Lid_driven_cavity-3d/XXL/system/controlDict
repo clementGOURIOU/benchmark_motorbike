@@ -15,7 +15,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-libs            ("$FOAM_SITE_LIBBIN/libpetscFoam.so");
+libs            (petscFoam);
 
 application     icoFoam;
 
