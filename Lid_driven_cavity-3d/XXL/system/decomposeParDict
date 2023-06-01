@@ -1,8 +1,8 @@
 /*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
-|  \\    /   O peration     | Version:  v2006                                 |
-|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|  \\    /   O peration     | Version:  2.3.1                                 |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
 |    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
 FoamFile
@@ -11,40 +11,35 @@ FoamFile
     format      ascii;
     class       dictionary;
     location    "system";
-    object      controlDict;
+    object      decomposeParDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-//libs            (petscFoam);
+numberOfSubdomains 288;
 
-application     icoFoam;
+method       scotch;
 
-startFrom       startTime;
+simpleCoeffs
+{
+    n               ( 2 2 4 );
+    delta           0.001;
+}
 
-startTime       0;
+hierarchicalCoeffs
+{
+    n               ( 4 3 1 );
+    delta           0.001;
+    order           xyz;
+}
 
-stopAt          endTime;
+manualCoeffs
+{
+    dataFile        "";
+}
 
-endTime         0.00625;
+distributed     no;
 
-deltaT          0.0000625;
+roots           ( );
 
-writeControl    timeStep;
-
-writeInterval   1000000;
-
-purgeWrite      0;
-
-writeFormat     ascii;
-
-writePrecision  6;
-
-writeCompression off;
-
-timeFormat      general;
-
-timePrecision   6;
-
-runTimeModifiable true;
 
 // ************************************************************************* //

@@ -11,40 +11,44 @@ FoamFile
     format      ascii;
     class       dictionary;
     location    "system";
-    object      controlDict;
+    object      fvSolution;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-//libs            (petscFoam);
+solvers
+{
+    p
+    {
+        solver          PCG;
+        preconditioner  DIC;
+        tolerance       1e-04;
+        relTol          0;
+        maxIter         3000;
+    }
 
-application     icoFoam;
+    pFinal
+    {
+        $p;
+        relTol          0;
+    }
 
-startFrom       startTime;
+    U
+    {
+        solver          PBiCGStab;
+        preconditioner  DILU;
+        tolerance       0;
+        relTol          0;
+        maxIter         5;
+    }
+}
 
-startTime       0;
+PISO
+{
+    nCorrectors     2;
+    nNonOrthogonalCorrectors 0;
+    pRefCell        0;
+    pRefValue       0;
+}
 
-stopAt          endTime;
-
-endTime         0.00625;
-
-deltaT          0.0000625;
-
-writeControl    timeStep;
-
-writeInterval   1000000;
-
-purgeWrite      0;
-
-writeFormat     ascii;
-
-writePrecision  6;
-
-writeCompression off;
-
-timeFormat      general;
-
-timePrecision   6;
-
-runTimeModifiable true;
 
 // ************************************************************************* //
