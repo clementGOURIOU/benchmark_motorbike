@@ -1,0 +1,61 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2006                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      fvSolution;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+// Just use DICTS_DIR=_location_of_dicts_ CACHING=_yyy_ PETSC_SOLVER=_xxx_ icoFoam
+// It will use the dictionaries located at _location_of_dicts:
+// - solver: petsc-_xxx_
+// - caching: caching-_yyy_
+solvers
+{
+    p
+    {
+        solver          petsc;
+        petsc {
+          #include "${DICTS_DIR}/petsc-${PETSC_SOLVER}"
+          #include "${DICTS_DIR}/caching-${CACHING}"
+        }
+        tolerance       1e-04;
+        relTol          0;
+        maxIter         3000;
+    }
+
+    pFinal
+    {
+        $p;
+        relTol          0;
+    }
+
+    U
+    {
+        solver          PBiCGStab;
+        preconditioner  DILU;
+        tolerance       0;
+        relTol          0;
+        maxIter         5;
+    }
+}
+
+PISO
+{
+    nCorrectors     2;
+    nNonOrthogonalCorrectors 0;
+    pRefCell        0;
+    pRefValue       0;
+}
+
+
+// ************************************************************************* //

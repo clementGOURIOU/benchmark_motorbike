@@ -15,22 +15,15 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-// Just use PETSC_DICTS_DIR=_location_of_dicts_ CACHING=_yyy_ PETSC_SOLVER=_xxx_ icoFoam
-// It will use the dictionaries located at _location_of_dicts:
-// - solver: petsc-_xxx_
-// - caching: caching-_yyy_
 solvers
 {
     p
     {
-        solver          petsc;
-        petsc {
-          #include "${PETSC_DICTS_DIR}/petsc-${PETSC_SOLVER}"
-        }
+        solver          PCG;
+        preconditioner  DIC;
         tolerance       1e-04;
         relTol          0;
         maxIter         3000;
-        #include "${PETSC_DICTS_DIR}/caching-${CACHING}"
     }
 
     pFinal

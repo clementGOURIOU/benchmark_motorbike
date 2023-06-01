@@ -2,6 +2,7 @@
 options
 {
     ksp_type cg;
+    ksp_norm_type none;
     pc_type bjacobi;
     sub_pc_type icc;
     ksp_cg_single_reduction true;

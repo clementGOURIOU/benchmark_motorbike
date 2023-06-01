@@ -3,6 +3,7 @@ options
 {
     //ksp_view "::ascii_info"; // uncomment to list details of the solve
     ksp_type cg;
+    ksp_norm_type none;
     ksp_cg_single_reduction  true;
     mat_type aij;
     pc_type gamg; // algebraic multigrid from PETSc

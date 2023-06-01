@@ -1,9 +1,10 @@
-// Example dictionary for boomerAMG from PCHYPRE using MATHYPRE as matrix
+// Example dictionary for boomerAMG from PCHYPRE using MATMPIAIJ as matrix
 options
 {
     ksp_type cg;
+    ksp_norm_type none;
     ksp_cg_single_reduction true;
-    mat_type hypre;
+    mat_type mpiaij;
     pc_type hypre;
     pc_hypre_type boomeramg;
     pc_hypre_boomeramg_max_iter "1";
