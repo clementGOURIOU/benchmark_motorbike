@@ -1,0 +1,104 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2206                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      controlDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#include "parameters"
+
+application     rhoPimpleFoam;
+
+startFrom       startTime;
+
+startTime       0;
+
+stopAt          endTime;
+
+endTime         0.02;
+
+deltaT          #eval{ 1e-6 / $nref };
+
+writeControl    runTime;
+
+writeInterval   0.0002;
+
+purgeWrite      1;
+
+writeFormat     binary;
+
+writePrecision  16;
+
+writeCompression off;
+
+timeFormat      general;
+
+timePrecision   6;
+
+runTimeModifiable true;
+
+adjustTimeStep  no;
+
+maxCo           0.3;
+
+maxDeltaT       1;
+
+functions
+{
+    fieldAverage
+    {
+        type            fieldAverage;
+        libs            (fieldFunctionObjects);
+        writeControl    writeTime;
+        fields
+        (
+            U
+            {
+                mean        on;
+                prime2Mean  off;
+                base        time;
+            }
+
+            p
+            {
+                mean        on;
+                prime2Mean  off;
+                base        time;
+            }
+
+        );
+    }
+    probePoint
+    {
+        type    probes;
+
+        libs    (sampling);
+
+        writeControl   runTime;
+        writeInterval  1e-6;
+
+        probeLocations
+        (
+            // 1m from wave origin and centered in other direction
+            (-0.25 0 0)
+        );
+        fields
+        (
+            p
+        );
+
+        timeStart       0.01;
+        timeEnd         0.02;
+    }
+}
+
+// ************************************************************************* //

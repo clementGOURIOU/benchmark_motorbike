@@ -1,0 +1,56 @@
+#!/bin/bash
+cd "${0%/*}" || exit                                # Run from this directory
+. ${WM_PROJECT_DIR:?}/bin/tools/RunFunctions        # Tutorial run functions
+#------------------------------------------------------------------------------
+
+#User entry
+parameterFile="$PWD/system/parameters"
+#------------------------------------------------------------------------------
+
+# Read number of cores from command line argument
+export nCPU="$1"
+
+case "$nCPU" in
+  ([1-9][0-9]*)
+  ;;
+  (*)
+    echo "Usage: Allrun <number of cores to use>"
+    echo "Example: ./Allrun 16"
+    exit
+  ;;
+esac
+
+# Read refinement steps from base mesh from parameters file
+nref=$(sed -ne 's/^ *nref  *\([0-9][0-9]*\).*$/\1/p' "$parameterFile"| tail -n1)
+if [ "${nref:-0}" -lt 1 ]
+then
+    echo "Usage: Set valid nref - refinement level inside system/parameters"
+    echo "Example: nref 2;"
+    exit
+else
+    echo "Using refinement level : $nref"
+fi
+
+runApplication -o blockMesh
+runApplication -o decomposePar
+
+# Do refine one time to reach 500x10x10 = 0.05M baseline
+# - refineMesh strategy is used instead of blockMesh to full resolution
+# - as we can generate mesh faster and in parallel with any steps of refineMesh
+runParallel -o -s "baseline-r1" refineMesh -all -overwrite
+#runParallel -o -s "baseline-r1" refineMesh -all -overwrite
+
+for ((iter=1; iter<"$nref"; iter++))
+do
+    refStep=$(echo "$iter+1"|bc -l)
+    echo "Doing refinement step : baseline + $iter"
+    runParallel -o -s "r-$refStep" refineMesh -all -overwrite
+done
+
+restore0Dir -processor
+
+runParallel $(getApplication)
+runParallel noise -dict system/noiseDict-point
+
+foamLog log.rhoPimpleFoam
+#------------------------------------------------------------------------------
