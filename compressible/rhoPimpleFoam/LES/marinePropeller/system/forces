@@ -1,0 +1,24 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2206                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+
+    forces_all
+    {
+        type        forces;
+        libs        ( "libforces.so" );
+        writeControl timeStep;
+        writeInterval 1;
+        patches     ( propellerStem1 propellerStem2 propellerTip );
+        rho         rho;
+        log         true;
+        rhoInf      997;              // Redundant for incompressible
+        pRef        101325;           // Redundant for incompressible but necessary for compressible
+        CofR        (0 0 0); // Axle midpoint on ground
+        pitchAxis   (0 1 0);
+    }
+
+// ************************************************************************* //

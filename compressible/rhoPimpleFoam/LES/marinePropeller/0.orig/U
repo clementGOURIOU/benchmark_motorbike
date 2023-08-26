@@ -1,0 +1,67 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2206                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volVectorField;
+    object      U;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+Uinlet          (0 -5 0);
+
+dimensions      [0 1 -1 0 0 0 0];
+
+internalField   uniform $Uinlet;
+
+boundaryField
+{
+    //- Set patchGroups for constraint patches
+    #includeEtc "caseDicts/setConstraintTypes"
+
+    freestream
+    {
+        type            freestreamVelocity;
+        freestreamValue uniform $Uinlet;
+        value           uniform $Uinlet;
+    }
+
+    "propeller.*"
+    {
+        type            fixedValue;
+        value           uniform (0 0 0);
+    }
+
+    propellerStem_outlet
+    {
+        type                flowRateOutletVelocity;
+        massFlowRate        table ((0 0) (200 1) (1000 10.8934)(10000 10.8934));
+        value               uniform (0 0 0);
+    }
+
+    propellerTip
+    {
+        type            movingWallVelocity;
+        value           uniform (0 0 0);
+    }
+
+    propellerStem1
+    {
+        type            movingWallVelocity;
+        value           uniform (0 0 0);
+    }
+
+    "AMI.*"
+    {
+        type            cyclicAMI;
+        value           $internalField;
+    }
+}
+
+// ************************************************************************* //

@@ -1,0 +1,128 @@
+#!/bin/sh
+cd "${0%/*}" || exit                                # Run from this directory
+. ${WM_PROJECT_DIR:?}/bin/tools/RunFunctions        # Tutorial run functions
+#------------------------------------------------------------------------------
+
+#User entry
+parameterFile="$PWD/system/parameters"
+#------------------------------------------------------------------------------
+
+# Read number of cores from command line argument
+export nCPU="$1"
+
+case "$nCPU" in
+  ([1-9][0-9]*)
+  ;;
+  (*)
+    echo "Usage: Allrun <number of cores to use>"
+    echo "Example: ./Allrun 16"
+    exit
+  ;;
+esac
+
+# Read refinement steps from base mesh from parameters file
+nref=$(sed -ne 's/^ *nref  *\([0-9][0-9]*\).*$/\1/p' "$parameterFile"| tail -n1)
+if [ "${nref:-0}" -lt 1 ]
+then
+    echo "Usage: Set valid nref - refinement level inside system/parameters"
+    echo "Example: nref 2;"
+    exit
+else
+    echo "Using refinement level : $nref"
+fi
+
+getExpansionRatio()
+{
+    sn=$1
+    a0=$2
+    n=$3
+    rEst=$4
+
+    nIter=100
+
+    while [ $nIter -gt 0 ]
+    do
+        fx=`echo "$a0*$rEst^$n-$rEst*$sn-$a0+$sn" |bc -l`
+        fDashx=`echo "$a0*$n*$rEst^($n-1)-$sn" |bc -l`
+        rEst=`echo "$rEst - $fx/$fDashx" | bc -l`
+
+        [[ "$fx" -eq "0" ]] 2>/dev/null && break
+#        echo "Iter $nIter rEst $rEst : fx $fx fD $fDashx"
+        ((nIter--))
+    done
+    echo $rEst
+}
+
+
+\cp -f system/controlDict.st system/controlDict
+\cp -f system/fvSchemes.st system/fvSchemes
+\cp -f system/fvSolution.st system/fvSolution
+foamDictionary -entry simulationType -set RAS constant/turbulenceProperties
+foamDictionary -entry acousticDampingSource.active -set false system/fvOptions
+foamDictionary -entry mrf_v_fluid_rotor.active -set true constant/MRFProperties
+
+runApplication blockMesh
+runApplication -s "rotor" blockMesh -region v_fluid_rotor
+runApplication surfaceFeatureExtract
+runApplication decomposePar 
+runApplication -s "rotor" decomposePar -region v_fluid_rotor
+
+# Do refine according to nref
+# - refineMesh strategy is used instead of blockMesh to full resolution
+# - as we can generate mesh faster and in parallel with any steps of refineMesh
+for ((iter=1; iter<"$nref"; iter++))
+do
+    refStep=$(echo "$iter+1"|bc -l)
+    echo "Doing refinement step : baseline + $iter"
+    runParallel -o -s "r-$refStep"  refineMesh -all -overwrite
+    runParallel -o -s "rotor.r-$refStep"  refineMesh -all -overwrite -region v_fluid_rotor
+done
+
+runParallel snappyHexMesh -overwrite
+runParallel  -s "rotor" snappyHexMesh -overwrite -region v_fluid_rotor
+runParallel topoSet -region v_fluid_rotor
+runParallel mergeMeshes ./ ./ -addRegion v_fluid_rotor -overwrite
+runParallel createPatch -overwrite
+FCH=`echo "0.0075/$nref" | bc -l`
+nLayers=`echo "36*$nref" | bc -l`
+ratio=$(getExpansionRatio 0.976 $FCH $nLayers 1.5)
+echo "FCH $FCH nLayers $nLayers ratio $ratio"
+foamDictionary -entry expansionRatio -set $ratio system/extrudeMeshDict.step1 -disableFunctionEntries
+runParallel -s "step1"  extrudeMesh -dict system/extrudeMeshDict.step1
+FCH=`echo "($FCH*$ratio^($nLayers-1))"|bc -l`
+nLayers=`echo "150*$nref" | bc -l`
+ratio=$(getExpansionRatio 600 $FCH $nLayers $ratio)
+echo "FCH $FCH nLayers $nLayers ratio $ratio"
+foamDictionary -entry expansionRatio -set $ratio system/extrudeMeshDict.step2 -disableFunctionEntries
+runParallel -s "step2"  extrudeMesh -dict system/extrudeMeshDict.step2
+runParallel -s v_fluid_tunnel topoSet
+runParallel  renumberMesh -constant -overwrite
+runParallel  checkMesh -constant
+
+\cp -f system/controlDict.st system/controlDict
+\cp -f system/fvSchemes.st system/fvSchemes
+\cp -f system/fvSolution.st system/fvSolution
+foamDictionary -entry simulationType -set RAS constant/turbulenceProperties
+foamDictionary -entry acousticDampingSource.active -set false system/fvOptions
+foamDictionary -entry mrf_v_fluid_rotor.active -set true constant/MRFProperties
+
+runParallel  redistributePar -constant -overwrite
+restore0Dir -processor
+
+runParallel  rhoSimpleFoam
+runParallel -s "yPlus"  rhoSimpleFoam -postProcess -func yPlus -parallel
+
+\cp -f system/controlDict.tr system/controlDict
+\cp -f system/fvSchemes.tr system/fvSchemes
+\cp -f system/fvSolution.tr system/fvSolution
+foamDictionary -entry simulationType -set LES constant/turbulenceProperties
+foamDictionary -entry acousticDampingSource.active -set true system/fvOptions
+foamDictionary -entry mrf_v_fluid_rotor.active -set false constant/MRFProperties
+system/replace.sh
+runParallel -s "AMI-lowWeight-and-massFlow" changeDictionary
+
+runParallel rhoPimpleFoam
+
+./Allrun.noise
+
+gnuplot plot_spectrum

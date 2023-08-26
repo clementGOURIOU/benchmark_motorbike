@@ -1,0 +1,17 @@
+#!/bin/sh
+cd "${0%/*}" || exit                                # Run from this directory
+. ${WM_PROJECT_DIR:?}/bin/tools/RunFunctions        # Tutorial run functions
+#------------------------------------------------------------------------------
+
+evaluateProbe()
+{
+    foamDictionary -entry pointNoiseCoeffs.componentColumns -set "($1)" system/noiseDict-points -disableFunctionEntries
+    foamDictionary -entry pointNoiseCoeffs.outputPrefix -set pressurePoint$1 system/noiseDict-points -disableFunctionEntries
+    runApplication -s p$1 noise -dict system/noiseDict-points
+}
+
+evaluateProbe 1
+evaluateProbe 2
+evaluateProbe 3
+evaluateProbe 4
+evaluateProbe 5

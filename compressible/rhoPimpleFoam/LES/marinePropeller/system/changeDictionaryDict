@@ -1,0 +1,38 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2206                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      changeDictionaryDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+boundary
+{
+    "AMI1.*"
+    {
+        type            cyclicAMI;
+        lowWeightCorrection 0.1;
+    }
+}
+
+U
+{
+    boundaryField
+    {
+        propellerStem_outlet
+        {
+            type                flowRateOutletVelocity;
+            massFlowRate        10.8934;
+//            value               uniform (0 0 0);
+        }
+    }
+}
+// ************************************************************************* //
