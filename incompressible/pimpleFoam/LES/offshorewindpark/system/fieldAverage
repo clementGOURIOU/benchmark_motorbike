@@ -1,0 +1,26 @@
+fieldAverage1
+{
+    enabled         true;
+    type            fieldAverage;
+    libs            ("libfieldFunctionObjects.so");
+    writeControl    writeTime;
+    restartOnRestart no;
+    timeStart       1000;
+
+    fields
+    (
+        U
+        {
+            mean        on;
+            prime2Mean  on;
+            base        time;
+        }
+
+        p
+        {
+            mean        on;
+            prime2Mean  on;
+            base        time;
+        }
+    );
+}

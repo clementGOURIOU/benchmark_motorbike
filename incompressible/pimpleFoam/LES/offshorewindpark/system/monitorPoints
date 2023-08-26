@@ -1,0 +1,21 @@
+monitorPoints
+{
+    type probes;
+    enabled         false;
+    writeControll   timeStep;
+    writeInterval   10;
+    libs            ("libsampling.so");
+
+    probeLocations
+    (
+        (311591.5 5961652.3 102) // south of A01
+        (308271.9 5966624.6 102) // north of A07
+    );
+
+    fields
+    (
+        p
+        U
+        UMean
+    );
+}

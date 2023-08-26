@@ -1,0 +1,575 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2212                                  |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      fvOptions;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#include "$FOAM_CASE/system/initialConditions"
+
+turbineA01
+{
+    type            axialFlowTurbineALSource;
+    active          on;
+
+    axialFlowTurbineALSourceCoeffs
+    {
+        fieldNames          (U);
+        selectionMode       cellSet; // cellSet || points || cellZone
+        cellSet             windTurbineA01;
+        origin              (311491.5 5961752.3 102);
+        axis                $axisInitial;
+        verticalDirection   (0 0 1);
+        freeStreamVelocity  $UInitial;
+        tipSpeedRatio       6.8;
+        inductionFactor     0.25;
+        rotorRadius         77.0;
+
+        dynamicStall
+        {
+            active          off;
+            dynamicStallModel LeishmanBeddoes;
+        }
+
+        endEffects
+        {
+            active          on;
+            endEffectsModel Shen;
+            GlauertCoeffs
+            {
+                tipEffects  on;
+                rootEffects on;
+            }
+            ShenCoeffs
+            {
+                tipEffects  on;
+                rootEffects on;
+                c1          0.125;
+                c2          21;
+            }
+        }
+
+        blades
+        {
+            blade1
+            {
+                writePerf   true;
+                writeElementPerf true;
+                nElements   17;
+                elementProfiles
+                (
+			#include "NREL6MW_Blade/NREL6MW_17_elementProfiles"
+                );
+                elementData
+                ( 
+                	#include "NREL6MW_Blade/NREL6MW_17_elementData"
+		);
+                collectivePitch 0.0;
+            }
+            blade2
+            {
+                $blade1;
+                writePerf   false;
+                writeElementPerf false;
+                azimuthalOffset 120.0;
+            }
+            blade3
+            {
+                $blade2;
+                azimuthalOffset 240.0;
+            }
+        }
+/*
+        tower
+        {
+            includeInTotalDrag  false; // default is false
+            nElements   2; //6;
+            elementProfiles (cylinder);
+            elementData
+            ( // axial distance (turbine axis), height, diameter
+                (10.0 -90.0 4.50)
+                (10.0  0.00 3.50)
+            );
+        }
+
+        hub
+        {
+            nElements   2;
+            elementProfiles (cylinder);
+            elementData
+            ( // axial distance, height, diameter
+                (0  1.5 3)
+                (0 -1.5 3)
+            );
+        }
+*/
+        profileData
+        {
+            // profile names : DU99W405LM DU99W350LM DU97W300LM DU91W2250LM DU93W210LM NACA64618 circular050 circular035 cylinder
+
+            DU99W405LM
+            {
+                tableType   singleRe; // singleRe (default) || multiRe
+             //   Re          1e6; // For tableType = singleRe
+                data // For tableType = singleRe
+                (   // alpha C_l C_d
+                    #include "NREL6MW_foil/DU40_A17"
+                );
+            }
+
+            DU99W350LM
+            {
+                tableType   singleRe; // singleRe (default) || multiRe
+             //   Re          1e6; // For tableType = singleRe
+                data // For tableType = singleRe
+                (   // alpha C_l C_d
+                    #include "NREL6MW_foil/DU35_A17"
+                );
+            }
+
+            DU97W300LM
+            {
+                tableType   singleRe; // singleRe (default) || multiRe
+             //   Re          1e6; // For tableType = singleRe
+                data // For tableType = singleRe
+                (   // alpha C_l C_d
+                    #include "NREL6MW_foil/DU30_A17"
+                );
+            }
+
+            DU91W2250LM
+            {
+                tableType   singleRe; // singleRe (default) || multiRe
+             //   Re          1e6; // For tableType = singleRe
+                data // For tableType = singleRe
+                (   // alpha C_l C_d
+                    #include "NREL6MW_foil/DU25_A17"
+		);
+            }
+
+            DU93W210LM
+            {
+                tableType   singleRe; // singleRe (default) || multiRe
+               // Re          1e6; // For tableType = singleRe
+                data // For tableType = singleRe
+                (   // alpha C_l C_d
+                    #include "NREL6MW_foil/DU21_A17"
+                );
+            }
+
+            NACA64618
+            {
+                tableType   singleRe; // singleRe (default) || multiRe
+               // Re          1e6; // For tableType = singleRe
+                data // For tableType = singleRe
+                (   // alpha C_l C_d
+                    #include "NREL6MW_foil/NACA64_A17"
+                );
+            }
+
+            circular050
+            {
+                data ((-180 0 0.50)(180 0 0.50));
+            }
+
+            circular035
+            {
+                data ((-180 0 0.35)(180 0 0.35));
+            }
+
+            cylinder
+            {
+                //data ((-180 0 1.1)(180 0 1.1));
+                data ((-180 0 0.0)(180 0 0.0)); //no tower nor hub 
+            }
+        }
+    }
+}
+
+turbineA02						
+{						
+	$turbineA01					
+	axialFlowTurbineALSourceCoeffs					
+	{					
+	cellSet	windTurbineA02		;		
+	origin	(	310960.2	5962546.4	102	);
+	pointAbove	(	310960.2	5962546.4	200	);
+	freeStreamVelocity	$UInitial;				
+	}					
+}						
+turbineA03						
+{						
+	$turbineA01					
+	axialFlowTurbineALSourceCoeffs					
+	{					
+	cellSet	windTurbineA03		;		
+	origin	(	310451.6	5963347.9	102	);
+	pointAbove	(	310451.6	5963347.9	200	);
+	freeStreamVelocity	$UInitial;				
+	}					
+}						
+turbineA04						
+{						
+	$turbineA01					
+	axialFlowTurbineALSourceCoeffs					
+	{					
+	cellSet	windTurbineA04		;		
+	origin	(	309935.5	5964178.5	102	);
+	pointAbove	(	309935.5	5964178.5	200	);
+	freeStreamVelocity	$UInitial;				
+	}					
+}						
+turbineA05						
+{						
+	$turbineA01					
+	axialFlowTurbineALSourceCoeffs					
+	{					
+	cellSet	windTurbineA05		;		
+	origin	(	309426.9	5964994.5	102	);
+	pointAbove	(	309426.9	5964994.5	200	);
+	freeStreamVelocity	$UInitial;				
+	}					
+}						
+turbineA06						
+{						
+	$turbineA01					
+	axialFlowTurbineALSourceCoeffs					
+	{					
+	cellSet	windTurbineA06		;		
+	origin	(	308910.8	5965759.6	102	);
+	pointAbove	(	308910.8	5965759.6	200	);
+	freeStreamVelocity	$UInitial;				
+	}					
+}						
+turbineA07						
+{						
+	$turbineA01					
+	axialFlowTurbineALSourceCoeffs					
+	{					
+	cellSet	windTurbineA07		;		
+	origin	(	308371.9	5966524.6	102	);
+	pointAbove	(	308371.9	5966524.6	200	);
+	freeStreamVelocity	$UInitial;				
+	}					
+}						
+turbineB01						
+{						
+	$turbineA01					
+	axialFlowTurbineALSourceCoeffs					
+	{					
+	cellSet	windTurbineB01		;		
+	origin	(	312447.8	5962393.4	102	);
+	pointAbove	(	312447.8	5962393.4	200	);
+	freeStreamVelocity	$UInitial;				
+	}					
+}						
+turbineB02						
+{						
+	$turbineA01					
+	axialFlowTurbineALSourceCoeffs					
+	{					
+	cellSet	windTurbineB02		;		
+	origin	(	311893.7	5963158.5	102	);
+	pointAbove	(	311893.7	5963158.5	200	);
+	freeStreamVelocity	$UInitial;				
+	}					
+}						
+turbineB03						
+{						
+	$turbineA01					
+	axialFlowTurbineALSourceCoeffs					
+	{					
+	cellSet	windTurbineB03		;		
+	origin	(	311408	5963981.8	102	);
+	pointAbove	(	311408	5963981.8	200	);
+	freeStreamVelocity	$UInitial;				
+	}					
+}						
+turbineB04						
+{						
+	$turbineA01					
+	axialFlowTurbineALSourceCoeffs					
+	{					
+	cellSet	windTurbineB04		;		
+	origin	(	310891.8	5964812.4	102	);
+	pointAbove	(	310891.8	5964812.4	200	);
+	freeStreamVelocity	$UInitial;				
+	}					
+}						
+turbineB05						
+{						
+	$turbineA01					
+	axialFlowTurbineALSourceCoeffs					
+	{					
+	cellSet	windTurbineB05		;		
+	origin	(	310360.5	5965592	102	);
+	pointAbove	(	310360.5	5965592	200	);
+	freeStreamVelocity	$UInitial;				
+	}					
+}						
+turbineB06						
+{						
+	$turbineA01					
+	axialFlowTurbineALSourceCoeffs					
+	{					
+	cellSet	windTurbineB06		;		
+	origin	(	309851.9	5966349.7	102	);
+	pointAbove	(	309851.9	5966349.7	200	);
+	freeStreamVelocity	$UInitial;				
+	}					
+}						
+turbineB07						
+{						
+	$turbineA01					
+	axialFlowTurbineALSourceCoeffs					
+	{					
+	cellSet	windTurbineB07		;		
+	origin	(	309366.2	5967143.9	102	);
+	pointAbove	(	309366.2	5967143.9	200	);
+	freeStreamVelocity	$UInitial;				
+	}					
+}						
+turbineC01						
+{						
+	$turbineA01					
+	axialFlowTurbineALSourceCoeffs					
+	{					
+	cellSet	windTurbineC01		;		
+	origin	(	313404.2	5962990.9	102	);
+	pointAbove	(	313404.2	5962990.9	200	);
+	freeStreamVelocity	$UInitial;				
+	}					
+}						
+turbineC02						
+{						
+	$turbineA01					
+	axialFlowTurbineALSourceCoeffs					
+	{					
+	cellSet	windTurbineC02		;		
+	origin	(	312865.3	5963821.5	102	);
+	pointAbove	(	312865.3	5963821.5	200	);
+	freeStreamVelocity	$UInitial;				
+	}					
+}						
+turbineC03						
+{						
+	$turbineA01					
+	axialFlowTurbineALSourceCoeffs					
+	{					
+	cellSet	windTurbineC03		;		
+	origin	(	312364.3	5964608.4	102	);
+	pointAbove	(	312364.3	5964608.4	200	);
+	freeStreamVelocity	$UInitial;				
+	}					
+}						
+turbineC06						
+{						
+	$turbineA01					
+	axialFlowTurbineALSourceCoeffs					
+	{					
+	cellSet	windTurbineC06		;		
+	origin	(	310808.3	5966961.7	102	);
+	pointAbove	(	310808.3	5966961.7	200	);
+	freeStreamVelocity	$UInitial;				
+	}					
+}						
+turbineC07						
+{						
+	$turbineA01					
+	axialFlowTurbineALSourceCoeffs					
+	{					
+	cellSet	windTurbineC07		;		
+	origin	(	310269.4	5967755.9	102	);
+	pointAbove	(	310269.4	5967755.9	200	);
+	freeStreamVelocity	$UInitial;				
+	}					
+}						
+turbineD01						
+{						
+	$turbineA01					
+	axialFlowTurbineALSourceCoeffs					
+	{					
+	cellSet	windTurbineD01		;		
+	origin	(	314352.9	5963632	102	);
+	pointAbove	(	314352.9	5963632	200	);
+	freeStreamVelocity	$UInitial;				
+	}					
+}						
+turbineD07						
+{						
+	$turbineA01					
+	axialFlowTurbineALSourceCoeffs					
+	{					
+	cellSet	windTurbineD07		;		
+	origin	(	311233.4	5968382.5	102	);
+	pointAbove	(	311233.4	5968382.5	200	);
+	freeStreamVelocity	$UInitial;				
+	}					
+}						
+turbineE01						
+{						
+	$turbineA01					
+	axialFlowTurbineALSourceCoeffs					
+	{					
+	cellSet	windTurbineE01		;		
+	origin	(	315332.1	5964258.7	102	);
+	pointAbove	(	315332.1	5964258.7	200	);
+	freeStreamVelocity	$UInitial;				
+	}					
+}						
+turbineE02						
+{						
+	$turbineA01					
+	axialFlowTurbineALSourceCoeffs					
+	{					
+	cellSet	windTurbineE02		;		
+	origin	(	314800.8	5965045.5	102	);
+	pointAbove	(	314800.8	5965045.5	200	);
+	freeStreamVelocity	$UInitial;				
+	}					
+}						
+turbineE03						
+{						
+	$turbineA01					
+	axialFlowTurbineALSourceCoeffs					
+	{					
+	cellSet	windTurbineE03		;		
+	origin	(	314269.4	5965817.8	102	);
+	pointAbove	(	314269.4	5965817.8	200	);
+	freeStreamVelocity	$UInitial;				
+	}					
+}						
+turbineE04						
+{						
+	$turbineA01					
+	axialFlowTurbineALSourceCoeffs					
+	{					
+	cellSet	windTurbineE04		;		
+	origin	(	313722.9	5966670.3	102	);
+	pointAbove	(	313722.9	5966670.3	200	);
+	freeStreamVelocity	$UInitial;				
+	}					
+}						
+turbineE05						
+{						
+	$turbineA01					
+	axialFlowTurbineALSourceCoeffs					
+	{					
+	cellSet	windTurbineE05		;		
+	origin	(	313229.6	5967479.1	102	);
+	pointAbove	(	313229.6	5967479.1	200	);
+	freeStreamVelocity	$UInitial;				
+	}					
+}						
+turbineE06						
+{						
+	$turbineA01					
+	axialFlowTurbineALSourceCoeffs					
+	{					
+	cellSet	windTurbineE06		;		
+	origin	(	312728.7	5968214.9	102	);
+	pointAbove	(	312728.7	5968214.9	200	);
+	freeStreamVelocity	$UInitial;				
+	}					
+}						
+turbineE07						
+{						
+	$turbineA01					
+	axialFlowTurbineALSourceCoeffs					
+	{					
+	cellSet	windTurbineE07		;		
+	origin	(	312189.8	5969001.8	102	);
+	pointAbove	(	312189.8	5969001.8	200	);
+	freeStreamVelocity	$UInitial;				
+	}					
+}						
+turbineF01						
+{						
+	$turbineA01					
+	axialFlowTurbineALSourceCoeffs					
+	{					
+	cellSet	windTurbineF01		;		
+	origin	(	316273.2	5964885.2	102	);
+	pointAbove	(	316273.2	5964885.2	200	);
+	freeStreamVelocity	$UInitial;				
+	}					
+}						
+turbineF02						
+{						
+	$turbineA01					
+	axialFlowTurbineALSourceCoeffs					
+	{					
+	cellSet	windTurbineF02		;		
+	origin	(	315734.3	5965672.1	102	);
+	pointAbove	(	315734.3	5965672.1	200	);
+	freeStreamVelocity	$UInitial;				
+	}					
+}						
+turbineF03						
+{						
+	$turbineA01					
+	axialFlowTurbineALSourceCoeffs					
+	{					
+	cellSet	windTurbineF03		;		
+	origin	(	315233.4	5966495.4	102	);
+	pointAbove	(	315233.4	5966495.4	200	);
+	freeStreamVelocity	$UInitial;				
+	}					
+}						
+turbineF04						
+{						
+	$turbineA01					
+	axialFlowTurbineALSourceCoeffs					
+	{					
+	cellSet	windTurbineF04		;		
+	origin	(	314664.1	5967267.8	102	);
+	pointAbove	(	314664.1	5967267.8	200	);
+	freeStreamVelocity	$UInitial;				
+	}					
+}						
+turbineF05						
+{						
+	$turbineA01					
+	axialFlowTurbineALSourceCoeffs					
+	{					
+	cellSet	windTurbineF05		;		
+	origin	(	314140.4	5968098.4	102	);
+	pointAbove	(	314140.4	5968098.4	200	);
+	freeStreamVelocity	$UInitial;				
+	}					
+}						
+turbineF06						
+{						
+	$turbineA01					
+	axialFlowTurbineALSourceCoeffs					
+	{					
+	cellSet	windTurbineF06		;		
+	origin	(	313662.2	5968870.7	102	);
+	pointAbove	(	313662.2	5968870.7	200	);
+	freeStreamVelocity	$UInitial;				
+	}					
+}						
+turbineF07						
+{						
+	$turbineA01					
+	axialFlowTurbineALSourceCoeffs					
+	{					
+	cellSet	windTurbineF07		;		
+	origin	(	313168.9	5969606.6	102	);
+	pointAbove	(	313168.9	5969606.6	200	);
+	freeStreamVelocity	$UInitial;				
+	}					
+}						
+
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

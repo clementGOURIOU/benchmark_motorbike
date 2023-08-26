@@ -1,0 +1,53 @@
+writeForceAllTurbines
+{
+// Script to sum up the fields from all wind turbines `force.turbineXXX` into a single field `forceAllTurbines.write`
+// for visualization
+// HLRS, 2022-2023
+
+    libs            (utilityFunctionObjects);
+    type            coded;
+    name            writeForceAllTurbines;
+    writeControl    adjustableRunTime;
+    writeInterval   10.0;
+
+    codeWrite
+    #{
+
+        volScalarField forceAllTurbines
+        (
+            IOobject
+            (
+                "forceAllTurbines",
+                mesh().time().timeName(),
+                mesh(),
+                IOobject::NO_READ,
+                IOobject::AUTO_WRITE
+            ),
+            mesh(),
+            dimensionedScalar("zero", dimensionSet(0,1,-2,0,0,0,0), 0.0)
+        );
+
+        Foam::word fields[] = {
+            "force.turbineA01", "force.turbineA02", "force.turbineA03", "force.turbineA04",
+            "force.turbineA05", "force.turbineA06", "force.turbineA07", "force.turbineB01",
+            "force.turbineB02", "force.turbineB03", "force.turbineB04", "force.turbineB05",
+            "force.turbineB06", "force.turbineB07", "force.turbineC01", "force.turbineC02",
+            "force.turbineC03", "force.turbineC06", "force.turbineC07", "force.turbineD01",
+            "force.turbineD07", "force.turbineE01", "force.turbineE02", "force.turbineE03",
+            "force.turbineE04", "force.turbineE05", "force.turbineE06", "force.turbineE07",
+            "force.turbineF01", "force.turbineF02", "force.turbineF03", "force.turbineF04",
+            "force.turbineF05", "force.turbineF06", "force.turbineF07"
+        };
+
+        Info << "Reading forces ";
+        for (Foam::word i : fields) {
+           Info << "i " << i;
+           const volVectorField& forceTemp = mesh().lookupObject<volVectorField>(i);
+           forceAllTurbines = forceAllTurbines + mag(forceTemp);
+        }
+
+        forceAllTurbines.write();
+
+        Info << endl <<"forceAllTurbines volScalarField written" << endl;
+    #};
+}
