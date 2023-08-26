@@ -1,0 +1,15 @@
+#!/bin/sh
+cd "${0%/*}" || exit                                # Run from this directory
+. ${WM_PROJECT_DIR:?}/bin/tools/RunFunctions        # Tutorial run functions
+#------------------------------------------------------------------------------
+
+runApplication -s N noise -dict system/noiseDict-probes-N
+runApplication -s E noise -dict system/noiseDict-probes-E
+runApplication -s S noise -dict system/noiseDict-probes-S
+runApplication -s W noise -dict system/noiseDict-probes-W
+
+runApplication -s curle noise -dict system/noiseDict-point
+
+gnuplot plot_comparison
+gnuplot plot_comparison-pressure
+#------------------------------------------------------------------------------

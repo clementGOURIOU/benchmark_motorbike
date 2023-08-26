@@ -1,0 +1,103 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2206                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      fvSolution;
+}
+solvers
+{
+    cellDisplacement
+    {
+        solver          PCG;
+        preconditioner  DIC;
+        tolerance       1e-08;
+        relTol          0;
+    }
+    
+    p
+    {
+        solver          GAMG;
+        tolerance       1e-08;
+        relTol          0.05;
+        preconditioner  GaussSeidel;
+        smoother        GaussSeidel;
+        nPreSweeps      0;
+        nPostSweeps     2;
+        cacheAgglomeration true;
+        nCellsInCoarsestLevel 200;
+        agglomerator    faceAreaPair;
+        mergeLevels     1;
+    }
+    
+    U
+    {
+        solver          smoothSolver;
+        preconditioner  GaussSeidel;
+        smoother        GaussSeidel;
+        nSweeps         2;
+        tolerance       1e-12;
+        relTol          0.1;
+    }
+    
+    k
+    {
+        solver          smoothSolver;
+        preconditioner  GaussSeidel;
+        smoother        GaussSeidel;
+        nSweeps         2;
+        tolerance       1e-12;
+        relTol          0.1;
+    }
+    
+    omega
+    {
+        solver          smoothSolver;
+        preconditioner  GaussSeidel;
+        smoother        GaussSeidel;
+        nSweeps         2;
+        tolerance       1e-12;
+        relTol          0.1;
+    }
+}
+
+SIMPLE
+{
+    nNonOrthogonalCorrectors 0;
+    pRefCell        0;
+    pRefValue       0;
+    
+    residualControl
+    {
+        default         1e-20;
+    }
+}
+
+relaxationFactors
+{
+    
+    fields
+    {
+        p               0.2;
+    }
+    
+    equations
+    {
+        U               0.5;
+        k               0.3;
+        omega           0.3;
+    }
+}
+
+cache
+{
+    grad(U)         ;
+}
+

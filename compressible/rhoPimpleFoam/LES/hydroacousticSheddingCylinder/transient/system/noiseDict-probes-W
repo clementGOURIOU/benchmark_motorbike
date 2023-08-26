@@ -1,0 +1,55 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2206                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      noiseDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+noiseModel      pointNoise;
+
+pointNoiseCoeffs
+{
+    outputPrefix    probes-W;
+
+    windowModel     Hanning;
+
+    HanningCoeffs
+    {
+        // Window overlap percentage
+        overlapPercent  50;
+        symmetric       yes;
+        extended        yes;
+
+        // Optional number of windows, default = all available
+        //nWindow         5;
+    }
+
+    files
+    (
+        "postProcessing/probes_pressure/0/p"
+        "postProcessing/probes_pressure/0.05/pGauge"
+    );
+
+    nHeaderLine     1006;
+    refColumn       0;
+    componentColumns (4);
+    mergeSeparators yes;
+    separator       " ";
+
+    // Number of samples in sampling window
+    // default = 2^16 (=65536)
+    N               2000;
+
+    rhoRef          1;
+}
+
+// ************************************************************************* //

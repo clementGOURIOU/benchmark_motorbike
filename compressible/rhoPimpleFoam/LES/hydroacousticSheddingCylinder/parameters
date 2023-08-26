@@ -1,0 +1,9 @@
+//Mesh size parameter: 
+//   Set nref to refine the mesh in all directions.
+//   nref must be integer,  >0
+//   Ideally it is 2.4M * 8^(nref-1) + cells from extrusion
+//
+//   nref=1 -> Baseline mesh (3.2M cells)
+//   nref=2 -> Refined cells (24.?M cells): 2 times refinement in x,y,z
+
+nref       1;

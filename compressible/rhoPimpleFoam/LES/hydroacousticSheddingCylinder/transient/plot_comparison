@@ -1,0 +1,26 @@
+set title "PSD"
+set ylabel 'Power (dB)'
+set xlabel 'Frequency (Hz)'
+set grid
+set terminal png size 1000,750
+set xrange [0:2000]
+
+set output "psd_comparison-N.png"
+plot "<cat postProcessing/noise/probes-N/pointNoise/input0/p/PSD_dB_Hz_f.xy" title "baseline(r1)-probe-N" with lines, \
+     "<cat postProcessing/noise/probes-N/pointNoise/input1/pGauge/PSD_dB_Hz_f.xy" title "baseline(r1)-probe-N-gauge" with lines, \
+     "<cat postProcessing/noise/curlePoint/pointNoise/input0/observer0/PSD_dB_Hz_f.xy" title "baseline(r1)-curle-N" with lines
+
+set output "psd_comparison-E.png"
+plot "<cat postProcessing/noise/probes-E/pointNoise/input0/p/PSD_dB_Hz_f.xy" title "baseline(r1)-probe-E" with lines, \
+     "<cat postProcessing/noise/probes-E/pointNoise/input1/pGauge/PSD_dB_Hz_f.xy" title "baseline(r1)-probe-E-gauge" with lines, \
+     "<cat postProcessing/noise/curlePoint/pointNoise/input1/observer1/PSD_dB_Hz_f.xy" title "baseline(r1)-curle-E" with lines
+
+set output "psd_comparison-S.png"
+plot "<cat postProcessing/noise/probes-S/pointNoise/input0/p/PSD_dB_Hz_f.xy" title "baseline(r1)-probe-S" with lines, \
+     "<cat postProcessing/noise/probes-S/pointNoise/input1/pGauge/PSD_dB_Hz_f.xy" title "baseline(r1)-probe-S-gauge" with lines, \
+     "<cat postProcessing/noise/curlePoint/pointNoise/input2/observer2/PSD_dB_Hz_f.xy" title "baseline(r1)-curle-S" with lines
+
+set output "psd_comparison-W.png"
+plot "<cat postProcessing/noise/probes-W/pointNoise/input0/p/PSD_dB_Hz_f.xy" title "baseline(r1)-probe-W" with lines, \
+     "<cat postProcessing/noise/probes-W/pointNoise/input1/pGauge/PSD_dB_Hz_f.xy" title "baseline(r1)-probe-W-gauge" with lines, \
+     "<cat postProcessing/noise/curlePoint/pointNoise/input3/observer3/PSD_dB_Hz_f.xy" title "baseline(r1)-curle-W" with lines

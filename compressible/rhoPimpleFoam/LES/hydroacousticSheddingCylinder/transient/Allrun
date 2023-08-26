@@ -1,0 +1,18 @@
+#!/bin/sh
+cd "${0%/*}" || exit                                # Run from this directory
+. ${WM_PROJECT_DIR:?}/bin/tools/RunFunctions        # Tutorial run functions
+#------------------------------------------------------------------------------
+
+rm -rf constant/polyMesh
+cp -r ../mesh/constant/polyMesh constant
+cp -r ../steady-state/3000 0
+rm -rf 0/uniform 0/phi
+
+runApplication decomposePar
+
+runParallel rhoPimpleFoam
+
+runApplication reconstructPar -latestTime
+
+./Allrun.postProcess
+#------------------------------------------------------------------------------

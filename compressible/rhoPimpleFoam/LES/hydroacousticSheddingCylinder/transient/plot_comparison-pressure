@@ -1,0 +1,17 @@
+set title "Pressure"
+set ylabel 'Pressure (Pa)'
+set xlabel 'Time (s)'
+set grid
+set terminal png size 1000,750
+
+set output "psd_comparison-pressure.png"
+plot "<cat postProcessing/probes_pressure/0/p" using 1:2 with lines title "probes-N", \
+     "<cat postProcessing/probes_pressure/0/p" using 1:3 with lines title "probes-E", \
+     "<cat postProcessing/probes_pressure/0/p" using 1:4 with lines title "probes-S", \
+     "<cat postProcessing/probes_pressure/0/p" using 1:5 with lines title "probes-W"
+
+set output "psd_comparison-curlePressure.png"
+plot "<cat postProcessing/curlePoint/0/observer0.dat" using 1:(10*$2) with lines title "probe-N", \
+     "<cat postProcessing/curlePoint/0/observer1.dat" using 1:(10*$2) with lines title "probe-E", \
+     "<cat postProcessing/curlePoint/0/observer2.dat" using 1:(10*$2) with lines title "probe-S", \
+     "<cat postProcessing/curlePoint/0/observer3.dat" using 1:(10*$2) with lines title "probe-W"
