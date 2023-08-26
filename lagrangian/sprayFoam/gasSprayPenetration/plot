@@ -1,0 +1,123 @@
+#!/bin/sh
+cd "${0%/*}" || exit                                # Run from this directory
+#------------------------------------------------------------------------------
+
+# settings
+
+# Nothing to change except the log file name if other than
+#    log.sprayFoam from current execution direcotry
+
+#------------------------------------------------------------------------------
+
+plot_liquid_penetration() {
+
+    benchmarkFile="resources/liquidPenetrationVsTime.txt"
+    samplesFile="penetration.txt"
+    image="liquid_penetration.png"
+
+    gnuplot<<PLT_LIQ
+    set terminal pngcairo font "helvetica,20" size 1000, 1000
+    set style fill transparent solid 0.5 # partial transparency
+    set style fill noborder # no separate top/bottom lines
+    set grid
+    set key right top
+    set xrange [0:1.5]
+    set yrange [0:20]
+    set key samplen 2
+    set key spacing 0.75
+    set xlabel "Time [ms]"
+    set ylabel "Penetration [mm]"
+    set output "$image"
+    set title "Liquid penetration as a function of time" noenhanced
+
+    # Benchmark - Experimental
+        benchmark="$benchmarkFile"
+
+    # OpenFOAM
+        samples="$samplesFile"
+
+    plot \
+        benchmark u 1:2 t "Experiment" w l lw 2 lc rgb "#ffc020", \
+        benchmark u 1:(\$2-\$3):(\$2+\$3) notitle w filledcurves lw 2 lc rgb "#ffc020", \
+        samples u (\$1*1000.0):(\$2*1000.0) t "OpenFOAM" w l lw 2 lc rgb "#4169e1"
+PLT_LIQ
+}
+
+
+plot_vapour_penetration() {
+
+    benchmarkFile="resources/vapourPenetrationVsTime.txt"
+    samplesFile="penetration.txt"
+    image="vapour_penetration.png"
+
+    gnuplot<<PLT_VAP
+    set terminal pngcairo font "helvetica,20" size 1000, 1000
+    set style fill transparent solid 0.5 # partial transparency
+    set style fill noborder # no separate top/bottom lines
+    set grid
+    set key right top
+    set xrange [0:1.5]
+    set yrange [0:70]
+    set key samplen 2
+    set key spacing 0.75
+    set xlabel "Time [ms]"
+    set ylabel "Penetration [mm]"
+    set output "$image"
+    set title "Vapour penetration as a function of time" noenhanced
+
+    # Benchmark - Experimental
+        benchmark="$benchmarkFile"
+
+    # OpenFOAM
+        samples="$samplesFile"
+
+    plot \
+        benchmark u 1:2 t "Experiment" w l lw 2 lc rgb "#ffc020", \
+        benchmark u 1:(\$2-\$3):(\$2+\$3) notitle w filledcurves lw 2 lc rgb "#ffc020", \
+        samples u (\$1*1000.0):(\$6*1000.0) t "OpenFOAM" w l lw 2 lc rgb "#4169e1"
+PLT_VAP
+}
+
+
+prepare_plot_data() {
+    cat ./log.sprayFoam | grep -e "\<Time = " -e "Liquid penetration" -e "internal field" > ll
+    sed  -e '/Time =/N;s/\n    Liquid/ /' ll >llb
+    cp -f llb ll
+    sed  -e '/Time =/N;s/\n    internal/ /' ll >llb
+    cp -f llb ll
+    sed  -e '/Time =/N;s/\n    internal/ /' ll >llb
+    cp -f llb ll
+    sed  -e '/Time =/N;s/\n    internal/ /' ll >llb
+    cp -f llb ll
+    sed -e 's/Time =//' -e 's/field://g' -e 's/penetration 95% mass (m) =//' -e 's/(//g' -e's/)//g' ll >llb
+    cp -f llb ll
+    mv ll penetration.txt
+    /bin/rm  llb 
+}
+
+#------------------------------------------------------------------------------
+
+# Requires "gnuplot"
+command -v gnuplot >/dev/null || {
+    echo "gnuplot not found - skipping graph creation" 1>&2
+    exit 1
+}
+
+# Requires "awk"
+command -v awk >/dev/null || {
+    echo "awk not found - skipping graph creation" 1>&2
+    exit 1
+}
+
+#------------------------------------------------------------------------------
+
+echo ""
+echo "# Plots for the setup: $setup"
+echo ""
+
+prepare_plot_data
+
+plot_liquid_penetration
+plot_vapour_penetration
+
+#------------------------------------------------------------------------------

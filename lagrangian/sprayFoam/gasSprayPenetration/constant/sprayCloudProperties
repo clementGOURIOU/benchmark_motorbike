@@ -1,0 +1,196 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2206                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      sprayCloudProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+solution
+{
+    active          true;
+    coupled         true;
+    transient       yes;
+    cellValueSourceCorrection on;
+    maxCo           0.3;
+
+    sourceTerms
+    {
+        schemes
+        {
+            rho             explicit 1;
+            U               explicit 1;
+            Yi              explicit 1;
+            h               explicit 1;
+            radiation       explicit 1;
+        }
+    }
+
+    interpolationSchemes
+    {
+        rho             cell;
+        U               cellPoint;
+        thermo:mu       cell;
+        T               cell;
+        Cp              cell;
+        kappa           cell;
+        p               cell;
+    }
+
+    integrationSchemes
+    {
+        U               Euler;
+        T               analytical;
+    }
+}
+
+constantProperties
+{
+    T0              363;
+
+    // place holders for rho0 and Cp0
+    // - reset from liquid properties using T0
+    rho0            713.13;
+    Cp0             298.15;
+
+    constantVolume  false;
+}
+
+subModels
+{
+    particleForces
+    {
+        sphereDrag;
+    }
+
+    injectionModels
+    {
+        model1
+        {
+            type            coneNozzleInjection;
+            SOI             0;
+            parcelBasisType mass;
+            injectionMethod disc;
+            flowType        flowRateAndDischarge;
+
+            position        (0 0 0);
+            direction       (1 0 0);
+            parcelsPerSecond 700000000; // (Di Ilio et al., (2019), p. 6)
+
+            #include "<constant>/massFlowRateProfile.foam"
+
+            thetaInner      constant 0.0;
+            thetaOuter      constant 11.0; // (Di Ilio et al., (2019), p. 4)
+
+            sizeDistribution
+            {
+                type        RosinRammler;
+
+                RosinRammlerDistribution
+                {
+                    minValue        1e-06;
+                    maxValue        18e-06;
+                    d               6e-06;
+                    n               3;
+                }
+            }
+        }
+    }
+
+    dispersionModel stochasticDispersionRAS;
+
+    patchInteractionModel none;
+
+    heatTransferModel RanzMarshall;
+
+    compositionModel singlePhaseMixture;
+
+    phaseChangeModel liquidEvaporationBoil;
+
+    surfaceFilmModel none;
+
+    atomizationModel none;
+
+    breakupModel ReitzKHRT;
+
+    stochasticCollisionModel none;
+
+    radiation       off;
+
+    RanzMarshallCoeffs
+    {
+        BirdCorrection  true;
+    }
+
+    singlePhaseMixtureCoeffs
+    {
+        phases
+        (
+            liquid
+            {
+                C12H26    1;
+            }
+        );
+    }
+
+    liquidEvaporationBoilCoeffs
+    {
+        enthalpyTransfer enthalpyDifference;
+
+        activeLiquids    ( C12H26 );
+    }
+
+    ETABCoeffs
+    {
+        // (Wehrfritz et al. (2013), Table 2)
+        Cmu             10.0;
+        Comega          8.0;
+        WeCrit          12;
+        k1              0.2;
+        k2              0.2;
+        WeTransition    100.0;
+    }
+
+    ReitzKHRTCoeffs
+    {
+        defaultCoeffs   no;
+        B0              0.61;
+        B1              18;
+        Ctau            1.0;
+        CRT             0.1;
+        msLimit         0.3;
+        WeberLimit      6.0;
+
+        // (Wehrfritz et al. (2013), Table 1)
+     /* defaultCoeffs   no;
+        B0              0.61;
+        B1              40;
+        Ctau            1.0;
+        CRT             0.1;
+        msLimit         0.03;
+        WeberLimit      6.0; */
+    }
+}
+
+cloudFunctions
+{
+    /*WeberNumber1
+    {
+        type    WeberNumber;
+    }
+    voidFraction1
+    {
+        type    voidFraction;
+    }
+    */
+}
+
+// ************************************************************************* //

@@ -1,0 +1,126 @@
+#!/bin/sh
+cd "${0%/*}" || exit                                # Run from this directory
+. ${WM_PROJECT_DIR:?}/bin/tools/RunFunctions        # Tutorial run functions
+. ${WM_PROJECT_DIR:?}/bin/tools/CleanFunctions      # Tutorial clean functions
+#------------------------------------------------------------------------------
+
+# settings
+
+    # operand setup
+    setup="
+    injectionDuration-1.5-URANS
+    "
+
+#------------------------------------------------------------------------------
+
+#######################################
+# Collect results into a given path.
+# Arguments:
+#   Path to move results
+# Outputs:
+#   Writes info to stdout
+#######################################
+collect() {
+
+    [ $# -eq 0 ] && { echo "Usage: $0 dir-model"; exit 1; }
+
+    collection="$1"
+
+    dirResult=results/"$collection"
+    dirSettings="$dirResult"/settings
+
+    if [ ! -d "$dirResult" ]
+    then
+
+        echo "      # Collecting results and settings into $dirResult"
+
+        mkdir -p "$dirResult"
+        mkdir -p "$dirSettings"
+
+        mv -f $(foamListTimes) "$dirResult"
+        [ -d postProcessing ] && mv -f postProcessing "$dirResult"
+        mv -f log.* "$dirResult"
+        cp -f system/{fv*,controlDict} constant/*Properties "$dirSettings"
+        mv -f 0/ "$dirSettings"
+
+        echo "      # Cleaning up the case"
+
+        cleanTimeDirectories
+        cleanPostProcessing
+        rm -rf processor*
+
+    else
+
+        echo "      # Directory $dirResult already exists"
+        echo "      # Skipping the computation"
+
+    fi
+
+}
+
+
+#------------------------------------------------------------------------------
+
+# Read number of cores from command line argument
+export nCPU="$1"
+
+case "$nCPU" in
+  ([1-9][0-9]*)
+  ;;
+  (*)
+    echo "Usage: Allrun <number of cores to use>"
+    echo "Example: ./Allrun 16"
+    exit
+  ;;
+esac
+
+echo "nCPU $nCPU"
+export parameterFile="$PWD/parameters"
+echo "parameterFile $parameterFile"
+# Read refinement steps from base mesh from parameters file
+nref=$(sed -ne 's/^ *nref  *\([0-9][0-9]*\).*$/\1/p' "$parameterFile"| tail -n1)
+if [ "${nref:-0}" -lt 1 ]
+then
+    echo "Usage: Set valid nref - refinement level inside parameters"
+    echo "Example: nref 2;"
+    exit
+else
+    echo "Using refinement level : $nref"
+    export nref=$nref
+fi
+
+
+runApplication blockMesh
+runApplication -s translate transformPoints -translate '(0 -54 -54)'
+
+runApplication decomposePar
+
+echo "INFO: refineMesh" >>/dev/stderr
+
+# Do refine one time to reach baseline
+# - refineMesh strategy is used instead of blockMesh to full resolution
+# - as we can generate mesh faster and in parallel with any steps of refineMesh
+for ((iter=1; iter<"$nref"; iter++))
+do
+    refStep=$(echo "$iter+1"|bc -l)
+    echo "Doing refinement step : baseline + $iter"
+    runParallel -o -s "r-$refStep" refineMesh -all -overwrite
+done
+
+runParallel snappyHexMesh -overwrite
+runParallel -s scale transformPoints -scale '0.001'
+runParallel renumberMesh -overwrite -constant
+runParallel checkMesh -allTopology -allGeometry -constant
+
+runParallel redistributePar -overwrite
+
+restore0Dir -processor
+
+runParallel $(getApplication)
+
+runApplication reconstructParMesh -constant
+runApplication reconstructPar
+
+#collect "$setup"
+
+#------------------------------------------------------------------------------
