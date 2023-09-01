@@ -1,0 +1,49 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2206                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+
+  cuttingPlane
+  {
+      type            surfaces;
+      libs            ("libsampling.so");
+//      timeStart       0.2;
+      writeControl    runTime;       // outputTime timeStep
+      writeInterval   2.0e-04;
+
+      surfaceFormat   ensight;
+      formatOptions
+      {
+        ensight { format binary; collateTimes true;}
+      }
+      fields          (p pGauge U);
+
+      interpolationScheme cellPoint;
+
+      surfaces
+      (
+
+          xNormal_0
+          {
+              type            cuttingPlane;
+              planeType       pointAndNormal;
+              zone            v_fluid_tunnel;
+              exposedPatchName inlet;
+              pointAndNormalDict
+              {
+                  point           (0 0 0);
+                  normal          (1 0 0);
+              }
+              interpolate     	false;
+              triangulate     	false;
+	      mergeTol		1.0e-015;
+          }
+
+
+      );
+  }
+
+// ************************************************************************* //

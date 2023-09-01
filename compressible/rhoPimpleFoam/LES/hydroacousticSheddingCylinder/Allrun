@@ -1,0 +1,50 @@
+#!/bin/sh
+cd "${0%/*}" || exit                                # Run from this directory
+. ${WM_PROJECT_DIR:?}/bin/tools/RunFunctions        # Tutorial run functions
+#------------------------------------------------------------------------------
+
+if ! canCompile
+then
+    echo "Skipping tutorial $PWD"
+    exit 0
+fi
+
+#------------------------------------------------------------------------------
+#User entry
+parameterFile="$PWD/parameters"
+#------------------------------------------------------------------------------
+
+# Read number of cores from command line argument
+export nCPU="$1"
+
+case "$nCPU" in
+  ([1-9][0-9]*)
+  ;;
+  (*)
+    echo "Usage: Allrun <number of cores to use>"
+    echo "Example: ./Allrun 16"
+    exit
+  ;;
+esac
+
+# Read refinement steps from base mesh from parameters file
+nref=$(sed -ne 's/^ *nref  *\([0-9][0-9]*\).*$/\1/p' "$parameterFile"| tail -n1)
+if [ "${nref:-0}" -lt 1 ]
+then
+    echo "Usage: Set valid nref - refinement level inside system/parameters"
+    echo "Example: nref 2;"
+    exit
+else
+    echo "Using refinement level : $nref"
+    export nref=$nref
+fi
+
+# Baseline mesh : ~3.2M cells
+
+(cd mesh && ./Allrun)
+
+(cd steady-state && ./Allrun)
+
+(cd transient && ./Allrun)
+
+#------------------------------------------------------------------------------

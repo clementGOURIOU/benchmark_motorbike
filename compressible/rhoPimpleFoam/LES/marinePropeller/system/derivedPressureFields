@@ -1,0 +1,48 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2112                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+
+    gaugePressure
+    {
+        // Mandatory entries
+        type     exprField;
+        libs     (fieldFunctionObjects);
+        field    pGauge;
+        /// action new;
+        ///autowrite       false;
+        ///store           true;
+        useNamePrefix   false;
+
+        executeControl  timeStep;
+        writeControl    none;
+
+        // Use expression to define Gauge pressure
+        expression  "p - 101325";
+        dimensions  [ Pa ];
+    }
+
+    curle
+    {
+        libs            ("libfieldFunctionObjects.so");
+        type            Curle;
+        writeControl    writeTime;
+        timeStart       0.1;
+        input           point;
+        output          point;
+        observerPositions
+        (
+            (0 -4.48 0)
+            (0 -3.1678 3.1678)
+            (0 0 4.48)
+            (0 3.1678 3.1678)
+            (0 4.48 0)
+        );
+        patches         (propellerStem1 propellerStem2 propellerTip propellerStem_outlet);
+        c0              1500;	// Acoustic velocity in medium
+    }
+
+// ************************************************************************* //

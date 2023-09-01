@@ -1,0 +1,132 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2206                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      fvSolution;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+solvers
+{
+
+    "(rho|rhoFinal)"
+    {
+        solver          diagonal;
+    }
+
+    "(p|pcorr|Phi)"
+    {
+        solver          GAMG;
+        tolerance       1e-20;
+        relTol          0.05;
+        smoother        symGaussSeidel;
+        cacheAgglomeration true;
+        nCellsInCoarsestLevel 200;
+        agglomerator    faceAreaPair;
+        nPreSweeps      0;
+        nPostSweeps     2;
+        mergeLevels     1;
+    }
+
+    a
+    {
+        solver          PCG;
+        preconditioner  FDIC;
+        tolerance       1e-20;
+        relTol          0.05;
+        maxIter         600;
+    }
+
+    "(pFinal|pcorrFinal)"
+    {
+        $p;
+        tolerance       1e-20;
+        relTol          0.001;
+    }
+
+    "(U|k|omega|nuTilda)"
+    {
+//        solver          smoothSolver;
+//        smoother        symGaussSeidel;
+        solver          PBiCGStab;
+        preconditioner  DILU;
+        tolerance       1e-20;
+        relTol          0.1;
+    }
+
+    "(U|k|omega|nuTilda)Final"
+    {
+        $U;
+        tolerance       1e-20;
+        relTol          0.01;
+    }
+
+    "(h|e|hFinal|eFinal)"
+    {
+        $U;
+        tolerance       1.0e-020;
+        relTol          0.01;
+    }
+}
+
+potentialFlow
+{
+    nNonOrthogonalCorrectors 10;
+}
+
+PIMPLE
+{
+    momentumPredictor   yes;
+    transonic           no;
+    nOuterCorrectors    7;
+    nCorrectors         2;
+    nNonOrthogonalCorrectors 1;
+    transonic           no;
+//    pMax 		1.0e+12;
+//    pMin 		-1.0e+12;
+    pMaxFactor 1.5;
+    pMinFactor 0.8;
+    residualControl
+    {
+        default
+        {
+            tolerance      1e-010;
+            relTol         0.0;
+        }
+        p
+        {
+            tolerance      5e-012;
+            relTol         0.001;
+        }
+    }
+}
+
+relaxationFactors
+{
+   fields
+   {
+        p                   0.9;
+        pFinal               1;
+   }
+   equations
+   {
+      U  0.9;
+      h     0.95;
+      e	    0.95;	
+      eFinal     1;
+      hFinal     1;
+      UFinal   1;
+      kFinal  1;
+      omegaFinal  1;
+   }
+}
+
+// ************************************************************************* //

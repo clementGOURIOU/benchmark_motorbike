@@ -1,0 +1,57 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2206                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      thermophysicalProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+thermoType
+{
+    type            hePsiThermo;
+    mixture         reactingMixture;
+    transport       sutherland;
+    thermo          janaf;
+    energy          sensibleEnthalpy;
+    equationOfState perfectGas;
+    specie          specie;
+}
+
+inertSpecie     N2;
+
+liquids
+{
+    C12H26;
+}
+
+solids
+{}
+
+// Tekgul, B., Peltonena, P., Kahilab, H.,
+// Kaarioa, O., and Vuorinen, V., (2021).
+// DLBFoam:  An open-source dynamic load balancing
+// model for fast reacting flow simulations in OpenFOAM.
+// arXiv:2011.07978v2
+//
+// "The chemical kinetics is modeled by the skeletal mechanism
+// developed by Yao et al., including 54 species and 269 reactions."
+//
+// Yao, T., Pei, Y., Zhong, B. J., Som, S., Lu, T., and Luo, K. H., (2017).
+// A compact skeletal mechanism for n-dodecane with optimized semi-global low
+// temperature  chemistry  for  diesel  engine  simulations.
+// Fuel, 191, 339–349.
+// DOI:10.1016/j.fuel.2016.11.083
+
+chemistryReader foamChemistryReader;
+foamChemistryFile "$FOAM_CASE/constant/reactions";
+foamChemistryThermoFile "$FOAM_CASE/constant/therm.foam";
+
+// ************************************************************************* //

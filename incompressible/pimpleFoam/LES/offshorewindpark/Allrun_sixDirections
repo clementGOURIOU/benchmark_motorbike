@@ -1,0 +1,33 @@
+#!/bin/bash
+
+### Script for running a series of offshore wind park simulations
+### prepared with the Allpre_sixDirections script
+### HLRS, 2022-2023
+
+# This application has been developed as part of the exaFOAM project
+# https://www.exafoam.eu, which has received funding from
+# the European High-Performance Computing Joint Undertaking Joint
+# Undertaking (JU) under grant agreement No 956416. The JU receives
+# support from the European Union's Horizon 2020 research and
+# innovation programme and France, United Kingdom, Germany, Italy,
+# Croatia, Spain, Greece, Portugal
+
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+for windAngle in 314 319 324 329 334 339; do
+
+   echo "Running test case with wind angle ${windAngle}"
+
+   cd run_${windAngle}
+
+   restore0Dir
+
+   runApplication decomposePar
+   runParallel renumberMesh -overwrite
+   runParallel pimpleFoam
+
+cd ..
+
+done

@@ -1,0 +1,15 @@
+#!/bin/sh
+
+### Script for cleaning the folder of the offshore wind park simulation
+### HLRS, 2022-2023
+
+# This application has been developed as part of the exaFOAM project
+# https://www.exafoam.eu, which has received funding from
+# the European High-Performance Computing Joint Undertaking Joint
+# Undertaking (JU) under grant agreement No 956416. The JU receives
+# support from the European Union's Horizon 2020 research and
+# innovation programme and France, United Kingdom, Germany, Italy,
+# Croatia, Spain, Greece, Portugal
+
+
+rm -rf 0 log* constant/polyMesh dynamicCode log* postProcessing run_*

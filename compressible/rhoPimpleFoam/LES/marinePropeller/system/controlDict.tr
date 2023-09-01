@@ -1,0 +1,87 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2206                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      controlDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+#include "parameters"
+
+application     rhoPimpleFoam;
+startFrom       latestTime;
+startTime       0;
+stopAt          endTime;
+endTime         2.5;
+deltaT          #eval{ 1e-4 / $nref };;
+writeControl    adjustableRunTime;
+writeInterval   1.0e-01;
+purgeWrite      1;
+writeFormat     binary;
+writePrecision  6;
+writeCompression off;
+timeFormat      general;
+timePrecision   6;
+runTimeModifiable yes;
+adjustTimeStep  no;
+maxCo           0.5;
+maxAlphaCo      0.5;
+maxDeltaT       1;
+
+libs            ("$FOAM_LIBBIN/libturbulenceModelSchemes.so");
+
+functions
+{
+    #include "derivedPressureFields"
+
+    readFields
+    {
+        libs            ("libfieldFunctionObjects.so");
+        type            readFields;
+        fields          ( pMean UMean );
+    }
+
+    fieldMinMax
+    {
+        type                fieldMinMax;
+        libs                ("libfieldFunctionObjects.so");
+        log                 yes;
+        writeControl        timeStep;
+        writeInterval       1;
+        mode                magnitude;
+        fields              ( U p rho T );
+    }
+
+    probes_pGauge
+    {
+        type            probes;
+        libs            ("libsampling.so");
+        enabled         true;
+        writeControl    runTime;//timeStep;
+        writeInterval   1e-4;
+
+        fields        (pGauge);
+
+        probeLocations
+        (
+            (0 -4.48 0)
+            (0 -3.1678 3.1678)
+            (0 0 4.48)
+            (0 3.1678 3.1678)
+            (0 4.48 0)
+        );
+    }
+
+    #include "forces"
+    #include "cuttingPlane"
+
+}
+
+// ************************************************************************* //

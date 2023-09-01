@@ -70,6 +70,11 @@ use_control="system/controlDict.DDES.init"
 use_decompose="-decomposeParDict system/decomposeParDict.meshing"
 use_parallel="-parallel $use_decompose"
 
+# The obj-file was split to avoid the repository's 20MB limitation
+# by using "split -b 15MiB OC_DrivAer_CC_NB_210512_A.obj.gz OC_DrivAer_CC_NB_210512_A.obj.gz_"
+# The md5 hash of the original file was 48e7bdcfa5e19db72fea349371e3c366
+(cd occDrivAerRotMesh.orig/constant/triSurface && cat OC_DrivAer_CC_NB_210512_A.obj.gz_aa OC_DrivAer_CC_NB_210512_A.obj.gz_ab > OC_DrivAer_CC_NB_210512_A.obj.gz)
+
 if $prepareMesh; then
    time (
    echo "Prepare meshing ..."

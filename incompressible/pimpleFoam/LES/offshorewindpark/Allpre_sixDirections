@@ -1,0 +1,44 @@
+#!/bin/bash
+
+### Script for preparing the folders for a series of offshore wind 
+### park simulations
+### HLRS, 2022-2023
+
+# This application has been developed as part of the exaFOAM project 
+# https://www.exafoam.eu, which has received funding from
+# the European High-Performance Computing Joint Undertaking Joint
+# Undertaking (JU) under grant agreement No 956416. The JU receives
+# support from the European Union's Horizon 2020 research and
+# innovation programme and France, United Kingdom, Germany, Italy,
+# Croatia, Spain, Greece, Portugal
+
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+for windAngle in 314 319 324 329 334 339; do
+
+   # Preprocessing
+   mkdir run_${windAngle}
+   cd    run_${windAngle}
+   cp -r ../0.orig .
+   cp -r ../system .
+   mkdir constant
+   ln -s ../../constant/polyMesh constant/.
+   ln -s ../../constant/fvOptions constant/.
+   ln -s ../../constant/NREL6MW_Blade constant/.
+   ln -s ../../constant/NREL6MW_foil constant/.
+   ln -s ../../constant/transportProperties constant/.
+   ln -s ../../constant/turbulenceProperties constant/.
+
+   cp system/initialConditions.orig system/initialConditions
+   # First we set the value of WindDirMeteo in the initialConditions file 
+   sed -i "s/WindDirMeteo[[:blank:]]*[[:digit:]]*\;/WindDirMeteo    ${windAngle}\;/g" system/initialConditions
+   # Second we call foamDictionary, that executes the #eval functions
+   runApplication foamDictionary -entry WindDirMeteo -set ${windAngle} system/initialConditions
+
+   python ../createInletBoundaryData.py
+
+   cd ..
+
+done

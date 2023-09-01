@@ -1,0 +1,43 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | foam-extend: Open Source CFD                    |
+|  \\    /   O peration     | Version:     4.1                                |
+|   \\  /    A nd           | Web:         http://www.foam-extend.org         |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      meshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+surfaceFile         "total.fms";
+
+maxCellSize         0.38;
+
+objectRefinements
+{
+    preParallelZone
+    {
+        type        box;
+        cellSize    0.3;
+        centre      (50 30 155);
+        lengthX     120;
+        lengthY     120;
+        lengthZ     22;
+    }
+    parallelZone
+    {
+        type        box;
+        cellSize    0.15;
+        centre      (50 30 185);
+        lengthX     120;
+        lengthY     120;
+        lengthZ     36;
+    }
+}
+
+// ************************************************************************* //

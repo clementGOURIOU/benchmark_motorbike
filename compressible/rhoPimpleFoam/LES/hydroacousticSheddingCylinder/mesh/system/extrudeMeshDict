@@ -1,0 +1,55 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2206                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      extrudeMeshDict;
+}
+#include "<case>/../parameters"
+
+constructFrom   mesh;
+
+sourceCase      "./";
+
+sourcePatches   ( atmosphere );
+
+exposedPatchName atmosphere;
+
+flipNormals     false;
+
+extrudeModel    linearCylRadial;
+
+nLayers         #eval { 170 * $nref };
+
+expansionRatio  1.014;
+
+linearNormalCoeffs
+{
+    thickness       8.6;
+}
+
+linearCylRadialCoeffs
+{
+    R               8.6;
+    point           ( 0 0 0 );
+    axis            ( 0 1 0 );
+}
+
+linearDirectionCoeffs
+{
+    direction       ( 0 1 0 );
+    thickness       0.04;
+}
+
+mergeFaces      false;
+
+mergeTol        0;
+
+// ************************************************************************* //

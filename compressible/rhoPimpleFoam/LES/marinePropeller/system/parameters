@@ -1,0 +1,15 @@
+//Mesh size parameter:
+//   Set nref to refine the mesh in all directions.
+//   nref must be integer,  >0
+//   number of cells is ~4.xxM * 8^nref
+//
+//   nref=1 -> Baseline mesh ( 4.07M cells)
+//   nref=2 -> Refined cells (29.13M cells): 2 times refinement in x,y,z
+
+// Note that, the core of the snappyHexMesh is fixed size domain refined by nref factor
+// However, the extrusion is performed to 'match' the last cell size of snappyHexMesh
+//   cell size and nref factor times extrusion cells, hence the sum of geometric
+//   progression series is different leading to change in size of domain, however this
+//   should be still farfield domain with same BCs, hence this shouldn't affect simulation
+
+nref       1;

@@ -1,0 +1,46 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2206                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      fvOptions;
+}
+damp
+{
+     type            velocityDampingConstraint;
+     active          true;
+     selectionMode   all;
+
+     velocityDampingConstraintCoeffs
+     {
+     	 selectionMode   all;
+         UMax    100;
+     }
+}
+
+acousticDampingSource
+{
+    type            acousticDampingSource;
+    active          true;
+    selectionMode   all;
+
+    acousticDampingSourceCoeffs
+    {
+        timeStart        0.003;
+        duration         1000.0;
+        selectionMode    all;
+        centre           (0.0 0.0 0.0);
+        radius1          6;
+        radius2          9;
+        frequency        500;
+        URef	         UMean;
+    }
+}
+

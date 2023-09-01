@@ -1,0 +1,407 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2212                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      topoSetDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#include "$FOAM_CASE/system/initialConditions"
+
+actions
+(
+{					
+name	windTurbineA01	;			
+type	cellSet;				
+action	new;				
+source	sphereToCell;				
+origin	(	311491.5	5961752.3	102	);
+radius	$sphereRadius	;			
+}					
+					
+					
+					
+{					
+name	windTurbineA02	;			
+type	cellSet;				
+action	new;				
+source	sphereToCell;				
+origin	(	310960.2	5962546.4	102	);
+radius	$sphereRadius	;			
+}					
+					
+					
+					
+{					
+name	windTurbineA03	;			
+type	cellSet;				
+action	new;				
+source	sphereToCell;				
+origin	(	310451.6	5963347.9	102	);
+radius	$sphereRadius	;			
+}					
+					
+					
+					
+{					
+name	windTurbineA04	;			
+type	cellSet;				
+action	new;				
+source	sphereToCell;				
+origin	(	309935.5	5964178.5	102	);
+radius	$sphereRadius	;			
+}					
+					
+					
+					
+{					
+name	windTurbineA05	;			
+type	cellSet;				
+action	new;				
+source	sphereToCell;				
+origin	(	309426.9	5964994.5	102	);
+radius	$sphereRadius	;			
+}					
+					
+					
+					
+{					
+name	windTurbineA06	;			
+type	cellSet;				
+action	new;				
+source	sphereToCell;				
+origin	(	308910.8	5965759.6	102	);
+radius	$sphereRadius	;			
+}					
+					
+					
+					
+{					
+name	windTurbineA07	;			
+type	cellSet;				
+action	new;				
+source	sphereToCell;				
+origin	(	308371.9	5966524.6	102	);
+radius	$sphereRadius	;			
+}					
+					
+					
+					
+{					
+name	windTurbineB01	;			
+type	cellSet;				
+action	new;				
+source	sphereToCell;				
+origin	(	312447.8	5962393.4	102	);
+radius	$sphereRadius	;			
+}					
+					
+					
+					
+{					
+name	windTurbineB02	;			
+type	cellSet;				
+action	new;				
+source	sphereToCell;				
+origin	(	311893.7	5963158.5	102	);
+radius	$sphereRadius	;			
+}					
+					
+					
+					
+{					
+name	windTurbineB03	;			
+type	cellSet;				
+action	new;				
+source	sphereToCell;				
+origin	(	311408	5963981.8	102	);
+radius	$sphereRadius	;			
+}					
+					
+					
+					
+{					
+name	windTurbineB04	;			
+type	cellSet;				
+action	new;				
+source	sphereToCell;				
+origin	(	310891.8	5964812.4	102	);
+radius	$sphereRadius	;			
+}					
+					
+					
+					
+{					
+name	windTurbineB05	;			
+type	cellSet;				
+action	new;				
+source	sphereToCell;				
+origin	(	310360.5	5965592	102	);
+radius	$sphereRadius	;			
+}					
+					
+					
+					
+{					
+name	windTurbineB06	;			
+type	cellSet;				
+action	new;				
+source	sphereToCell;				
+origin	(	309851.9	5966349.7	102	);
+radius	$sphereRadius	;			
+}					
+					
+					
+					
+{					
+name	windTurbineB07	;			
+type	cellSet;				
+action	new;				
+source	sphereToCell;				
+origin	(	309366.2	5967143.9	102	);
+radius	$sphereRadius	;			
+}					
+					
+					
+					
+{					
+name	windTurbineC01	;			
+type	cellSet;				
+action	new;				
+source	sphereToCell;				
+origin	(	313404.2	5962990.9	102	);
+radius	$sphereRadius	;			
+}					
+					
+					
+					
+{					
+name	windTurbineC02	;			
+type	cellSet;				
+action	new;				
+source	sphereToCell;				
+origin	(	312865.3	5963821.5	102	);
+radius	$sphereRadius	;			
+}					
+					
+					
+					
+{					
+name	windTurbineC03	;			
+type	cellSet;				
+action	new;				
+source	sphereToCell;				
+origin	(	312364.3	5964608.4	102	);
+radius	$sphereRadius	;			
+}					
+					
+					
+					
+{					
+name	windTurbineC06	;			
+type	cellSet;				
+action	new;				
+source	sphereToCell;				
+origin	(	310808.3	5966961.7	102	);
+radius	$sphereRadius	;			
+}					
+					
+					
+					
+{					
+name	windTurbineC07	;			
+type	cellSet;				
+action	new;				
+source	sphereToCell;				
+origin	(	310269.4	5967755.9	102	);
+radius	$sphereRadius	;			
+}					
+					
+					
+					
+{					
+name	windTurbineD01	;			
+type	cellSet;				
+action	new;				
+source	sphereToCell;				
+origin	(	314352.9	5963632	102	);
+radius	$sphereRadius	;			
+}					
+					
+					
+					
+{					
+name	windTurbineD07	;			
+type	cellSet;				
+action	new;				
+source	sphereToCell;				
+origin	(	311233.4	5968382.5	102	);
+radius	$sphereRadius	;			
+}					
+					
+					
+					
+{					
+name	windTurbineE01	;			
+type	cellSet;				
+action	new;				
+source	sphereToCell;				
+origin	(	315332.1	5964258.7	102	);
+radius	$sphereRadius	;			
+}					
+					
+					
+					
+{					
+name	windTurbineE02	;			
+type	cellSet;				
+action	new;				
+source	sphereToCell;				
+origin	(	314800.8	5965045.5	102	);
+radius	$sphereRadius	;			
+}					
+					
+					
+					
+{					
+name	windTurbineE03	;			
+type	cellSet;				
+action	new;				
+source	sphereToCell;				
+origin	(	314269.4	5965817.8	102	);
+radius	$sphereRadius	;			
+}					
+					
+					
+					
+{					
+name	windTurbineE04	;			
+type	cellSet;				
+action	new;				
+source	sphereToCell;				
+origin	(	313722.9	5966670.3	102	);
+radius	$sphereRadius	;			
+}					
+					
+					
+					
+{					
+name	windTurbineE05	;			
+type	cellSet;				
+action	new;				
+source	sphereToCell;				
+origin	(	313229.6	5967479.1	102	);
+radius	$sphereRadius	;			
+}					
+					
+					
+					
+{					
+name	windTurbineE06	;			
+type	cellSet;				
+action	new;				
+source	sphereToCell;				
+origin	(	312728.7	5968214.9	102	);
+radius	$sphereRadius	;			
+}					
+					
+					
+					
+{					
+name	windTurbineE07	;			
+type	cellSet;				
+action	new;				
+source	sphereToCell;				
+origin	(	312189.8	5969001.8	102	);
+radius	$sphereRadius	;			
+}					
+					
+					
+					
+{					
+name	windTurbineF01	;			
+type	cellSet;				
+action	new;				
+source	sphereToCell;				
+origin	(	316273.2	5964885.2	102	);
+radius	$sphereRadius	;			
+}					
+					
+					
+					
+{					
+name	windTurbineF02	;			
+type	cellSet;				
+action	new;				
+source	sphereToCell;				
+origin	(	315734.3	5965672.1	102	);
+radius	$sphereRadius	;			
+}					
+					
+					
+					
+{					
+name	windTurbineF03	;			
+type	cellSet;				
+action	new;				
+source	sphereToCell;				
+origin	(	315233.4	5966495.4	102	);
+radius	$sphereRadius	;			
+}					
+					
+					
+					
+{					
+name	windTurbineF04	;			
+type	cellSet;				
+action	new;				
+source	sphereToCell;				
+origin	(	314664.1	5967267.8	102	);
+radius	$sphereRadius	;			
+}					
+					
+					
+					
+{					
+name	windTurbineF05	;			
+type	cellSet;				
+action	new;				
+source	sphereToCell;				
+origin	(	314140.4	5968098.4	102	);
+radius	$sphereRadius	;			
+}					
+					
+					
+					
+{					
+name	windTurbineF06	;			
+type	cellSet;				
+action	new;				
+source	sphereToCell;				
+origin	(	313662.2	5968870.7	102	);
+radius	$sphereRadius	;			
+}					
+					
+					
+					
+{					
+name	windTurbineF07	;			
+type	cellSet;				
+action	new;				
+source	sphereToCell;				
+origin	(	313168.9	5969606.6	102	);
+radius	$sphereRadius	;			
+}					
+					
+
+);
+
+// ************************************************************************* //

@@ -1,0 +1,54 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | foam-extend: Open Source CFD                    |
+|  \\    /   O peration     | Version:     4.1                                |
+|   \\  /    A nd           | Web:         http://www.foam-extend.org         |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volSymmTensorField;
+    object      tauM3;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [1 -1 -2 0 0 0 0];
+
+internalField   uniform (0 0 0 0 0 0);
+
+boundaryField
+{
+    inlet
+    {
+        type            fixedValue;
+        value           uniform (0 0 0 0 0 0);
+    }
+    outlet
+    {
+        type            zeroGradient;
+    }
+    wall1
+    {
+        type            zeroGradient;
+    }
+    wall2
+    {
+        type            zeroGradient;
+    }
+    wall3
+    {
+        type            zeroGradient;
+    }
+    symH
+    {
+        type            symmetryPlane;
+    }
+    symV
+    {
+        type            symmetryPlane;
+    }
+}
+
+// ************************************************************************* //

@@ -1,0 +1,136 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2206                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      snappyHexMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+castellatedMesh true;
+snap            false;
+addLayers       false;
+
+geometry
+{
+    cylinder1
+    {
+        type    searchableCylinder;
+        point1  (0 0 0);
+        point2  (80 0 0);
+        radius  30;
+    }
+
+    cylinder2
+    {
+        type    searchableCylinder;
+        point1  (0 0 0);
+        point2  (70 0 0);
+        radius  15;
+    }
+
+    cylinder3
+    {
+        type    searchableCylinder;
+        point1  (0 0 0);
+        point2  (20 0 0);
+        radius  10;
+    }
+
+    cylinder4
+    {
+        type    searchableCylinder;
+        point1  (0 0 0);
+        point2  (10 0 0);
+        radius  8;
+    }
+
+    cylinder5
+    {
+        type    searchableCylinder;
+        point1  (0 0 0);
+        point2  (5 0 0);
+        radius  7;
+    }
+};
+
+castellatedMeshControls
+{
+    maxLocalCells       100000;
+    maxGlobalCells      100000000;
+    minRefinementCells  0;
+    maxLoadUnbalance    0.10;
+    nCellsBetweenLevels 1;
+    resolveFeatureAngle 30;
+    allowFreeStandingZoneFaces true;
+    locationInMesh (0.01 0.01 0.01);
+    features
+    ();
+
+    refinementSurfaces
+    {
+    }
+
+    refinementRegions
+    {
+        cylinder1
+        {
+            mode    inside;
+            levels  ((1.0 1));
+        }
+        cylinder2
+        {
+            mode    inside;
+            levels  ((1.0 2));
+        }
+        cylinder3
+        {
+            mode    inside;
+            levels  ((1.0 3));
+        }
+        cylinder4
+        {
+            mode    inside;
+            levels  ((1.0 4));
+        }
+        cylinder5
+        {
+            mode    inside;
+            levels  ((1.0 5));
+        }
+    }
+}
+
+snapControls
+{
+    nSmoothPatch    5;
+    tolerance       2.0;
+    nSolveIter      5;
+    nRelaxIter      2;
+    nFeatureSnapIter 10;
+    explicitFeatureSnap    false;
+    multiRegionFeatureSnap false;
+    implicitFeatureSnap    true;
+}
+
+addLayersControls
+{}
+
+meshQualityControls
+{
+    #includeEtc "caseDicts/meshQualityDict"
+    errorReduction 0.75;
+    nSmoothScale 4;
+}
+
+debug          0;
+mergeTolerance 1e-6;
+
+// ************************************************************************* //

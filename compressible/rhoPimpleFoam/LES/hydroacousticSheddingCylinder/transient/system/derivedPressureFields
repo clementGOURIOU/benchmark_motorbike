@@ -1,0 +1,54 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2206                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+
+    gaugePressure
+    {
+        // Mandatory entries
+        type     exprField;
+        libs     (fieldFunctionObjects);
+        field    pGauge;
+        /// action new;
+        ///autowrite       false;
+        ///store           true;
+        useNamePrefix   false;
+
+        executeControl  timeStep;
+        writeControl    none;
+
+        // Use expression to define Gauge pressure
+        expression  "p - 101325";
+        dimensions  [ Pa ];
+    }
+
+    curlePoint
+    {
+        // Mandatory entries
+        type            Curle;
+        libs            (fieldFunctionObjects);
+        patches         (cylinder);
+        c0              1480;
+        input           point;
+        output          point;
+        observerPositions
+        (
+            ( 0.0 0.0  0.5) // N
+            ( 0.5 0.0  0.0) // E
+            ( 0.0 0.0 -0.5) // S
+            (-0.5 0.0  0.0) // W
+        );
+
+        // Optional (inherited) entries
+        p               p;
+        region          region0;
+        enabled         true;
+        log             true;
+        timeStart       0.05;
+        executeControl  runTime;
+        executeInterval 5e-5;
+    }
+// ************************************************************************* //

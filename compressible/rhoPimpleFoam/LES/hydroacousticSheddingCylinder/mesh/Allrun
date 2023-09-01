@@ -1,0 +1,65 @@
+#!/bin/sh
+cd "${0%/*}" || exit                                # Run from this directory
+. ${WM_PROJECT_DIR:?}/bin/tools/RunFunctions        # Tutorial run functions
+#------------------------------------------------------------------------------
+
+if ! canCompile
+then
+    echo "Skipping tutorial $PWD"
+    exit 0
+fi
+
+wmake linearRadial
+
+getExpansionRatio()
+{
+    sn=$1
+    a0=$2
+    n=$3
+    rEst=$4
+
+    nIter=100
+
+    while [ $nIter -gt 0 ]
+    do
+        fx=`echo "$a0*$rEst^$n-$rEst*$sn-$a0+$sn" |bc -l`
+        fDashx=`echo "$a0*$n*$rEst^($n-1)-$sn" |bc -l`
+        rEst=`echo "$rEst - $fx/$fDashx" | bc -l`
+
+        [[ "$fx" -eq "0" ]] 2>/dev/null && break
+#        echo "Iter $nIter rEst $rEst : fx $fx fD $fDashx"
+        ((nIter--))
+    done
+    echo $rEst
+}
+
+runApplication surfaceFeatureExtract
+
+runApplication blockMesh
+
+runApplication decomposePar
+
+for ((iter=1; iter<"$nref"; iter++))
+do
+    refStep=$(echo "$iter+1"|bc -l)
+    echo "Doing refinement step : baseline + $iter"
+    runParallel -o -s "r-$refStep" refineMesh -all -overwrite
+done
+
+runParallel snappyHexMesh -overwrite
+
+runApplication reconstructParMesh -constant
+
+FCH=`echo "0.0125/$nref" | bc -l`
+nLayers=`echo "170*$nref" | bc -l`
+ratio=$(getExpansionRatio 8.6 $FCH $nLayers 1.1)
+echo "FCH $FCH nLayers $nLayers ratio $ratio"
+foamDictionary -entry expansionRatio -set $ratio system/extrudeMeshDict -disableFunctionEntries
+
+runApplication extrudeMesh -lib libextrudeModel-exaFoam.so
+
+runApplication createPatch -overwrite
+
+runApplication checkMesh -allGeometry -allTopology
+
+#------------------------------------------------------------------------------
