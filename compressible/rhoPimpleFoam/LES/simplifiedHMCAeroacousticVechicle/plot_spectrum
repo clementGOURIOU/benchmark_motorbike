@@ -1,0 +1,41 @@
+set title "Spectra: -8.45dB correction \n{Time window: 0.05718-0.20s; Freq resolution: 7Hz}"
+set ylabel 'SPL, dB'
+set xlabel 'Frequency, Hz'
+set yrange [50:130]
+set grid
+set grid mxtics
+set terminal png size 1000,750
+set output "SPL_spectrum-w-0.05718-0.2_plot-p1.png"
+
+set logscale x
+plot "<cat postProcessing/noise/probes-1/pointNoise/input0/p/SPL_dB_f.dat" using 1:($2-8.45) title "p1" with lines, \
+     "exp.txt" using 1:2 title "exp" with lines
+
+set output "SPL_spectrum-w-0.05718-0.2_plot-p2.png"
+plot "<cat postProcessing/noise/probes-2/pointNoise/input0/p/SPL_dB_f.dat" using 1:($2-8.45) title "p2" with lines, \
+     "exp.txt" using 1:3 title "exp" with lines
+
+set output "SPL_spectrum-w-0.05718-0.2_plot-p3.png"
+plot "<cat postProcessing/noise/probes-3/pointNoise/input0/p/SPL_dB_f.dat" using 1:($2-8.45) title "p3" with lines, \
+     "exp.txt" using 1:4 title "exp" with lines
+
+set output "SPL_spectrum-w-0.05718-0.2_plot-p4.png"
+plot "<cat postProcessing/noise/probes-4/pointNoise/input0/p/SPL_dB_f.dat" using 1:($2-8.45) title "p4" with lines, \
+     "exp.txt" using 1:5 title "exp" with lines
+
+set output "SPL_spectrum-w-0.05718-0.2_plot-p5.png"
+plot "<cat postProcessing/noise/probes-5/pointNoise/input0/p/SPL_dB_f.dat" using 1:($2-8.45) title "p5" with lines, \
+     "exp.txt" using 1:6 title "exp" with lines
+
+unset logscale x
+set title "Pressure history"
+set ylabel 'Pressure, Pa'
+set xlabel 'Time, s'
+set yrange [100500:102500]
+unset xrange
+set output "Pressure_history-p1-5.png"
+plot "<cat postProcessing/probes/0/p" using 1:2 title "p1" with lines, \
+     "<cat postProcessing/probes/0/p" using 1:3 title "p2" with lines, \
+     "<cat postProcessing/probes/0/p" using 1:4 title "p3" with lines, \
+     "<cat postProcessing/probes/0/p" using 1:5 title "p4" with lines, \
+     "<cat postProcessing/probes/0/p" using 1:6 title "p5" with lines

@@ -1,0 +1,865 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2306                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      snappyHexMeshDict;
+}
+castellatedMesh true;
+snap            true;
+addLayers       true;
+
+geometry
+{
+    drivaer.obj
+    {
+        type            triSurfaceMesh;
+        regions
+        {
+            Body_A_Pillar_LH
+            {
+                name            Body_A_Pillar_LH;
+            }
+            Body_Door_handles
+            {
+                name            Body_Door_handles;
+            }
+            Body_Fascia_front_1
+            {
+                name            Body_Fascia_front_1;
+            }
+            Body_Fascia_front_2
+            {
+                name            Body_Fascia_front_2;
+            }
+            Body_Fender
+            {
+                name            Body_Fender;
+            }
+            Body_Headlamps
+            {
+                name            Body_Headlamps;
+            }
+            Body_Hood
+            {
+                name            Body_Hood;
+            }
+            Body_Rear
+            {
+                name            Body_Rear;
+            }
+            Body_Rear_Access
+            {
+                name            Body_Rear_Access;
+            }
+            Body_Rocker
+            {
+                name            Body_Rocker;
+            }
+            Body_Roof
+            {
+                name            Body_Roof;
+            }
+            Body_Side
+            {
+                name            Body_Side;
+            }
+            Body_Window_front
+            {
+                name            Body_Window_front;
+            }
+            Body_Window_front_frame
+            {
+                name            Body_Window_front_frame;
+            }
+            Body_Window_side_frame_RH
+            {
+                name            Body_Window_side_frame_RH;
+            }
+            Open_Grill_Lower_finebl
+            {
+                name            Open_Grill_Lower_finebl;
+            }
+            Open_Grill_Upper_finebl
+            {
+                name            Open_Grill_Upper_finebl;
+            }
+            OCDA_Detailed_Underbody_nobl
+            {
+                name            OCDA_Detailed_Underbody_nobl;
+            }
+            Engine_Undershield
+            {
+                name            Engine_Undershield;
+            }
+            Upstream_ducting_nobl
+            {
+                name            Upstream_ducting_nobl;
+            }
+            Engine_Encapsulation_nobl
+            {
+                name            Engine_Encapsulation_nobl;
+            }
+            Wheel_Support_front_1_nobl
+            {
+                name            Wheel_Support_front_1_nobl;
+            }
+            Wheel_Support_front_2_nobl
+            {
+                name            Wheel_Support_front_2_nobl;
+            }
+            Wheel_Support_rear_nobl
+            {
+                name            Wheel_Support_rear_nobl;
+            }
+            Brake_Disc_front_nobl
+            {
+                name            Brake_Disc_front_nobl;
+            }
+            Brake_Disc_rear_nobl
+            {
+                name            Brake_Disc_rear_nobl;
+            }
+            Powertrain_nobl
+            {
+                name            Powertrain_nobl;
+            }
+            Exhaust_System_1_nobl
+            {
+                name            Exhaust_System_1_nobl;
+            }
+            Exhaust_System_2_nobl
+            {
+                name            Exhaust_System_2_nobl;
+            }
+            Exhaust_System_3_nobl
+            {
+                name            Exhaust_System_3_nobl;
+            }
+            Heat_Exchanger_Frame_nobl
+            {
+                name            Heat_Exchanger_Frame_nobl;
+            }
+            Heat_Exchanger_Sealing_nobl
+            {
+                name            Heat_Exchanger_Sealing_nobl;
+            }
+            Fan_shroud_nobl
+            {
+                name            Fan_shroud_nobl;
+            }
+            Fan_shroud_sealing_nobl
+            {
+                name            Fan_shroud_sealing_nobl;
+            }
+            Notchback_B_Pillar
+            {
+                name            Notchback_B_Pillar;
+            }
+            Notchback_Body_side
+            {
+                name            Notchback_Body_side;
+            }
+            Notchback_C_Pillar
+            {
+                name            Notchback_C_Pillar;
+            }
+            Notchback_Roof
+            {
+                name            Notchback_Roof;
+            }
+            Notchback_Trunk
+            {
+                name            Notchback_Trunk;
+            }
+            Notchback_Window_rear
+            {
+                name            Notchback_Window_rear;
+            }
+            Notchback_Window_rear_frame
+            {
+                name            Notchback_Window_rear_frame;
+            }
+            Notchback_Window_side_frame
+            {
+                name            Notchback_Window_side_frame;
+            }
+            tyre_fr_lh_nobl
+            {
+                name            tyre_fr_lh_nobl;
+            }
+            tyre_fr_rh_nobl
+            {
+                name            tyre_fr_rh_nobl;
+            }
+            tyre_rr_rh_nobl
+            {
+                name            tyre_rr_rh_nobl;
+            }
+            tyre_rr_lh_nobl
+            {
+                name            tyre_rr_lh_nobl;
+            }
+            rim_fr_lh_nobl
+            {
+                name            rim_fr_lh_nobl;
+            }
+            rim_fr_rh_nobl
+            {
+                name            rim_fr_rh_nobl;
+            }
+            rim_rr_lh_nobl
+            {
+                name            rim_rr_lh_nobl;
+            }
+            rim_rr_rh_nobl
+            {
+                name            rim_rr_rh_nobl;
+            }
+            Body_Window_Side_LH
+            {
+                name            Body_Window_Side_LH;
+            }
+            Notchback_Window_side
+            {
+                name            Notchback_Window_side;
+            }
+            lh_mirror
+            {
+                name            lh_mirror;
+            }
+            rh_mirror
+            {
+                name            rh_mirror;
+            }
+            Body_A_Pillar_RH
+            {
+                name            Body_A_Pillar_RH;
+            }
+            Body_Window_Side_RH
+            {
+                name            Body_Window_Side_RH;
+            }
+            Body_Window_side_frame_LH
+            {
+                name            Body_Window_side_frame_LH;
+            }
+        }
+    }
+    box1
+    {
+        type            searchableBox;
+        min             ( -2.42234 -3.04497 -0.3185 );
+        max             ( 8.4178 3.04497 2.1682 );
+    }
+    box2
+    {
+        type            searchableBox;
+        min             ( -19.2592 -5.07495 -0.3185 );
+        max             ( 22.2563 5.07495 3.23393 );
+    }
+    box3
+    {
+        type            searchableBox;
+        min             ( -19.2592 -9.13491 -1.02899 );
+        max             ( 49.9332 9.13491 9.27306 );
+    }
+    ref_Body_Window_Side_LH
+    {
+        type            subTriSurfaceMesh;
+        surface         drivaer.obj;
+        patches         ( Body_Window_Side_LH );
+    }
+    box_lh_mirror
+    {
+        type            searchableBox;
+        min             ( 0.706418 -1.05952 0.581842 );
+        max             ( 1.77305 -0.658722 0.806082 );
+    }
+    box_Body_A_Pillar_LH
+    {
+        type            searchableBox;
+        min             ( 0.421677 -0.82514 0.517328 );
+        max             ( 1.67456 -0.498614 1.12848 );
+    }
+    box_Body_Window_side_frame_LH
+    {
+        type            searchableBox;
+        min             ( 0.590213 -0.830964 0.524003 );
+        max             ( 1.65258 -0.573493 1.08756 );
+    }
+}
+
+castellatedMeshControls
+{
+    maxLocalCells   200000000;
+    maxGlobalCells  300000000;
+    minRefinementCells 20;
+    nCellsBetweenLevels 5;
+    maxLoadUnbalance 0.1;
+    allowFreeStandingZoneFaces true;
+    resolveFeatureAngle 30;
+    features        ( { file "drivaer.eMesh" ; level 0 ; } );
+    refinementSurfaces
+    {
+        drivaer.obj
+        {
+            level           ( 0 0 );
+            regions
+            {
+                Wheel_Support_front_2_nobl
+                {
+                    level           ( 7 7 );
+                }
+                Body_Roof
+                {
+                    level           ( 7 7 );
+                }
+                Notchback_Window_rear_frame
+                {
+                    level           ( 7 7 );
+                }
+                Exhaust_System_1_nobl
+                {
+                    level           ( 7 7 );
+                }
+                Body_Fender
+                {
+                    level           ( 7 7 );
+                }
+                Open_Grill_Upper_finebl
+                {
+                    level           ( 7 7 );
+                }
+                Fan_shroud_nobl
+                {
+                    level           ( 7 7 );
+                }
+                rim_rr_lh_nobl
+                {
+                    level           ( 7 7 );
+                }
+                Body_Window_front_frame
+                {
+                    level           ( 7 7 );
+                }
+                tyre_rr_rh_nobl
+                {
+                    level           ( 7 7 );
+                }
+                Body_Window_front
+                {
+                    level           ( 7 7 );
+                }
+                Open_Grill_Lower_finebl
+                {
+                    level           ( 7 7 );
+                }
+                Body_Headlamps
+                {
+                    level           ( 7 7 );
+                }
+                Body_Side
+                {
+                    level           ( 7 7 );
+                }
+                Body_Fascia_front_2
+                {
+                    level           ( 7 7 );
+                }
+                Brake_Disc_front_nobl
+                {
+                    level           ( 7 7 );
+                }
+                Body_Fascia_front_1
+                {
+                    level           ( 7 7 );
+                }
+                Exhaust_System_3_nobl
+                {
+                    level           ( 7 7 );
+                }
+                OCDA_Detailed_Underbody_nobl
+                {
+                    level           ( 7 7 );
+                }
+                Body_Rocker
+                {
+                    level           ( 7 7 );
+                }
+                Body_Hood
+                {
+                    level           ( 7 7 );
+                }
+                Body_Door_handles
+                {
+                    level           ( 7 7 );
+                }
+                Fan_shroud_sealing_nobl
+                {
+                    level           ( 7 7 );
+                }
+                rim_fr_rh_nobl
+                {
+                    level           ( 7 7 );
+                }
+                tyre_fr_lh_nobl
+                {
+                    level           ( 7 7 );
+                }
+                Notchback_Window_rear
+                {
+                    level           ( 7 7 );
+                }
+                rim_rr_rh_nobl
+                {
+                    level           ( 7 7 );
+                }
+                Brake_Disc_rear_nobl
+                {
+                    level           ( 7 7 );
+                }
+                Wheel_Support_rear_nobl
+                {
+                    level           ( 7 7 );
+                }
+                Notchback_Roof
+                {
+                    level           ( 7 7 );
+                }
+                Heat_Exchanger_Frame_nobl
+                {
+                    level           ( 7 7 );
+                }
+                tyre_fr_rh_nobl
+                {
+                    level           ( 7 7 );
+                }
+                Notchback_Body_side
+                {
+                    level           ( 7 7 );
+                }
+                Wheel_Support_front_1_nobl
+                {
+                    level           ( 7 7 );
+                }
+                Body_Rear_Access
+                {
+                    level           ( 7 7 );
+                }
+                Notchback_C_Pillar
+                {
+                    level           ( 7 7 );
+                }
+                tyre_rr_lh_nobl
+                {
+                    level           ( 7 7 );
+                }
+                Upstream_ducting_nobl
+                {
+                    level           ( 7 7 );
+                }
+                rim_fr_lh_nobl
+                {
+                    level           ( 7 7 );
+                }
+                Powertrain_nobl
+                {
+                    level           ( 7 7 );
+                }
+                Body_A_Pillar_RH
+                {
+                    level           ( 7 7 );
+                }
+                Exhaust_System_2_nobl
+                {
+                    level           ( 7 7 );
+                }
+                Heat_Exchanger_Sealing_nobl
+                {
+                    level           ( 7 7 );
+                }
+                Notchback_Trunk
+                {
+                    level           ( 7 7 );
+                }
+                Body_Rear
+                {
+                    level           ( 7 7 );
+                }
+                Body_Window_side_frame_RH
+                {
+                    level           ( 7 7 );
+                }
+                Notchback_Window_side
+                {
+                    level           ( 7 7 );
+                }
+                rh_mirror
+                {
+                    level           ( 7 7 );
+                }
+                Notchback_B_Pillar
+                {
+                    level           ( 7 7 );
+                }
+                Body_Window_Side_RH
+                {
+                    level           ( 7 7 );
+                }
+                Notchback_Window_side_frame
+                {
+                    level           ( 7 7 );
+                }
+                Engine_Encapsulation_nobl
+                {
+                    level           ( 7 7 );
+                }
+                Engine_Undershield
+                {
+                    level           ( 7 7 );
+                }
+                Body_Window_Side_LH
+                {
+                    level           ( 8 8 );
+                }
+                lh_mirror
+                {
+                    level           ( 9 9 );
+                }
+                Body_A_Pillar_LH
+                {
+                    level           ( 9 9 );
+                }
+                Body_Window_side_frame_LH
+                {
+                    level           ( 9 9 );
+                }
+            }
+        }
+    }
+    refinementRegions
+    {
+        box1
+        {
+            mode            inside;
+            levels          1 ( ( 1e+15 5 ) );
+        }
+        box2
+        {
+            mode            inside;
+            levels          1 ( ( 1e+15 4 ) );
+        }
+        box3
+        {
+            mode            inside;
+            levels          1 ( ( 1e+15 1 ) );
+        }
+        ref_Body_Window_Side_LH
+        {
+            mode            distance;
+            levels          2 ( ( 0.05 8 ) ( 0.15 7 ) );
+        }
+        box_lh_mirror
+        {
+            mode            inside;
+            levels          ( ( 0 8 ) );
+        }
+        box_Body_A_Pillar_LH
+        {
+            mode            inside;
+            levels          ( ( 0 8 ) );
+        }
+        box_Body_Window_side_frame_LH
+        {
+            mode            inside;
+            levels          ( ( 0 8 ) );
+        }
+    }
+    locationInMesh  ( -21.872 -9.16489 1.6915 );
+}
+
+snapControls
+{
+    tolerance       2;
+    implicitFeatureSnap false;
+    explicitFeatureSnap true;
+    multiRegionFeatureSnap true;
+    detectNearSurfacesSnap true;
+    nSmoothPatch    3;
+    nSolveIter      100;
+    nRelaxIter      5;
+    nFeatureSnapIter 10;
+    nFaceSplitInterval 5;
+}
+
+addLayersControls
+{
+    layerTerminationAngle -180;
+    detectExtrusionIsland true;
+    layers
+    {
+        Body_Roof
+        {
+            nSurfaceLayers  16;
+            firstLayerThickness 8.82e-06;
+            expansionRatio  1.4;
+        }
+        Notchback_Window_rear_frame
+        {
+            nSurfaceLayers  16;
+            firstLayerThickness 1.17e-05;
+            expansionRatio  1.4;
+        }
+        Body_Fender
+        {
+            nSurfaceLayers  16;
+            firstLayerThickness 9.64e-06;
+            expansionRatio  1.4;
+        }
+        Open_Grill_Upper_finebl
+        {
+            nSurfaceLayers  16;
+            firstLayerThickness 1.17e-05;
+            expansionRatio  1.4;
+        }
+        Body_Window_front_frame
+        {
+            nSurfaceLayers  16;
+            firstLayerThickness 5.25e-06;
+            expansionRatio  1.4;
+        }
+        Body_Window_front
+        {
+            nSurfaceLayers  16;
+            firstLayerThickness 8.1e-06;
+            expansionRatio  1.4;
+        }
+        Open_Grill_Lower_finebl
+        {
+            nSurfaceLayers  16;
+            firstLayerThickness 1.17e-05;
+            expansionRatio  1.4;
+        }
+        Body_Headlamps
+        {
+            nSurfaceLayers  16;
+            firstLayerThickness 1.17e-05;
+            expansionRatio  1.4;
+        }
+        Body_Side
+        {
+            nSurfaceLayers  16;
+            firstLayerThickness 1.07e-05;
+            expansionRatio  1.4;
+        }
+        Body_Fascia_front_2
+        {
+            nSurfaceLayers  16;
+            firstLayerThickness 1.17e-05;
+            expansionRatio  1.4;
+        }
+        Body_Fascia_front_1
+        {
+            nSurfaceLayers  16;
+            firstLayerThickness 1.17e-05;
+            expansionRatio  1.4;
+        }
+        Body_Rocker
+        {
+            nSurfaceLayers  16;
+            firstLayerThickness 1.17e-05;
+            expansionRatio  1.4;
+        }
+        Body_Hood
+        {
+            nSurfaceLayers  16;
+            firstLayerThickness 1.09e-05;
+            expansionRatio  1.4;
+        }
+        Body_Door_handles
+        {
+            nSurfaceLayers  16;
+            firstLayerThickness 1.17e-05;
+            expansionRatio  1.4;
+        }
+        Notchback_Window_rear
+        {
+            nSurfaceLayers  16;
+            firstLayerThickness 1.17e-05;
+            expansionRatio  1.4;
+        }
+        Notchback_Roof
+        {
+            nSurfaceLayers  16;
+            firstLayerThickness 1.14e-05;
+            expansionRatio  1.4;
+        }
+        Notchback_Body_side
+        {
+            nSurfaceLayers  16;
+            firstLayerThickness 9.79e-06;
+            expansionRatio  1.4;
+        }
+        Body_Rear_Access
+        {
+            nSurfaceLayers  16;
+            firstLayerThickness 1.17e-05;
+            expansionRatio  1.4;
+        }
+        Notchback_C_Pillar
+        {
+            nSurfaceLayers  16;
+            firstLayerThickness 1.07e-05;
+            expansionRatio  1.4;
+        }
+        Body_A_Pillar_RH
+        {
+            nSurfaceLayers  16;
+            firstLayerThickness 5.82e-06;
+            expansionRatio  1.4;
+        }
+        Notchback_Trunk
+        {
+            nSurfaceLayers  16;
+            firstLayerThickness 1.17e-05;
+            expansionRatio  1.4;
+        }
+        Body_Rear
+        {
+            nSurfaceLayers  16;
+            firstLayerThickness 1.17e-05;
+            expansionRatio  1.4;
+        }
+        Body_Window_side_frame_RH
+        {
+            nSurfaceLayers  16;
+            firstLayerThickness 5.79e-06;
+            expansionRatio  1.4;
+        }
+        Notchback_Window_side
+        {
+            nSurfaceLayers  16;
+            firstLayerThickness 9.17e-06;
+            expansionRatio  1.4;
+        }
+        rh_mirror
+        {
+            nSurfaceLayers  16;
+            firstLayerThickness 5.86e-06;
+            expansionRatio  1.4;
+        }
+        Notchback_B_Pillar
+        {
+            nSurfaceLayers  16;
+            firstLayerThickness 7.6e-06;
+            expansionRatio  1.4;
+        }
+        Body_Window_Side_RH
+        {
+            nSurfaceLayers  16;
+            firstLayerThickness 1.05e-05;
+            expansionRatio  1.4;
+        }
+        Notchback_Window_side_frame
+        {
+            nSurfaceLayers  16;
+            firstLayerThickness 1e-05;
+            expansionRatio  1.4;
+        }
+        Engine_Undershield
+        {
+            nSurfaceLayers  16;
+            firstLayerThickness 1.17e-05;
+            expansionRatio  1.4;
+        }
+        Body_Window_Side_LH
+        {
+            nSurfaceLayers  16;
+            firstLayerThickness 1.05e-05;
+            expansionRatio  1.34;
+        }
+        lh_mirror
+        {
+            nSurfaceLayers  16;
+            firstLayerThickness 5.86e-06;
+            expansionRatio  1.34;
+        }
+        Body_A_Pillar_LH
+        {
+            nSurfaceLayers  16;
+            firstLayerThickness 5.82e-06;
+            expansionRatio  1.34;
+        }
+        Body_Window_side_frame_LH
+        {
+            nSurfaceLayers  16;
+            firstLayerThickness 5.79e-06;
+            expansionRatio  1.34;
+        }
+        ZMin
+        {
+            nSurfaceLayers  6;
+            firstLayerThickness 1e-03;
+            expansionRatio  1.2;
+        }
+    }
+    relativeSizes   false;
+    firstLayerThickness 0.003;
+    expansionRatio  1.3;
+    minThickness    1e-08;
+    nGrow           0;
+    featureAngle    180;
+    slipFeatureAngle 30;
+    nMedialAxisIter 10;
+    nRelaxIter      5;
+    nSmoothSurfaceNormals 10;
+    nSmoothNormals  10;
+    nSmoothDisplacement 90;
+    nSmoothThickness 10;
+    maxFaceThicknessRatio 0.5;
+    maxThicknessToMedialRatio 0.3;
+    minMedialAxisAngle 130;
+    nBufferCellsNoExtrude 0;
+    nLayerIter      50;
+    nRelaxedIter    0;
+}
+
+meshQualityControls
+{
+    maxNonOrtho     65;
+    maxBoundarySkewness 20;
+    maxInternalSkewness 4;
+    maxConcave      80;
+    minFlatness     0.5;
+    minVol          1e-30;
+    minTetQuality   1e-30;
+    minArea         1e-30;
+    minTwist        0.02;
+    minDeterminant  0.001;
+    minFaceWeight   0.05;
+    minVolRatio     0.01;
+    minTriangleTwist 0.001;
+    nSmoothScale    4;
+    errorReduction  0.75;
+    relaxed
+    {
+        maxNonOrtho     75;
+        maxInternalSkewness 8;
+        minTetQuality   -1e+30;
+        minTwist        1e-06;
+        minDeterminant  1e-06;
+        minFaceWeight   1e-06;
+    }
+}
+
+debug           0;
+
+mergeTolerance  1e-08;

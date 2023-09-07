@@ -1,0 +1,25 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2306                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      turbulenceQuantities;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+turbulentK           0.056712962962962965;
+turbulentOmega       43.47909956249591;
+turbulentEpsilon     0.22192457068357288;
+turbulentV2          0.03780864197530864;
+turbulentNut         0.0013043729868748772;
+turbulentNuTilda     0.0013043729868748772;
+turbulentNuSgs       0.0013043729868748772;
+
+// ************************************************************************* //

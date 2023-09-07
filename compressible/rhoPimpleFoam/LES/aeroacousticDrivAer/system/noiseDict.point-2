@@ -1,0 +1,65 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2306                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      noiseDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+noiseModel      pointNoise;
+
+pointNoiseCoeffs
+{
+    outputPrefix    probes-2;
+
+    windowModel     Hanning;
+
+    HanningCoeffs
+    {
+        // Window overlap percentage
+        overlapPercent  50;
+        symmetric       yes;
+        extended        yes;
+
+        // Optional number of windows, default = all available
+        //nWindow         5;
+    }
+    files
+    (
+        "postProcessing/patchProbes/0/p"
+    );
+
+    nHeaderLine     7;
+    refColumn       0;
+    componentColumns (2);
+    mergeSeparators yes;
+    separator       " ";
+
+    // Number of samples in sampling window
+    // Must be a power of 2, default = 2^16 (=65536)
+    N               1000;
+
+    // Lower frequency limit, default = 25Hz
+    fl              1;
+
+    // Upper frequency limit, default = 10kHz
+    //fu              10000;
+
+    // Start time, default = 0s
+    startTime       0.1;
+
+    // Write interval for FFT data, default = 1
+    fftWriteInterval 1;
+
+    rhoRef          1;
+}
+
+// ************************************************************************* //

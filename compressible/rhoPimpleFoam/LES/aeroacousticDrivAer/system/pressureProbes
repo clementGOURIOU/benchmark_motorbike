@@ -1,0 +1,19 @@
+    patchProbes
+    {
+        type            patchProbes;
+        libs            ("libsampling.so");
+        enabled         true;
+        patches         (Body_Window_Side_LH);
+        writeControl    timeStep;
+        writeInterval   1;
+        fields          ( U p T );
+
+        probeLocations
+        (
+            ( 1.08332   -0.757923   0.684179)
+            ( 1.283     -0.759517   0.694176)
+            ( 1.44289   -0.759536   0.701398)
+            ( 1.30513   -0.702511   0.833795)
+            ( 1.46506   -0.701798   0.840921)
+        );
+    }

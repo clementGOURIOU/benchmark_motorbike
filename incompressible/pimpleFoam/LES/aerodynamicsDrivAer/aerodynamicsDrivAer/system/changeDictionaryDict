@@ -1,0 +1,66 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2306                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      changeDictionaryDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+boundary
+{
+        Tire_FL               { type wall;     inGroups 1 ( groupGRWS_Tire_FL ); }
+        Tire_FR               { type wall;     inGroups 1 ( groupGRWS_Tire_FR ); }
+        Tire_RL               { type wall;     inGroups 1 ( groupGRWS_Tire_RL ); }
+        Tire_RR               { type wall;     inGroups 1 ( groupGRWS_Tire_RR ); }
+        DrivAer_PID__00       { type wall;     inGroups 1 ( groupWall ); }
+        DrivAer_PID__01       { type wall;     inGroups 1 ( groupWall ); }
+        DrivAer_PID__02       { type wall;     inGroups 1 ( groupGRWS_Tire_FL ); }
+        DrivAer_PID__03       { type wall;     inGroups 1 ( groupWall ); }
+        DrivAer_PID__04       { type wall;     inGroups 1 ( groupWall ); }
+        DrivAer_PID__05       { type wall;     inGroups 1 ( groupWall ); }
+        DrivAer_PID__06       { type wall;     inGroups 1 ( groupGRWS_Tire_RL ); }
+        DrivAer_PID__07       { type wall;     inGroups 1 ( groupWall ); }
+        DrivAer_PID__08       { type wall;     inGroups 1 ( groupWall ); }
+        DrivAer_PID__09       { type wall;     inGroups 1 ( groupWall ); }
+        DrivAer_PID__10       { type wall;     inGroups 1 ( groupWall ); }
+        DrivAer_PID__11       { type wall;     inGroups 1 ( groupWall ); }
+        DrivAer_PID__12       { type wall;     inGroups 1 ( groupWall ); }
+        DrivAer_PID__13       { type wall;     inGroups 1 ( groupWall ); }
+        DrivAer_PID__14       { type wall;     inGroups 1 ( groupWall ); }
+        DrivAer_PID__15       { type wall;     inGroups 1 ( groupWall ); }
+        DrivAer_PID__16       { type wall;     inGroups 1 ( groupWall ); }
+        DrivAer_PID__17       { type wall;     inGroups 1 ( groupWall ); }
+        DrivAer_PID__18       { type wall;     inGroups 1 ( groupWall ); }
+        DrivAer_PID__19       { type wall;     inGroups 1 ( groupWall ); }
+        DrivAer_PID__20       { type wall;     inGroups 1 ( groupWall ); }
+        DrivAer_PID__21       { type wall;     inGroups 1 ( groupWall ); }
+        DrivAer_PID__22       { type wall;     inGroups 1 ( groupWall ); }
+        DrivAer_PID__23       { type wall;     inGroups 1 ( groupWall ); }
+        DrivAer_PID__24       { type wall;     inGroups 1 ( groupWall ); }
+        DrivAer_PID__25       { type wall;     inGroups 1 ( groupWall ); }
+        DrivAer_PID__26       { type wall;     inGroups 1 ( groupWall ); }
+        DrivAer_PID__27       { type wall;     inGroups 1 ( groupWall ); }
+        DrivAer_PID__28       { type wall;     inGroups 1 ( groupWall ); }
+        DrivAer_PID__29       { type wall;     inGroups 1 ( groupWall ); }
+        DrivAer_PID__30       { type wall;     inGroups 1 ( groupWall ); }
+        DrivAer_PID__31       { type wall;     inGroups 1 ( groupWall ); }
+        DrivAer_PID__32       { type wall;     inGroups 1 ( groupWall ); }
+        DrivAer_PID__33       { type wall;     inGroups 1 ( groupWall ); }
+        DrivAer_PID__34       { type wall;     inGroups 1 ( groupWall ); }
+        DrivAer_PID__35       { type wall;     inGroups 1 ( groupWall ); }
+        WTUN_BELT             { type wall;     inGroups 1 ( groupWtunStreet );}
+        WTUN_INLET            { type patch;    inGroups 1 ( groupWtunInlet );}
+        WTUN_OUTLET           { type patch;    inGroups 1 ( groupWtunOutlet );}
+        WTUN_ROOF             { type symmetry; inGroups 1 ( groupSymmetry );}
+        WTUN_WALLS            { type symmetry; inGroups 1 ( groupSymmetry );}
+}
+
+// ************************************************************************* //

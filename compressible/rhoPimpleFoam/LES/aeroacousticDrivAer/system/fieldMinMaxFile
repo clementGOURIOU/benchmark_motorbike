@@ -1,0 +1,10 @@
+
+  fieldMinMax
+  {
+    type                fieldMinMax;
+    libs  ("libfieldFunctionObjects.so");
+    log                 yes;
+    writeControl        timeStep;
+    writeInterval       1;
+    fields              ( U p T);
+  }

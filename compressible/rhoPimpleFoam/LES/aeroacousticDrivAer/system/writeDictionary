@@ -1,0 +1,13 @@
+writeDictionary
+{
+    type      writeDictionary;
+    libs      ("libutilityFunctionObjects.so");
+    dictNames 
+    (
+        controlDict
+        fvSchemes
+        fvSolution
+        turbulenceProperties
+        transportProperties
+    );
+}

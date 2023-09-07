@@ -1,0 +1,70 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2306                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      fvSchemes;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+ddtSchemes
+{
+    default             backward;
+}
+gradSchemes
+{
+    default             cellLimited Gauss linear 1.0;
+    grad(p)             Gauss linear;
+    grad(U)             Gauss linear;
+}
+divSchemes
+{
+    default             none;
+    div(phi,U)          Gauss DEShybrid linear  linearUpwind grad(U) hmax 0.65 38.889 0.2 0.2 0.2 1.0e-03;
+    div(phi,k)          Gauss limitedLinear 1.0;
+    div(phi,v2)         Gauss limitedLinear 1.0;
+    div(phi,f)          Gauss limitedLinear 1.0;
+    div(phi,h)          Gauss limitedLinear 1.0;
+    div(phi,e)          Gauss limitedLinear 1.0;
+    div(phi,nuTilda)    Gauss limitedLinear 1.0;
+    div(phi,Ekp)        Gauss limitedLinear 1.0;
+    div(phi,epsilon)    Gauss limitedLinear 1.0;
+    div(phi,omega)      Gauss limitedLinear 1.0;
+    div(phiv,p)         Gauss linear;
+    div(phi,K)          Gauss linear;
+    div(div(phi,U))     Gauss linear;
+    div(((rho*nuEff)*dev2(T(grad(U)))))      Gauss linear;
+    div((nuEff*dev2(T(grad(U))))) Gauss linear;
+
+}
+
+interpolationSchemes
+{
+    default         linear;
+    interpolate(U)  linear;
+}
+laplacianSchemes
+{
+    default         Gauss linear limited corrected 0.333;
+}
+snGradSchemes
+{
+    default         limited corrected 0.333;
+}
+fluxRequired
+{
+    default         no;
+    p               ;
+    Phi             ;
+}
+wallDist
+{
+    method meshWave;
+}

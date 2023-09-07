@@ -1,0 +1,93 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2306                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volScalarField;
+    object      nuSgs;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#include            "$FOAM_CASE/constant/turbulenceQuantities"
+
+dimensions          [ 0 2 -1 0 0 0 0 ];
+internalField       uniform $turbulentNuSgs;
+
+boundaryField
+{
+    groupWall
+    {
+        type        nutUSpaldingWallFunction;
+        value       uniform $turbulentNuSgs;
+    }
+
+    groupSymmetry
+    {
+        type        symmetry;
+    }
+
+    groupDefault
+    {
+        type        nutUSpaldingWallFunction;
+        value       uniform $turbulentNuSgs;
+    }
+
+    groupSlip
+    {
+        type        slip;
+    }
+
+    groupGRWS_Tire_FL
+    {
+        type        nutUSpaldingWallFunction;
+        value       uniform $turbulentNuSgs;
+    }
+
+    groupGRWS_Tire_FR
+    {
+        type        nutUSpaldingWallFunction;
+        value       uniform $turbulentNuSgs;
+    }
+
+    groupGRWS_Tire_RL
+    {
+        type        nutUSpaldingWallFunction;
+        value       uniform $turbulentNuSgs;
+    }
+
+    groupGRWS_Tire_RR
+    {
+        type        nutUSpaldingWallFunction;
+        value       uniform $turbulentNuSgs;
+    }
+
+    groupWtunInlet
+    {
+        type        fixedValue;
+        value       uniform $turbulentNuSgs;
+    }
+
+    groupWtunOutlet
+    {
+        type        inletOutlet; 
+        inletValue  uniform $turbulentNuSgs;
+        value       uniform $turbulentNuSgs;
+    }
+
+    groupWtunStreet
+    {
+        type        nutUSpaldingWallFunction;
+        value       uniform $turbulentNuSgs;
+    }
+
+    // Set patchGroups for constraint types
+    #include "${WM_PROJECT_DIR}/etc/caseDicts/setConstraintTypes"
+}
+
+// ************************************************************************* //

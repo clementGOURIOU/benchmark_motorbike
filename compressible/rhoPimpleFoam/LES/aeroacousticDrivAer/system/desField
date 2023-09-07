@@ -1,0 +1,10 @@
+    desField
+    {
+        type            DESModelRegions;
+        libs            ("libutilityFunctionObjects.so");
+        log             true;
+        enabled         on;
+        storeFilter     on;
+        writeControl    writeTime;
+        writeInterval   1;
+    }

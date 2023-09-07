@@ -1,0 +1,69 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2306                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      MRFProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+MRF-FL
+{
+    cellZone    MRF-FL;
+    active      yes;
+
+    // Fixed patches (by default they 'move' with the MRF zone)
+    nonRotatingPatches ();
+
+    origin      (0.00687864 -0.76593819 -0.0015194);
+    axis        (0.0 -1.0 -0.0);
+    omega       constant 123.06587018851164;
+}
+
+MRF-FR
+{
+    cellZone    MRF-FR;
+    active      yes;
+
+    // Fixed patches (by default they 'move' with the MRF zone)
+    nonRotatingPatches ();
+
+    origin      (0.00687864 0.76593819 -0.0015194);
+    axis        (0.0 -1.0 -0.0);
+    omega       constant 123.06587018851165;
+}
+
+MRF-RL
+{
+    cellZone    MRF-RL;
+    active      yes;
+
+    // Fixed patches (by default they 'move' with the MRF zone)
+    nonRotatingPatches ();
+
+    origin      (2.79306285 -0.77243819 -0.00152188);
+    axis        (0.0 -1.0 -0.0);
+    omega       constant 123.06683726215915;
+}
+
+MRF-RR
+{
+    cellZone    MRF-RR;
+    active      yes;
+
+    // Fixed patches (by default they 'move' with the MRF zone)
+    nonRotatingPatches ();
+
+    origin      (2.79306285 0.77243819 -0.00152188);
+    axis        (0.0 -1.0 -0.0);
+    omega       constant 123.06683726215915;
+}
+
+// ************************************************************************* //

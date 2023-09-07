@@ -1,0 +1,99 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2306                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volScalarField;
+    object      k;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#include            "$FOAM_CASE/constant/turbulenceQuantities"
+
+dimensions          [0 2 -2 0 0 0 0];
+internalField       uniform $turbulentK;
+
+boundaryField
+{
+    groupWall
+    {
+        type        kqRWallFunction;
+        value       $internalField;
+    }
+
+    groupSymmetry
+    {
+        type        symmetry;
+    }
+
+    groupDefault
+    {
+        type        kqRWallFunction;
+        value       $internalField;
+    }
+
+    groupTransition
+    {
+        type        kqRWallFunction;
+        value       $internalField;
+    }
+
+    groupSlip
+    {
+        type        slip;
+    }
+
+    groupGRWS_Tire_FL
+    {
+        type        kqRWallFunction;
+        value       $internalField;
+    }
+
+    groupGRWS_Tire_FR
+    {
+        type        kqRWallFunction;
+        value       $internalField;
+    }
+
+    groupGRWS_Tire_RL
+    {
+        type        kqRWallFunction;
+        value       $internalField;
+    }
+
+    groupGRWS_Tire_RR
+    {
+        type        kqRWallFunction;
+        value       $internalField;
+    }
+
+    groupWtunInlet
+    {
+        type        fixedValue;
+        value       $internalField;
+    }
+
+    groupWtunOutlet
+    {
+        type        inletOutlet;
+        inletValue  $internalField;
+        value       $internalField;
+    }
+
+    groupWtunStreet
+    {
+        type        kqRWallFunction;
+        value       $internalField;
+    }
+
+    // Set patchGroups for constraint types
+    #include "${WM_PROJECT_DIR}/etc/caseDicts/setConstraintTypes"
+}
+
+// ************************************************************************* //

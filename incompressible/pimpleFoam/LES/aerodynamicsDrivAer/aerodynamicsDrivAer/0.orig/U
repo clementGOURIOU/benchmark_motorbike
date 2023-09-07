@@ -1,0 +1,105 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2306                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volVectorField;
+    object      U;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions          [0 1 -1 0 0 0 0];
+internalField       uniform (38.888888888888886 0.0 0);
+
+boundaryField
+{
+    groupWall
+    {
+        type        fixedValue;
+        value       uniform (0 0 0);
+    }
+
+    groupSymmetry
+    {
+        type        symmetry;
+    }
+
+    groupDefault
+    {
+        type        fixedValue;
+        value       uniform (0 0 0);
+    }
+
+    groupTransition
+    {
+        type        noSlip;
+    }
+
+    groupSlip
+    {
+        type        slip;
+    }
+
+    groupGRWS_Tire_FL
+    {
+        type        rotatingWallVelocity;
+        origin      (0.00687864 -0.76593819 -0.0015194);
+        axis        (0.0 -1.0 -0.0);
+        omega       constant 123.06587018851164;
+    }
+
+    groupGRWS_Tire_FR
+    {
+        type        rotatingWallVelocity;
+        origin      (0.00687864 0.76593819 -0.0015194);
+        axis        (0.0 -1.0 -0.0);
+        omega       constant 123.06587018851165;
+    }
+
+    groupGRWS_Tire_RL
+    {
+        type        rotatingWallVelocity;
+        origin      (2.79306285 -0.77243819 -0.00152188);
+        axis        (0.0 -1.0 -0.0);
+        omega       constant 123.06683726215915;
+    }
+
+    groupGRWS_Tire_RR
+    {
+        type        rotatingWallVelocity;
+        origin      (2.79306285 0.77243819 -0.00152188);
+        axis        (0.0 -1.0 -0.0);
+        omega       constant 123.06683726215915;
+    }
+
+    groupWtunInlet
+    {
+        type        surfaceNormalFixedValue;
+        refValue    uniform -38.888888888888886;
+    }
+
+    groupWtunOutlet
+    {
+        type        inletOutlet; 
+        inletValue  uniform (0 0 0); 
+        value       uniform (38.888888888888886 0.0 0);
+    }
+
+    groupWtunStreet
+    {
+        type        translatingWallVelocity;
+        U           (38.888888888888886 0 0);
+    }
+
+    // Set patchGroups for constraint types
+    #include "${WM_PROJECT_DIR}/etc/caseDicts/setConstraintTypes"
+
+}
+
+// ************************************************************************* //
