@@ -1,0 +1,22 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2306                                 |
+|   \\  /    A nd           | Web:      www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+
+    fluxIn-door-sumDirIn
+    {
+        type                surfaceFieldValue;
+        libs                ("libfieldFunctionObjects.so");
+        writeControl        adjustableRunTime;
+        writeInterval       2;
+        log                 true;
+        writeFields         no;
+        regionType          faceZone;
+        name                doorOpening;
+        operation           sumDirection;
+        direction           (-1 0 0);
+        fields              (phi);
+    } 

@@ -1,0 +1,66 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2306                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      createBafflesDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+// Whether to convert internal faces only (so leave boundary faces intact).
+// This is only relevant if your face selection type can pick up boundary
+// faces.
+internalFacesOnly true;
+
+// Baffles to create.
+baffles
+{
+    baffleFacesThermoBaffle1D
+    {
+        //- Use predefined faceZone to select faces and orientation.
+        type        faceZone;
+        zoneName    compartment;
+
+        patches
+        {
+            master
+            {
+                //- Master side patch
+                name            baffle1DWall_master;
+
+                type            wall;
+                inGroups        (baffleWallGroup);
+
+                patchFields
+                {
+                    #include "./0/include/wallBafflePatches"
+                    #include "./0/include/1DBaffle/1DTemperatureMasterBafflePatches"
+                }
+            }
+            slave
+            {
+                //- Slave side patch
+                name            baffle1DWall_slave;
+
+                type            wall;
+                inGroups        (baffleWallGroup);
+
+                patchFields
+                {
+                    #include "./0/include/wallBafflePatches"
+                    #include "./0/include/1DBaffle/1DTemperatureSlaveBafflePatches"
+                }
+            }
+        }
+    }
+
+}
+
+// ************************************************************************* //
