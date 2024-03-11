@@ -31,7 +31,7 @@ addLayers       true;
 
 geometry
 {
-    OC_DrivAer_CC_NB_210512_A.stl
+    OC_DrivAer_CC_NB_210512_A.obj
     {
         type triSurfaceMesh;
         regions
@@ -81,62 +81,62 @@ geometry
 	    CTRL_SURFACE_Wheelshouse_RHS    { name CTRL_SURFACE_Wheelshouse_RHS; }
         }
     }
-    Rimsfront.stl
+    Rimsfront.obj
     {
         type triSurfaceMesh;
         name Rimsfront;
     }
-    Rimsrear.stl
+    Rimsrear.obj
     {
         type triSurfaceMesh;
         name Rimsrear;
     }
-    BrakeDiscfront.stl
+    BrakeDiscfront.obj
     {
         type triSurfaceMesh;
         name BrakeDiscfront;
     }
-    BrakeDiscrear.stl
+    BrakeDiscrear.obj
     {
         type triSurfaceMesh;
         name BrakeDiscrear;
     }
-    AMI_IN_FL.stl
+    AMI_IN_FL.obj
     {
         type triSurfaceMesh;
         name AMI_IN_FL;
     }
-    AMI_IN_FR.stl
+    AMI_IN_FR.obj
     {
         type triSurfaceMesh;
         name AMI_IN_FR;
     }
-    AMI_OUT_FL.stl
+    AMI_OUT_FL.obj
     {
         type triSurfaceMesh;
         name AMI_OUT_FL;
     }
-    AMI_OUT_FR.stl
+    AMI_OUT_FR.obj
     {
         type triSurfaceMesh;
         name AMI_OUT_FR;
     }
-    AMI_IN_RL.stl
+    AMI_IN_RL.obj
     {
         type triSurfaceMesh;
         name AMI_IN_RL;
     }
-    AMI_IN_RR.stl
+    AMI_IN_RR.obj
     {
         type triSurfaceMesh;
         name AMI_IN_RR;
     }
-    AMI_OUT_RL.stl
+    AMI_OUT_RL.obj
     {
         type triSurfaceMesh;
         name AMI_OUT_RL;
     }
-    AMI_OUT_RR.stl
+    AMI_OUT_RR.obj
     {
         type triSurfaceMesh;
         name AMI_OUT_RR;
@@ -228,32 +228,32 @@ geometry
         origin          (-2.34 -2.5 -0.3176);
         span            (20 5 0);
     }
-    engine_undershield.stl
+    engine_undershield.obj
     {
         type triSurfaceMesh;
         name engine_undershield;
     }
-    windows_trunk_rear.stl
+    windows_trunk_rear.obj
     {
         type triSurfaceMesh;
         name windows_trunk_rear;
     }
-    NotchbackWindowrear.stl
+    NotchbackWindowrear.obj
     {
         type triSurfaceMesh;
         name NotchbackWindowrear;
     }
-    TirePlinthfront.stl
+    TirePlinthfront.obj
     {
         type triSurfaceMesh;
         name TirePlinthfront;
     }
-    TirePlinthrear.stl
+    TirePlinthrear.obj
     {
         type triSurfaceMesh;
         name TirePlinthrear;
     }
-    Plinths_adapted.stl
+    Plinths_adapted.obj
     {
         type triSurfaceMesh;
         name Plinths_adapted;
@@ -364,7 +364,7 @@ castellatedMeshControls
 
     refinementSurfaces
     {
-        OC_DrivAer_CC_NB_210512_A.stl
+        OC_DrivAer_CC_NB_210512_A.obj
         {
             level (6 6);
             regions
@@ -469,7 +469,7 @@ castellatedMeshControls
             mode        distance;
             levels       ((0.02 11)(0.06 9));
         }
-        OC_DrivAer_CC_NB_210512_A.stl
+        OC_DrivAer_CC_NB_210512_A.obj
         {
             mode        distance;
             levels       ((0.065 8) (0.2 7));

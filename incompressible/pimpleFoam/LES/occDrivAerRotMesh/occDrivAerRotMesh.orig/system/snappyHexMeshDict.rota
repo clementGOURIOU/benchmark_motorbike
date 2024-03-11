@@ -31,7 +31,7 @@ addLayers       true;
 
 geometry
 {
-    OC_DrivAer_CC_NB_210512_A.stl
+    OC_DrivAer_CC_NB_210512_A.obj
     {
         type triSurfaceMesh;
         regions
@@ -81,62 +81,62 @@ geometry
 	    CTRL_SURFACE_Wheelshouse_RHS    { name CTRL_SURFACE_Wheelshouse_RHS; }
         }
     }
-    Rimsfront.stl
+    Rimsfront.obj
     {
         type triSurfaceMesh;
         name Rimsfront_rota;
     }
-    Rimsrear.stl
+    Rimsrear.obj
     {
         type triSurfaceMesh;
         name Rimsrear_rota;
     }
-    BrakeDiscfront.stl
+    BrakeDiscfront.obj
     {
         type triSurfaceMesh;
         name BrakeDiscfront_rota;
     }
-    BrakeDiscrear.stl
+    BrakeDiscrear.obj
     {
         type triSurfaceMesh;
         name BrakeDiscrear_rota;
     }
-    AMI_IN_FL.stl
+    AMI_IN_FL.obj
     {
         type triSurfaceMesh;
         name AMI_IN_FL_rota;
     }
-    AMI_IN_FR.stl
+    AMI_IN_FR.obj
     {
         type triSurfaceMesh;
         name AMI_IN_FR_rota;
     }
-    AMI_OUT_FL.stl
+    AMI_OUT_FL.obj
     {
         type triSurfaceMesh;
         name AMI_OUT_FL_rota;
     }
-    AMI_OUT_FR.stl
+    AMI_OUT_FR.obj
     {
         type triSurfaceMesh;
         name AMI_OUT_FR_rota;
     }
-    AMI_IN_RL.stl
+    AMI_IN_RL.obj
     {
         type triSurfaceMesh;
         name AMI_IN_RL_rota;
     }
-    AMI_IN_RR.stl
+    AMI_IN_RR.obj
     {
         type triSurfaceMesh;
         name AMI_IN_RR_rota;
     }
-    AMI_OUT_RL.stl
+    AMI_OUT_RL.obj
     {
         type triSurfaceMesh;
         name AMI_OUT_RL_rota;
     }
-    AMI_OUT_RR.stl
+    AMI_OUT_RR.obj
     {
         type triSurfaceMesh;
         name AMI_OUT_RR_rota;
