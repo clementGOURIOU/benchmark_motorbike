@@ -18,7 +18,7 @@ foam-extend 4.1
 
 ## Description
 
-The lid-driven cavity is a well-known benchmark for assessing computational methods. The interest in using a lid-driven cavity as a microbenchmark to evaluate the solver's computational performance is related to its simple geometry and orthogonal mesh, which will allow the study of the solver's numerical implementation, without having to deal with issues pertaining to non-orthogonal meshes. The well-known singularities in this example can help study the precision of the discretization methods implemented. The problem is modelled considering the isothermal and incompressible 2D flow of a viscoelastic fluid. The solver employed is the viscoelasticFluidFoam, available in foam-extend 4.1.
+The lid-driven cavity is a well-known benchmark for assessing computational methods. The interest in using a lid-driven cavity as a microbenchmark to evaluate the solver's computational performance is related to its simple geometry and orthogonal meshes, which will allow the study of the solver's numerical implementation, without having to deal with issues pertaining to non-orthogonal meshes. The well-known singularities in this example can help study the precision of the discretization methods implemented. The problem is modelled considering the isothermal and incompressible 2D flow of a non-linear viscoelastic fluid. The solver employed is the viscoelasticFluidFoam, available in foam-extend 4.1.
 
 ## Geometry
 
@@ -82,10 +82,12 @@ For a fixed relative/absolute tolerance for residual convergence criteria, the f
 * 4M_fixedTol - Mesh with 4 million cells.
 * 16M_fixedTol - Mesh with 16 million cells.
 
-For a fixed number of inner iterations obtained as a representative average of the simulation, the following case folders are included:
+For a fixed number of inner iterations for residual convergence criteria, the following case folders are included:
 * 1M_fixedIter - Mesh with 1 million cells.
 * 4M_fixedIter - Mesh with 4 million cells.
 * 16M_fixedIter - Mesh with 16 million cells.
+
+For the *fixedIter* cases, the fixed number of iterations chosen is representative of the solver's behaviour with a more evolved solution and, thus, restarting files should be applied. Suitable restarting files and associated meshes are provided at the DaRUS repository (XXXX), which were obtained by running the same case with a fixed relative/absolute tolerance for a few seconds of physical time.
 
 ## Running the simulations
 
