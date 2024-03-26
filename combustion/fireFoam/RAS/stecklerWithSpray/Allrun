@@ -1,0 +1,20 @@
+#!/bin/sh
+cd ${0%/*} || exit 1                        # Run from this directory
+. $WM_PROJECT_DIR/bin/tools/RunFunctions    # Tutorial run functions
+
+restore0Dir
+
+./Allrun.pre
+
+runApplication decomposePar
+runParallel    fireFoam
+#runApplication reconstructPar
+
+runParallel -s "t80" postProcess -funcs sampleDict -time 80
+runParallel -s "t120" postProcess -funcs sampleDict -time 120
+
+if [ -f validation.sh ]; then
+    ./validation.sh 
+else
+    echo "validation.sh is missing"
+fi

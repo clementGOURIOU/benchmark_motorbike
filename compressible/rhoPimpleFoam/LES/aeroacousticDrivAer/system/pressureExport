@@ -1,0 +1,25 @@
+   pr_ens
+   {
+       type           surfaces;
+       libs           ("libsampling.so");
+       writeControl   timeStep;
+       writeInterval  1;
+       interpolationScheme cell;
+       surfaceFormat   ensight;
+       formatOptions
+       {
+           ensight { format binary; collateTimes true;}
+       }
+
+       fields ( p );
+       surfaces
+       (
+           FSP
+           {
+               type        patch;
+               patches     (Body_Window_Side_LH);
+               triangulate false;
+               interpolate false;
+           }
+       );
+   }

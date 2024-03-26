@@ -14,76 +14,76 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-OC_DrivAer_CC_NB_210512_A.stl
+OC_DrivAer_CC_NB_210512_A.obj
 {
     #include "surfaceFeatureExtractDictDefaultsNoEdges"
 }
-TirePlinthfront.stl
+TirePlinthfront.obj
 {
     #include "surfaceFeatureExtractDictDefaults"
 }
-TirePlinthrear.stl
+TirePlinthrear.obj
 {
     #include "surfaceFeatureExtractDictDefaults"
 }
-Plinths_adapted.stl
-{
-    #include "surfaceFeatureExtractDictDefaults"
-}
-
-AMI_IN_FL.stl
+Plinths_adapted.obj
 {
     #include "surfaceFeatureExtractDictDefaults"
 }
 
-AMI_IN_FR.stl
+AMI_IN_FL.obj
 {
     #include "surfaceFeatureExtractDictDefaults"
 }
 
-AMI_OUT_FL.stl
+AMI_IN_FR.obj
 {
     #include "surfaceFeatureExtractDictDefaults"
 }
 
-AMI_OUT_FR.stl
+AMI_OUT_FL.obj
 {
     #include "surfaceFeatureExtractDictDefaults"
 }
 
-AMI_IN_RL.stl
+AMI_OUT_FR.obj
 {
     #include "surfaceFeatureExtractDictDefaults"
 }
 
-AMI_IN_RR.stl
+AMI_IN_RL.obj
 {
     #include "surfaceFeatureExtractDictDefaults"
 }
 
-AMI_OUT_RL.stl
+AMI_IN_RR.obj
 {
     #include "surfaceFeatureExtractDictDefaults"
 }
 
-AMI_OUT_RR.stl
-{
-    #include "surfaceFeatureExtractDictDefaults"
-}
-Rimsfront.stl
-{
-    #include "surfaceFeatureExtractDictDefaults"
-}
-Rimsrear.stl
+AMI_OUT_RL.obj
 {
     #include "surfaceFeatureExtractDictDefaults"
 }
 
-BrakeDiscfront.stl
+AMI_OUT_RR.obj
 {
     #include "surfaceFeatureExtractDictDefaults"
 }
-BrakeDiscrear.stl
+Rimsfront.obj
+{
+    #include "surfaceFeatureExtractDictDefaults"
+}
+Rimsrear.obj
+{
+    #include "surfaceFeatureExtractDictDefaults"
+}
+
+BrakeDiscfront.obj
+{
+    #include "surfaceFeatureExtractDictDefaults"
+}
+BrakeDiscrear.obj
 {
     #include "surfaceFeatureExtractDictDefaults"
 }

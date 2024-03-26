@@ -1,0 +1,10 @@
+// Make sure all fields for functionObjects are loaded. Prevents any
+// problems running with execFlowFunctionObjects.
+readFields
+{
+    // Where to load it from (if not already in solver)
+    libs ("libfieldFunctionObjects.so");
+
+    type            readFields;
+    fields          (p U pMean UMean static(p)_coeffMean total(p)_coeffMean yPlus desField proudmanAcousticPower1:L_P proudmanAcousticPower1:P_A fmax );
+}

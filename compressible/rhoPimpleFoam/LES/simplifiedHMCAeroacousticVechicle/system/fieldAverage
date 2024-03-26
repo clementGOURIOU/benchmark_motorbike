@@ -1,0 +1,70 @@
+    fieldAverage
+    {
+
+        type                fieldAverage;
+        libs                ("libfieldFunctionObjects.so");
+        writeControl        writeTime;
+        timeStart           200;
+        restartOnRestart    false;
+        restartOnOutput     false;
+        periodicRestart     false;
+        enabled             true;
+
+        fields
+        (
+            U
+            {
+                mean        on;
+                prime2Mean  off;
+                base        time;
+                windowType      approximate;
+                window          200;
+                allowRestart    yes; 
+            }
+            p
+            {
+                mean        on;
+                prime2Mean  off;
+                base        time;
+                windowType      approximate;
+                window          200;
+                allowRestart    yes; 
+            }
+            total(p)
+            {
+                mean        on;
+                prime2Mean  off;
+                base        time;
+                windowType      approximate;
+                window          200;
+                allowRestart    yes; 
+            }
+            static(p)
+            {
+                mean        on;
+                prime2Mean  off;
+                base        time;
+                windowType      approximate;
+                window          200;
+                allowRestart    yes; 
+            }
+            static(p)_coeff
+            {
+                mean        on;
+                prime2Mean  off;
+                base        time;
+                windowType      approximate;
+                window       200;
+                allowRestart    yes; 
+            }
+            total(p)_coeff
+            {
+                mean        on;
+                prime2Mean  off;
+                base        time;
+                windowType      approximate;
+                window      200;
+                allowRestart    yes; 
+            }
+        );
+    }

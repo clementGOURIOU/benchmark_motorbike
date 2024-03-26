@@ -1,0 +1,66 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2212                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      controlDict;
+}
+#include "<system>/parameters"
+
+application     pimpleFoam;
+startFrom       latestTime;
+startTime       latestTime;
+stopAt          endTime;
+endTime         0.2;
+deltaT          #eval{ 2e-5 / $nref };
+writeControl    adjustableRunTime;
+writeInterval   0.05;
+purgeWrite      3;
+writeFormat     binary;
+writePrecision  6;
+writeCompression off;
+timeFormat      general;
+timePrecision   6;
+runTimeModifiable true;
+adjustTimeStep  no;
+maxCo           5;
+
+libs            ("libturbulenceModelSchemes.so");
+
+functions
+{
+
+    #include "readFields"
+    #include "fieldMinMaxFile"
+    #include "derivedPressure"
+    #include "fieldAverage.tr"
+    #include "writeDictionary"
+    #include "desField"
+    #include "wallShear"
+    #include "pressureExport"
+    probes
+    {
+        type            probes;
+        libs            ("libsampling.so");
+        enabled         true;
+        writeControl    timeStep;
+        writeInterval   1;
+        fields          ( U p T);
+
+        probeLocations
+        (
+                (       -0.31570 -0.42031 0.45200  )
+                (       -0.14780 -0.42031 0.45200  )
+                (       -0.00786 -0.42031 0.45200  )
+                (       -0.14780 -0.38505 0.65200  )
+                (       -0.00780 -0.38505 0.65200  )  
+        );
+    }
+}

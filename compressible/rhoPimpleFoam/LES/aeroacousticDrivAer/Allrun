@@ -1,0 +1,61 @@
+#!/bin/sh
+cd "${0%/*}" || exit                                # Run from this directory
+. ${WM_PROJECT_DIR:?}/bin/tools/RunFunctions        # Tutorial run functions
+#------------------------------------------------------------------------------
+
+#cp -f \
+#    "$FOAM_TUTORIALS"/resources/geometry/I7_aeroacoustics_DrivAer/* \
+#    constant/triSurface
+
+# Read number of cores from command line argument
+export nCPU="$1"
+
+case "$nCPU" in
+  ([1-9][0-9]*)
+  ;;
+  (*)
+    echo "Usage: Allrun <number of cores to use>"
+    echo "Example: ./Allrun 16"
+    exit
+  ;;
+esac
+
+cp -f system/controlDict.st system/controlDict
+cp -f system/fvSchemes.st system/fvSchemes
+cp -f system/fvSolution.st system/fvSolution
+foamDictionary -entry simulationType -set RAS constant/turbulenceProperties
+foamDictionary -entry acousticDampingSource.active -set false system/fvOptions
+
+runApplication blockMesh
+runApplication surfaceFeatureExtract
+runApplication decomposePar -decomposeParDict system/decomposeParDict_mesh
+
+runParallel -decomposeParDict system/decomposeParDict_mesh snappyHexMesh -overwrite
+runParallel -decomposeParDict system/decomposeParDict_mesh renumberMesh -constant -overwrite
+runParallel -decomposeParDict system/decomposeParDict_mesh checkMesh -constant
+runParallel -decomposeParDict system/decomposeParDict_solve redistributePar -constant -overwrite
+restore0Dir -processor
+runParallel -decomposeParDict system/decomposeParDict_solve potentialFoam -initialiseUBCs -noFunctionObjects
+rm -rf processor*/0/phi.gz
+runParallel -decomposeParDict system/decomposeParDict_solve applyBoundaryLayer  -ybl 0.1
+runParallel -decomposeParDict system/decomposeParDict_solve rhoSimpleFoam
+
+cp -f system/controlDict.tr system/controlDict
+cp -f system/fvSchemes.tr system/fvSchemes
+cp -f system/fvSolution.tr system/fvSolution
+foamDictionary -entry simulationType -set LES constant/turbulenceProperties
+foamDictionary -entry acousticDampingSource.active -set true system/fvOptions
+./system/replace.sh
+mv -f postProcessing postProcessing.steadyState
+
+runParallel -decomposeParDict system/decomposeParDict_solve rhoPimpleFoam
+
+#runParallel -decomposeParDict system/decomposeParDict_solve noise -dict system/noiseDict.surface
+
+runApplication -s p1 noise -dict system/noiseDict.point-1
+runApplication -s p2 noise -dict system/noiseDict.point-2
+runApplication -s p3 noise -dict system/noiseDict.point-3
+runApplication -s p4 noise -dict system/noiseDict.point-4
+runApplication -s p5 noise -dict system/noiseDict.point-5
+
+gnuplot plot_spectrum

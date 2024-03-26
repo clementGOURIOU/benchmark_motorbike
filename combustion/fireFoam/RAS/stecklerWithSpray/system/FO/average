@@ -1,0 +1,38 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2306                                 |
+|   \\  /    A nd           | Web:      www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+
+    fieldAverage1
+    {
+        type                fieldAverage;
+        libs                ("libfieldFunctionObjects.so");
+
+        writeControl        writeTime;
+        active              true;
+
+        restartOnRestart    false;
+        restartOnOutput     false;
+        periodicRestart     false;
+        timeStart           60;  //after  the flow pattern is established
+        restartTime         100; // one time reset after spray is initiated
+
+        fields
+        (
+            U
+            {
+                mean            on;
+                prime2Mean      on;
+                base            time;
+            }
+            T
+            {
+                mean            on;
+                prime2Mean      on;
+                base            time;
+            }
+        );
+    }

@@ -1,0 +1,55 @@
+pressure-static
+{
+    type            pressure;
+    libs            ( "libfieldFunctionObjects.so" );
+    rhoRef          1.205;
+    pRef            0;
+    rho             rho;
+    pInf            101325;
+    UInf            ( 30.556 0 0 );
+    rhoInf          1.205;
+    mode            static;
+    writeControl    writeTime;
+}
+
+pressure-total
+{
+    type            pressure;
+    libs            ( "libfieldFunctionObjects.so" );
+    rhoRef          1.205;
+    pRef            0;
+    rho             rho;
+    pInf            101325;
+    UInf            ( 30.556 0 0 );
+    rhoInf          1.205;
+    mode            total;
+    writeControl    writeTime;
+}
+
+pressure-static-coefficient
+{
+    type            pressure;
+    libs            ( "libfieldFunctionObjects.so" );
+    rhoRef          1.205;
+    pRef            0;
+    rho             rho;
+    pInf            101325;
+    UInf            ( 30.556 0 0 );
+    rhoInf          1.205;
+    mode            staticCoeff;
+    writeControl    writeTime;
+}
+
+pressure-total-coefficient
+{
+    type            pressure;
+    libs            ( "libfieldFunctionObjects.so" );
+    rhoRef          1.205;
+    pRef            0;
+    pInf            101325;
+    UInf            ( 30.556 0 0 );
+    rho             rho;
+    rhoInf          1.205;
+    mode            totalCoeff;
+    writeControl    writeTime;
+}

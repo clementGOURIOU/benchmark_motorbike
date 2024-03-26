@@ -18,7 +18,7 @@ foam-extend 4.1
 
 ## Description
 
-The computational time required to perform a numerical simulation of profile extrusion forming, considering more realistic (viscoelastic) constitutive models, is incompatible with the industrial requirements. This microbenchmark case study mimics a typical profile extrusion problem and aims at assessing the solvers available in OpenFOAM, namely viscoelasticFluidFoam integrated into foam-extend 4.1. Due to the simplified geometry employed, the computational meshes required to get accurate results will be much smaller than the ones of the associated industrial scale case study. This should allow performing initial exploratory studies much faster. Thus, the results obtained are expected to give insights into improving the viscoelasticFluidFoam solver.    
+The computational time required to perform a numerical simulation of profile extrusion forming, considering more realistic (viscoelastic) constitutive models, is incompatible with the industrial requirements. This microbenchmark case study mimics a typical profile extrusion problem and aims at assessing the solvers available in OpenFOAM, namely viscoelasticFluidFoam integrated into foam-extend 4.1. Due to the simplified geometry employed, the computational meshes required to obtain accurate results will be much smaller than those of the associated industrial scale case study. This should allow performing initial exploratory studies. Thus, the results obtained are expected to give insights into improving the viscoelasticFluidFoam solver.    
 
 ## Custom GiesekusIBSD viscoelastic constitutive model
 
@@ -81,9 +81,11 @@ For a fixed relative/absolute tolerance for residual convergence criteria, the f
 * 1M_fixedTol - Mesh with 1 million cells.
 * 20M_fixedTol - Mesh with 20 million cells.
 
-For a fixed number of inner iterations obtained as a representative average of the simulation, the following case folders are included:
+For a fixed number of inner iterations for residual convergence criteria, the following case folders are included:
 * 1M_fixedIter - Mesh with 1 million cells.
 * 20M_fixedIter - Mesh with 20 million cells.
+
+For the *fixedIter* cases, the fixed number of iterations chosen is representative of the solver's behaviour with a more evolved solution and, thus, restarting files should be applied. Suitable restarting files and associated meshes are provided at the DaRUS repository (XXXX), which were obtained by running the same case with a fixed relative/absolute tolerance for a few seconds of physical time.
 
 ## Running the simulations
 
@@ -91,7 +93,7 @@ Check the README.md file inside each case folder.
 
 ## Results
 
-The numerical distribution of pressure, velocity and stress are shown in Figure 3. The accuracy of the calculations can be assessed by the distribution of pressure, velocity and stress components along the 3D domain, the velocity and stress distributions at the outlet cross-section and the average pressure at the inlet. 
+The numerical distribution of pressure, velocity and stress are shown in Figure 3. The accuracy of the calculations can be assessed by the distribution of pressure, velocity and stress components along the 3D domain, the velocity and stress distributions at the outlet cross-section and the average pressure at the inlet.
 
 <img src="./figures/profileExtrusion_p.png" alt="footer" height="300">
 <img src="./figures/profileExtrusion_UMagnitude.png" alt="footer" height="300">

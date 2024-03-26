@@ -1,0 +1,217 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2306                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      controlDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+application     simpleFoam;
+startFrom       startTime;
+startTime       0;
+stopAt          endTime;
+endTime         4000;
+deltaT          1;
+writeControl    timeStep;
+writeInterval   1000;
+purgeWrite      1;
+writeFormat     binary;
+writePrecision  8;
+writeCompression no;
+timeFormat      general;
+timePrecision   8;
+runTimeModifiable yes;
+
+functions
+{
+    yPlus
+    {
+        libs             ( "libfieldFunctionObjects.so" );
+        type             yPlus;
+        writeControl     writeTime;
+        writeInterval    1000;
+        executeControl   timeStep;
+        executeInterval  1000;
+        timeStart        2000;
+        log              no;
+        result           yPlus;
+    }
+    
+    wallShearStress
+    {
+        libs             ( "libfieldFunctionObjects.so" );
+        type             wallShearStress;
+        writeControl     writeTime;
+        writeInterval    1000;
+        executeControl   timeStep;
+        executeInterval  1000;
+        timeStart        2000;
+        log              false;
+        patches
+        (
+            DrivAer_PID__00
+            DrivAer_PID__01
+            DrivAer_PID__02
+            DrivAer_PID__03
+            DrivAer_PID__04
+            DrivAer_PID__05
+            DrivAer_PID__06
+            DrivAer_PID__07
+            DrivAer_PID__08
+            DrivAer_PID__09
+            DrivAer_PID__10
+            DrivAer_PID__11
+            DrivAer_PID__12
+            DrivAer_PID__13
+            DrivAer_PID__14
+            DrivAer_PID__15
+            DrivAer_PID__16
+            DrivAer_PID__17
+            DrivAer_PID__18
+            DrivAer_PID__19
+            DrivAer_PID__20
+            DrivAer_PID__21
+            DrivAer_PID__22
+            DrivAer_PID__23
+            DrivAer_PID__24
+            DrivAer_PID__25
+            DrivAer_PID__26
+            DrivAer_PID__27
+            DrivAer_PID__28
+            DrivAer_PID__29
+            DrivAer_PID__30
+            DrivAer_PID__31
+            DrivAer_PID__32
+            DrivAer_PID__33
+            DrivAer_PID__34
+            DrivAer_PID__35
+            Tire_FL
+            Tire_FR
+            Tire_RL
+            Tire_RR
+        );
+        result           wallShearStress;
+    }
+    
+    fieldAverage
+    {
+        libs              ( "libfieldFunctionObjects.so" );
+        type              fieldAverage;
+        writeControl      writeTime;
+        writeInterval     1000;
+        executeControl    timeStep;
+        executeInterval   1000;
+        timeStart         2000;
+        restartOnRestart  false;
+        restartOnOutput   false;
+        periodicRestart   false;
+        avgControls
+        {
+            mean        on;
+            prime2Mean  off;
+            base        time;
+        }
+        fields
+        (
+            U { $avgControls; }
+            p { $avgControls; }
+            CourantNo { $avgControls; }
+            phi { $avgControls; }
+            wallShearStress { $avgControls; }
+            yPlus { $avgControls; }
+        );
+    }
+    
+    MinMax
+    {
+        libs             ( "libfieldFunctionObjects.so" );
+        type             fieldMinMax;
+        writeControl     timeStep;
+        writeInterval    1;
+        executeControl   timeStep;
+        executeInterval  1;
+        timeStart        0;
+        fields
+        (
+            p
+            U
+        );
+    }
+
+    forceCoeffs
+    {
+        libs             ( "libforces.so" );
+        type             forceCoeffs;
+        writeControl     timeStep;
+        writeInterval    1;
+        executeControl   timeStep;
+        executeInterval  1;
+        timeStart        0;
+        p                p;
+        U                U;
+        rho              rhoInf;
+        log              true;
+        rhoInf           1.1584;
+        liftDir          (0 0 1);
+        dragDir          (1 0 0);
+        CofR             (1.4000899999999998 0.0 -0.31751999999999997);
+        pitchAxis        (0 1 0);
+        magUInf          38.888888888888886;
+        lRef             2.78618;
+        Aref             2.2;
+        porosity         false;
+        patches 
+        (
+            DrivAer_PID__00
+            DrivAer_PID__01
+            DrivAer_PID__02
+            DrivAer_PID__03
+            DrivAer_PID__04
+            DrivAer_PID__05
+            DrivAer_PID__06
+            DrivAer_PID__07
+            DrivAer_PID__08
+            DrivAer_PID__09
+            DrivAer_PID__10
+            DrivAer_PID__11
+            DrivAer_PID__12
+            DrivAer_PID__13
+            DrivAer_PID__14
+            DrivAer_PID__15
+            DrivAer_PID__16
+            DrivAer_PID__17
+            DrivAer_PID__18
+            DrivAer_PID__19
+            DrivAer_PID__20
+            DrivAer_PID__21
+            DrivAer_PID__22
+            DrivAer_PID__23
+            DrivAer_PID__24
+            DrivAer_PID__25
+            DrivAer_PID__26
+            DrivAer_PID__27
+            DrivAer_PID__28
+            DrivAer_PID__29
+            DrivAer_PID__30
+            DrivAer_PID__31
+            DrivAer_PID__32
+            DrivAer_PID__33
+            DrivAer_PID__34
+            DrivAer_PID__35
+            Tire_FL
+            Tire_FR
+            Tire_RL
+            Tire_RR
+        );
+    }
+}
+
+// ************************************************************************* //

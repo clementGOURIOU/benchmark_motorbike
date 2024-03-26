@@ -1,0 +1,65 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2306                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      fvOptions;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+    energySource
+    {
+        type            scalarSemiImplicitSource;
+
+        selectionMode   cellZone;
+        cellZone        HRRzone;
+        volumeMode      absolute;
+
+        injectionRateSuSp
+        {
+            h        
+             {
+                Su table (
+                            (0 1e3)
+                            (1 1e3)
+                            (3 1e4)
+                            (5 6.29e4)
+                        );
+                Sp 0;
+
+            } 
+        }
+    }
+
+    limitTemp
+    {
+        type            limitTemperature;
+        active          yes;
+
+        selectionMode   all;
+        min             200;
+        max             2500;
+    }
+
+    damp
+    {
+        type            velocityDampingConstraint;
+        active          true;
+
+        U               U;
+        
+        velocityDampingConstraintCoeffs
+        {
+             UMax         40;
+             selectionMode  all;
+        }
+    }
+
+// ************************************************************************* //

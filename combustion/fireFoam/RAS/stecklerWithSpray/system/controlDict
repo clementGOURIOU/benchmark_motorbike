@@ -1,0 +1,77 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2306                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      controlDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#include "solverControls"
+
+application     fireFoam;
+
+startFrom       latestTime;
+
+startTime       0;
+
+stopAt          endTime;
+
+endTime         120;
+
+deltaT          5e-04;
+
+writeControl    adjustableRunTime;
+
+purgeWrite      2;
+
+writeFormat     binary;
+
+writePrecision  8;
+
+writeCompression off;
+
+timeFormat      general;
+
+timePrecision   6;
+
+graphFormat     raw;
+
+runTimeModifiable yes;
+
+adjustTimeStep  yes;
+
+maxDi           0.25;
+
+functions
+{
+    fileUpdate
+    {
+        type                timeActivatedFileUpdate;
+        libs                (utilityFunctionObjects);
+        writeControl        timeStep;
+        writeInterval       1;
+        fileToUpdate        "<system>/solverControls";
+
+        timeVsFile
+        (
+            ( 0     "<system>/solverControls.0" )
+            ( 40    "<system>/solverControls.40" )
+            ( 80    "<system>/solverControls.80")
+        );
+    }
+    #include        "<system>/FO/probe"
+//    #include      "<system>/FO/minMax"
+    #include        "<system>/FO/average"
+    #include        "<system>/FO/fluxSummary"
+    #include        "<system>/FO/surfaceField-out"
+    #include        "<system>/FO/sampling"
+};
+// ************************************************************************* //

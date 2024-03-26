@@ -1,0 +1,18 @@
+#!/bin/sh
+cd "${0%/*}" || exit                                # Run from this directory
+. ${WM_PROJECT_DIR:?}/bin/tools/RunFunctions        # Tutorial run functions
+#------------------------------------------------------------------------------
+
+runApplication blockMesh
+runApplication surfaceFeatureExtract
+runApplication -decomposeParDict system/decomposeParDictMesher decomposePar
+runParallel -decomposeParDict system/decomposeParDictMesher snappyHexMesh -overwrite
+runParallel -decomposeParDict system/decomposeParDictMesher renumberMesh -constant -overwrite
+runParallel -decomposeParDict system/decomposeParDictMesher checkMesh -constant
+runParallel -decomposeParDict system/decomposeParDictSolver redistributePar -constant -overwrite
+restore0Dir -processor
+runParallel -decomposeParDict system/decomposeParDictSolver changeDictionary -constant -enableFunctionEntries
+runParallel -decomposeParDict system/decomposeParDictSolver potentialFoam -initialiseUBCs -noFunctionObjects
+runParallel -decomposeParDict system/decomposeParDictSolver applyBoundaryLayer  -ybl 0.1
+runParallel -decomposeParDict system/decomposeParDictSolver simpleFoam
+#------------------------------------------------------------------------------

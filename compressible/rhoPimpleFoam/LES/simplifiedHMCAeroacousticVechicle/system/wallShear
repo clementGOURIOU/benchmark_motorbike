@@ -1,0 +1,27 @@
+wallShearStress
+{
+    type            wallShearStress;
+    libs            ( "libutilityFunctionObjects.so" );
+    writeControl    writeTime;
+    patches         ( stilts body_rest body_LH_fine body_LH windshield window_LH lh_mirror APillarFine_LH APillar_LH rh_mirror APillar_RH APillarFine_RH window_RH body_RH body_RH_fine );
+}
+
+surfaces_wallShear
+{
+    type            surfaces;
+    libs            ( "libsampling.so" );
+    writeControl    adjustableRunTime;
+    writeInterval   0.001;
+    surfaceFormat   ensight;
+    formatOptions
+    {
+        ensight
+        {
+            format          binary;
+            collateTimes    true;
+        }
+    }
+    fields          ( wallShearStress p );
+    interpolationScheme cellPoint;
+    surfaces        ( wallShear { type patch ; patches ( stilts body_rest body_LH_fine body_LH windshield window_LH lh_mirror APillarFine_LH APillar_LH rh_mirror APillar_RH APillarFine_RH window_RH body_RH body_RH_fine ) ; interpolate true ; } );
+}

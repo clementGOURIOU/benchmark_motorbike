@@ -86,9 +86,11 @@ For a fixed relative/absolute tolerance for residual convergence criteria, the f
 * 10M_fixedTol - Mesh with 10 million cells.
 * 40M_fixedTol - Mesh with 40 million cells.
 
-For a fixed number of inner iterations obtained as a representative average of the simulation, the following case folders are included:
+For a fixed number of inner iterations for residual convergence criteria, the following case folders are included:
 * 10M_fixedIter - Mesh with 10 million cells.
 * 40M_fixedIter - Mesh with 40 million cells.
+
+For the *fixedIter* cases, the fixed number of iterations chosen is representative of the solver's behaviour with a more evolved solution and, thus, restarting files should be applied. Suitable restarting files and associated meshes are provided at the DaRUS repository (XXXX), which were obtained by running the same case with a fixed relative/absolute tolerance for a few seconds of physical time.
 
 ## Running the simulations
 

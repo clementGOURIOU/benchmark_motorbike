@@ -1,0 +1,20 @@
+#!/bin/sh
+cd ${0%/*} || exit 1                        # Run from this directory
+. $WM_PROJECT_DIR/bin/tools/RunFunctions    # Tutorial run functions
+
+
+runApplication blockMesh
+
+#- selecting cells for burner
+
+runApplication -s burner topoSet -dict system/topoSetDictBurner
+
+runApplication -s compartment topoSet -dict system/topoSetDictCompartment
+
+runApplication createPatch -overwrite
+
+# Create baffles for the compartment
+
+runApplication createBaffles -overwrite
+
+touch steckler.foam

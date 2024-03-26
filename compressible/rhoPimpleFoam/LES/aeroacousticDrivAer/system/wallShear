@@ -1,0 +1,34 @@
+wallShearStress
+{
+    type            wallShearStress;
+    libs            ( "libutilityFunctionObjects.so" );
+    writeControl    writeTime;
+    patches         ( Body_A_Pillar_LH Body_Door_handles Body_Fascia_front_1 Body_Fascia_front_2 Body_Fender Body_Headlamps Body_Hood Body_Rear Body_Rear_Access Body_Rocker Body_Roof Body_Side Body_Window_front Body_Window_front_frame Body_Window_side_frame_RH Open_Grill_Lower_finebl Open_Grill_Upper_finebl OCDA_Detailed_Underbody_nobl Engine_Undershield Upstream_ducting_nobl Engine_Encapsulation_nobl Wheel_Support_front_1_nobl Wheel_Support_front_2_nobl Wheel_Support_rear_nobl Brake_Disc_front_nobl Brake_Disc_rear_nobl Powertrain_nobl Exhaust_System_1_nobl Exhaust_System_2_nobl Exhaust_System_3_nobl Heat_Exchanger_Frame_nobl Heat_Exchanger_Sealing_nobl Fan_shroud_nobl Fan_shroud_sealing_nobl Notchback_B_Pillar Notchback_Body_side Notchback_C_Pillar Notchback_Roof Notchback_Trunk Notchback_Window_rear Notchback_Window_rear_frame Notchback_Window_side_frame tyre_fr_lh_nobl tyre_fr_rh_nobl tyre_rr_rh_nobl tyre_rr_lh_nobl rim_fr_lh_nobl rim_fr_rh_nobl rim_rr_lh_nobl rim_rr_rh_nobl Body_Window_Side_LH Notchback_Window_side lh_mirror rh_mirror Body_A_Pillar_RH Body_Window_Side_RH Body_Window_side_frame_LH );
+}
+
+surfaces_wallShear
+{
+    type            surfaces;
+    libs            ( "libsampling.so" );
+    writeControl    writeTime;
+    surfaceFormat   ensight;
+    formatOptions
+    {
+        ensight
+        {
+            format          binary;
+            collateTimes    true;
+        }
+    }
+    fields          ( wallShearStress p );
+    interpolationScheme cellPoint;
+    surfaces
+    (
+        wallShear
+        {
+            type patch;
+            patches (Body_A_Pillar_LH Body_Door_handles Body_Fascia_front_1 Body_Fascia_front_2 Body_Fender Body_Headlamps Body_Hood Body_Rear Body_Rear_Access Body_Rocker Body_Roof Body_Side Body_Window_front Body_Window_front_frame Body_Window_side_frame_RH Open_Grill_Lower_finebl Open_Grill_Upper_finebl OCDA_Detailed_Underbody_nobl Engine_Undershield Upstream_ducting_nobl Engine_Encapsulation_nobl Wheel_Support_front_1_nobl Wheel_Support_front_2_nobl Wheel_Support_rear_nobl Brake_Disc_front_nobl Brake_Disc_rear_nobl Powertrain_nobl Exhaust_System_1_nobl Exhaust_System_2_nobl Exhaust_System_3_nobl Heat_Exchanger_Frame_nobl Heat_Exchanger_Sealing_nobl Fan_shroud_nobl Fan_shroud_sealing_nobl Notchback_B_Pillar Notchback_Body_side Notchback_C_Pillar Notchback_Roof Notchback_Trunk Notchback_Window_rear Notchback_Window_rear_frame Notchback_Window_side_frame tyre_fr_lh_nobl tyre_fr_rh_nobl tyre_rr_rh_nobl tyre_rr_lh_nobl rim_fr_lh_nobl rim_fr_rh_nobl rim_rr_lh_nobl rim_rr_rh_nobl Body_Window_Side_LH Notchback_Window_side lh_mirror rh_mirror Body_A_Pillar_RH Body_Window_Side_RH Body_Window_side_frame_LH);
+            interpolate false;
+        }
+    );
+}

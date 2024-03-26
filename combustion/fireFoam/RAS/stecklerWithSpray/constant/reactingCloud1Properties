@@ -1,0 +1,178 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2306                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      reactingCloud1Properties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+solution
+{
+    active          true;
+    coupled         true;
+    transient       yes;
+    cellValueSourceCorrection on;
+    maxCo           0.3;
+
+    sourceTerms
+    {
+        schemes
+        {
+            rho             explicit 1;
+            U               explicit 1;
+            Yi              explicit 1;
+            h               explicit 1;
+            radiation       explicit 1;
+        }
+    }
+
+    interpolationSchemes
+    {
+        rho             cell;
+        U               cellPoint;
+        thermo:mu       cell;
+        T               cell;
+        Cp              cell;
+        kappa           cell;
+        p               cell;
+        G               cell;
+    }
+
+    integrationSchemes
+    {
+        U               Euler;
+        T               analytical;
+    }
+}
+
+constantProperties
+{
+    rho0            1000;
+    T0              300;
+    Cp0             4100;
+    epsilon0        0.9;
+
+    constantVolume  false;
+}
+
+subModels
+{
+    particleForces
+    {
+        sphereDrag;
+        gravity;
+    }
+
+    injectionModels
+    {
+       model1
+        {
+            type            coneInjection;
+            SOI             85.00;
+            duration        40.000;
+            positionAxis
+            (
+                (( 0 2.1 0) (0 -1 0))
+            );
+
+            massTotal       14;
+            parcelsPerInjector 80000;
+            parcelBasisType mass;
+            flowRateProfile constant 1;
+            Umag            constant 0.4;
+            thetaInner      constant 60;  // Inner half-cone angle relative to SOI [deg]
+            thetaOuter      constant 80;  //- Outer half-cone angle relative to SOI [deg]
+
+            sizeDistribution
+            {
+                type         RosinRammler;
+                RosinRammlerDistribution
+                {
+                    minValue        5e-04;   //- Distribution minimum
+                    maxValue        1.2e-3;  //- Distribution maximum
+                    lambda          7.5e-5;  //- Scale parameter
+                    n               0.5;     //- Shape parameter
+                }
+            }
+        }
+    }
+
+    dispersionModel none;
+
+    patchInteractionModel standardWallInteraction;
+
+    heatTransferModel RanzMarshall;
+
+    compositionModel singlePhaseMixture; // only one phase allowed --- singleMixtureFraction;
+
+    phaseChangeModel liquidEvaporation;
+
+    devolatilisationModel none;
+
+    surfaceReactionModel none;
+
+    stochasticCollisionModel none;
+
+    surfaceFilmModel thermoSurfaceFilm;
+
+    radiation       off;
+
+    standardWallInteractionCoeffs
+    {
+        type           escape; 
+    }
+
+    RanzMarshallCoeffs
+    {
+        BirdCorrection  off;
+    }
+
+    singlePhaseMixtureCoeffs
+    {
+        phases
+        (
+            liquid
+            {
+                H2O         1;
+            }
+        );  
+    }
+
+    liquidEvaporationCoeffs
+    {
+        enthalpyTransfer enthalpyDifference;
+
+        activeLiquids   ( H2O );
+    }
+     thermoSurfaceFilmCoeffs
+    {
+        interactionType absorb;
+    }
+
+    thermoSurfaceFilmCoeffs
+    {
+        interactionType splashBai; // absorb;
+        deltaWet        0.0002;
+        Adry            2630;
+        Awet            1320;
+        Cf              0.6;
+        Vscale          2.0;
+        ejectedParcelType 10;
+    }
+
+}
+
+cloudFunctions
+{
+
+}
+
+// ************************************************************************* //

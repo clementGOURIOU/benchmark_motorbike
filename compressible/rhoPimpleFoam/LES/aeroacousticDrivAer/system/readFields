@@ -1,0 +1,18 @@
+readFields
+{
+    libs ("libfieldFunctionObjects.so");
+
+    type            readFields;
+    fields          
+    (
+        p
+        U
+        pMean
+        UMean
+        static(p)_coeffMean
+        total(p)_coeffMean
+        yPlus
+        desField
+        fmax
+    );
+}

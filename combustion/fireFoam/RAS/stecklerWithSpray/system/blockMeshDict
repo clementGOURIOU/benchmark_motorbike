@@ -1,0 +1,130 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2306                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      blockMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+scale 0.01; // cm
+
+vertices
+(
+    //- ROOM
+    //- back plane
+    ( -140 0    -140) // 0
+    (  140 0    -140) // 1
+    (  140 213  -140) // 2
+    ( -140 213  -140) // 3
+
+    //- front plane
+    (  -140  0    140) // 4
+    (   140  0    140) // 5
+    (   140  213  140) // 6
+    (  -140  213  140) // 7
+    
+    //- BLOCK-NEXT-DOOR
+    //- back plane
+    (  420 0      -140) // 8
+    (  420 213    -140) // 9
+    //- front plane
+    (  420 0    140) // 10
+    (  420 213  140) // 11
+
+    //- TOP BLOCK OUTLET
+    //- back plane
+    (  420 460    -140) // 12
+    (  140 460    -140) // 13
+    //- front plane
+    (  420 460    140) // 14
+    (  140 460    140) // 15
+);
+
+blocks
+(
+    // In Steckler case, D = 0.3m
+    // A = 0.25*pi*D^2 = ~0.0706 m2
+    // Equivalent square needs edge size: sqrt(A) = ~0.265m
+    // The following split is just indicative
+
+    hex (0 1 2 3 4 5 6 7)      (120 60 80) simpleGrading (1 1 1)
+    hex (1 8 9 2 5 10 11 6)    (120 60 80) simpleGrading (1 1 1)
+    hex (2 9 12 13 6 11 14 15) (120 60 80) simpleGrading (1 1 1)
+);
+
+edges
+(
+);
+
+boundary
+(
+    out
+    {
+        type patch;
+        faces
+        (
+            (12 13 14 15)
+        );
+    }
+    
+    outSide
+    {
+        type patch;
+        faces
+        (
+            (8 9 10 11)
+            (9 12 14 11)
+        );
+    }
+    
+    sides
+    {
+        type wall;
+        faces
+        (
+            (4 7 6 5)
+            (0 3 2 1)
+            (0 3 7 4)
+            (2 6 7 3)
+
+        );
+    }
+    
+    floor
+    {
+        type wall;
+        faces
+        (
+            (4 0 1 5)
+        );
+    }
+    
+    walls
+    {
+        type    wall;
+        faces
+        (
+            (1 8 10 5)
+            (5 10 11 6)
+            (2 9 12 13)
+            (6 11 14 15)
+
+            (2 6 15 13)
+            (1 8 9 2)
+        );
+    }
+);
+
+mergePatchPairs
+(
+);
+
+// ************************************************************************* //

@@ -1,0 +1,63 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2306                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      binary;
+    class       volVectorField;
+    object      U;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [0 1 -1 0 0 0 0];
+
+internalField   uniform (0 0 0);
+
+boundaryField
+{
+    out
+    {
+        type            pressureInletOutletVelocity;
+        value           uniform (0 0 0);
+    }
+    outSide
+    {
+        type            pressureInletOutletVelocity;
+        value           uniform (0 0 0);
+    }
+    sides
+    {
+        type            fixedValue;
+        value           uniform (0 0 0);
+    }
+    floor
+    {
+        type            slip;
+    }
+    walls
+    {
+        type            slip;
+    }
+    burner
+    {
+        // Methane - Low Calorific Value: 13.9kWh/kg
+        // Current Power : 62.9kW
+        // Mass flow rate = 62.9/13.9/3600 = 0.001257 kg/s
+
+        type            flowRateInletVelocity;
+        massFlowRate    table
+            (
+                (0 0.000258)
+                (1 0.001258)
+                (1000 0.001258)
+            );
+        value           uniform (0 0 0);
+    }
+}
+
+// ************************************************************************* //

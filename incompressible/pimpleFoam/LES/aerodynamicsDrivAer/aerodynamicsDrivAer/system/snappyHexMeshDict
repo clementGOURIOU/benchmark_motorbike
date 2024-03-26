@@ -1,0 +1,693 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2306                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      snappyHexMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+// Which of the steps to run
+castellatedMesh true;
+snap            true;
+addLayers       true;
+
+// Merge tolerance. Is fraction of overall bounding box of initial mesh.
+// Note: the write tolerance needs to be higher than this.
+mergeTolerance 1E-6;
+
+// Optional: avoid patch-face merging. Allows mesh to be used for
+//           refinement/unrefinement
+//mergePatchFaces off; // default on
+
+// Advanced
+// Flags for optional output
+// 0 : only write final meshes
+// 1 : write intermediate meshes
+// 2 : write volScalarField with cellLevel for postprocessing
+// 4 : write current intersections as .obj files
+debug 0;
+
+// Keep emtpy patches (OpenFOAM > 3.0)
+keepPatches     false;
+
+// Geometry. Definition of all surfaces. All surfaces are of class
+// searchableSurface.
+// Surfaces are used
+// - to specify refinement for any mesh cell intersecting it
+// - to specify refinement for any mesh cell inside/outside/near
+// - to 'snap' the mesh boundary to the surface
+geometry
+{
+    DrivAer_body.obj
+    {
+        type triSurfaceMesh;
+        regions
+        {
+            DrivAer_PID__09 { name DrivAer_PID__09; }
+            DrivAer_PID__11 { name DrivAer_PID__11; }
+            DrivAer_PID__14 { name DrivAer_PID__14; }
+            DrivAer_PID__16 { name DrivAer_PID__16; }
+            DrivAer_PID__26 { name DrivAer_PID__26; }
+            DrivAer_PID__32 { name DrivAer_PID__32; }
+            DrivAer_PID__33 { name DrivAer_PID__33; }
+            DrivAer_PID__35 { name DrivAer_PID__35; }
+        }
+    }
+    DrivAer_details.obj
+    {
+        type triSurfaceMesh;
+        regions
+        {
+            DrivAer_PID__00 { name DrivAer_PID__00; }
+            DrivAer_PID__01 { name DrivAer_PID__01; }
+            DrivAer_PID__02 { name DrivAer_PID__02; }
+            DrivAer_PID__03 { name DrivAer_PID__03; }
+            DrivAer_PID__04 { name DrivAer_PID__04; }
+            DrivAer_PID__05 { name DrivAer_PID__05; }
+            DrivAer_PID__06 { name DrivAer_PID__06; }
+            DrivAer_PID__07 { name DrivAer_PID__07; }
+            DrivAer_PID__08 { name DrivAer_PID__08; }
+            DrivAer_PID__10 { name DrivAer_PID__10; }
+            DrivAer_PID__12 { name DrivAer_PID__12; }
+            DrivAer_PID__13 { name DrivAer_PID__13; }
+            DrivAer_PID__15 { name DrivAer_PID__15; }
+            DrivAer_PID__17 { name DrivAer_PID__17; }
+            DrivAer_PID__18 { name DrivAer_PID__18; }
+            DrivAer_PID__19 { name DrivAer_PID__19; }
+            DrivAer_PID__20 { name DrivAer_PID__20; }
+            DrivAer_PID__21 { name DrivAer_PID__21; }
+            DrivAer_PID__22 { name DrivAer_PID__22; }
+            DrivAer_PID__23 { name DrivAer_PID__23; }
+            DrivAer_PID__24 { name DrivAer_PID__24; }
+            DrivAer_PID__25 { name DrivAer_PID__25; }
+            DrivAer_PID__27 { name DrivAer_PID__27; }
+            DrivAer_PID__28 { name DrivAer_PID__28; }
+            DrivAer_PID__29 { name DrivAer_PID__29; }
+            DrivAer_PID__30 { name DrivAer_PID__30; }
+            DrivAer_PID__31 { name DrivAer_PID__31; }
+            DrivAer_PID__34 { name DrivAer_PID__34; }
+        }
+    }
+    GRWS0930_Tire_FL.obj
+    {
+        type triSurfaceMesh;
+        regions
+        {
+            Tire_FL         { name Tire_FL; }
+        }
+    }
+    GRWS0930_Tire_FR.obj
+    {
+        type triSurfaceMesh;
+        regions
+        {
+            Tire_FR         { name Tire_FR; }
+        }
+    }
+    GRWS0930_Tire_RL.obj
+    {
+        type triSurfaceMesh;
+        regions
+        {
+            Tire_RL         { name Tire_RL; }
+        }
+    }
+    GRWS0930_Tire_RR.obj
+    {
+        type triSurfaceMesh;
+        regions
+        {
+            Tire_RR         { name Tire_RR; }
+        }
+    }
+    MRF-FL.obj
+    {
+        type triSurfaceMesh;
+        name MRF-FL;
+    }
+    MRF-FR.obj
+    {
+        type triSurfaceMesh;
+        name MRF-FR;
+    }
+    MRF-RL.obj
+    {
+        type triSurfaceMesh;
+        name MRF-RL;
+    }
+    MRF-RR.obj
+    {
+        type triSurfaceMesh;
+        name MRF-RR;
+    }
+    VRES0100_WTUN.obj
+    {
+        type triSurfaceMesh;
+        regions
+        {
+            VRES0100_WTUN   { name VRES0100_WTUN; }
+        }
+    }
+    VRES0200_WTUN.obj
+    {
+        type triSurfaceMesh;
+        regions
+        {
+            VRES0200_WTUN   { name VRES0200_WTUN; }
+        }
+    }
+    VRES0300_WTUN.obj
+    {
+        type triSurfaceMesh;
+        regions
+        {
+            VRES0300_WTUN   { name VRES0300_WTUN; }
+        }
+    }
+    VRES0400_WTUN.obj
+    {
+        type triSurfaceMesh;
+        regions
+        {
+            VRES0400_WTUN   { name VRES0400_WTUN; }
+        }
+    }
+    VRES0500.obj
+    {
+        type triSurfaceMesh;
+        regions
+        {
+            VRES0500        { name VRES0500; }
+        }
+    }
+    VRES0600.obj
+    {
+        type triSurfaceMesh;
+        regions
+        {
+            VRES0600        { name VRES0600; }
+        }
+    }
+    VRES0700.obj
+    {
+        type triSurfaceMesh;
+        regions
+        {
+            VRES0700        { name VRES0700; }
+        }
+    }
+    VRES0800.obj
+    {
+        type triSurfaceMesh;
+        regions
+        {
+            VRES0800        { name VRES0800; }
+        }
+    }
+
+    WTUN0000_WindTunnel.obj
+    {
+        type triSurfaceMesh;
+        regions
+        {
+            WTUN_BELT {name WTUN_BELT;}
+            WTUN_INLET {name WTUN_INLET;}
+            WTUN_OUTLET {name WTUN_OUTLET;}
+            WTUN_ROOF {name WTUN_ROOF;}
+            WTUN_WALLS {name WTUN_WALLS;}
+        }
+    }
+
+}
+
+// Settings for the castellatedMesh generation.
+castellatedMeshControls
+{
+
+    // Refinement parameters
+    // ~~~~~~~~~~~~~~~~~~~~~
+
+    // If local number of cells is >= maxLocalCells on any processor
+    // switches from from refinement followed by balancing
+    // (current method) to (weighted) balancing before refinement.
+    maxLocalCells 1000000000;
+
+    // Overall cell limit (approximately). Refinement will stop immediately
+    // upon reaching this number so a refinement level might not complete.
+    // Note that this is the number of cells before removing the part which
+    // is not 'visible' from the locationInMesh. The final number of cells might
+    // actually be a lot less.
+    maxGlobalCells 1000000000;
+
+    // The surface refinement loop might spend lots of iterations refining just a
+    // few cells. This setting will cause refinement to stop if <= minimumRefine
+    // are selected for refinement. Note: it will at least do one iteration
+    // (unless the number of cells to refine is 0)
+    minRefinementCells 10;
+
+    // Allow a certain level of imbalance during refining
+    // (since balancing is quite expensive)
+    // Expressed as fraction of perfect balance (= overall number of cells /
+    // nProcs). 0=balance always.
+    maxLoadUnbalance 0.10;
+
+    // Number of buffer layers between different levels.
+    // 1 means normal 2:1 refinement restriction, larger means slower
+    // refinement.
+    nCellsBetweenLevels 3;
+
+    // Explicit feature edge refinement
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    // Specifies a level for any cell intersected by its edges.
+    // This is a featureEdgeMesh, read from constant/triSurface for now.
+    features
+    (
+        {
+            file "WTUN0000_WindTunnel.extendedFeatureEdgeMesh";
+            level 0;
+        }
+    );
+
+    // Surface based refinement
+    // ~~~~~~~~~~~~~~~~~~~~~~~~
+
+    // Specifies two levels for every surface. The first is the minimum level,
+    // every cell intersecting a surface gets refined up to the minimum level.
+    // The second level is the maximum level. Cells that 'see' multiple
+    // intersections where the intersections make an
+    // angle > resolveFeatureAngle get refined up to the maximum level.
+
+    refinementSurfaces
+    {
+        DrivAer_body.obj
+        {
+            level (9 9);
+            patchInfo
+            {
+                type wall;
+                inGroups (groupDefault);
+            }
+        }
+        DrivAer_details.obj
+        {
+            level (9 9);
+            patchInfo
+            {
+                type wall;
+                inGroups (groupDefault);
+            }
+        }
+        GRWS0930_Tire_FL.obj
+        {
+            level (9 9);
+            patchInfo
+            {
+                type wall;
+                inGroups (groupDefault);
+            }
+            regions
+            {
+                Tire_FL         {level (9 9);}
+            }
+        }
+        GRWS0930_Tire_FR.obj
+        {
+            level (9 9);
+            patchInfo
+            {
+                type wall;
+                inGroups (groupDefault);
+            }
+            regions
+            {
+                Tire_FR         {level (9 9);}
+            }
+        }
+        GRWS0930_Tire_RL.obj
+        {
+            level (9 9);
+            patchInfo
+            {
+                type wall;
+                inGroups (groupDefault);
+            }
+            regions
+            {
+                Tire_RL         {level (9 9);}
+            }
+        }
+        GRWS0930_Tire_RR.obj
+        {
+            level (9 9);
+            patchInfo
+            {
+                type wall;
+                inGroups (groupDefault);
+            }
+            regions
+            {
+                Tire_RR         {level (9 9);}
+            }
+        }
+        MRF-FL
+        {
+            level (0 0);
+            faceZone MRF-FL;
+            cellZone MRF-FL;
+            cellZoneInside inside;
+        }
+        MRF-FR
+        {
+            level (0 0);
+            faceZone MRF-FR;
+            cellZone MRF-FR;
+            cellZoneInside inside;
+        }
+        MRF-RL
+        {
+            level (0 0);
+            faceZone MRF-RL;
+            cellZone MRF-RL;
+            cellZoneInside inside;
+        }
+        MRF-RR
+        {
+            level (0 0);
+            faceZone MRF-RR;
+            cellZone MRF-RR;
+            cellZoneInside inside;
+        }
+        WTUN0000_WindTunnel.obj
+        {
+            level (0 1);
+            patchInfo
+            {
+                type wall;
+                inGroups (groupDefault);
+            }
+            regions
+            {
+                WTUN_BELT         {level (4 4);}
+                WTUN_INLET        {level (0 0);}
+                WTUN_OUTLET       {level (0 0);}
+                WTUN_ROOF         {level (0 0);}
+                WTUN_WALLS        {level (0 0);}
+            }
+        }
+    }
+
+    // Resolve sharp angles
+    resolveFeatureAngle 30;
+
+    // Region-wise refinement
+    // ~~~~~~~~~~~~~~~~~~~~~~
+
+    // Specifies refinement level for cells in relation to a surface. One of
+    // three modes
+    // - distance. 'levels' specifies per distance to the surface the
+    //   wanted refinement level. The distances need to be specified in
+    //   descending order.
+    // - inside. 'levels' is only one entry and only the level is used. All
+    //   cells inside the surface get refined up to the level. The surface
+    //   needs to be closed for this to be possible.
+    // - outside. Same but cells outside.
+
+    refinementRegions
+    {
+        VRES0100_WTUN.obj {mode inside; levels ( (1E15 1) );}
+        VRES0200_WTUN.obj {mode inside; levels ( (1E15 2) );}
+        VRES0300_WTUN.obj {mode inside; levels ( (1E15 3) );}
+        VRES0400_WTUN.obj {mode inside; levels ( (1E15 4) );}
+        VRES0500.obj {mode inside; levels ( (1E15 5) );}
+        VRES0600.obj {mode inside; levels ( (1E15 6) );}
+        VRES0700.obj {mode inside; levels ( (1E15 7) );}
+        VRES0800.obj {mode inside; levels ( (1E15 8) );}
+        MRF-FL       {mode inside; levels ( (1E15 9) );}
+        MRF-FR       {mode inside; levels ( (1E15 9) );}
+        MRF-RL       {mode inside; levels ( (1E15 9) );}
+        MRF-RR       {mode inside; levels ( (1E15 9) );}
+        DrivAer_body.obj     {mode distance; levels ( (0.015 9) (0.03 8));}
+        DrivAer_details.obj  {mode distance; levels ( (0.015 9) (0.03 8));}
+        GRWS0930_Tire_FL.obj {mode distance; levels ( (0.015 9) (0.03 8));}
+        GRWS0930_Tire_FR.obj {mode distance; levels ( (0.015 9) (0.03 8));}
+        GRWS0930_Tire_RL.obj {mode distance; levels ( (0.015 9) (0.03 8));}
+        GRWS0930_Tire_RR.obj {mode distance; levels ( (0.015 9) (0.03 8));}
+    }
+
+    // Mesh selection
+    // ~~~~~~~~~~~~~~
+
+    // After refinement patches get added for all refinementSurfaces and
+    // all cells intersecting the surfaces get put into these patches. The
+    // section reachable from the locationInMesh is kept.
+    // NOTE: This point should never be on a face, always inside a cell, even
+    // after refinement.
+    locationInMesh (1.5230899999999998 -10.123 9.80548);
+
+    // Whether any faceZones (as specified in the refinementSurfaces)
+    // are only on the boundary of corresponding cellZones or also allow
+    // free-standing zone faces. Not used if there are no faceZones.
+    allowFreeStandingZoneFaces true;
+}
+
+// Settings for the snapping.
+snapControls
+{
+    //- Number of patch smoothing iterations before finding correspondence
+    //  to surface
+    nSmoothPatch 3;
+
+    //- Relative distance for points to be attracted by surface feature point
+    //  or edge. True distance is this factor times local
+    //  maximum edge length.
+    tolerance 2.0;
+
+    //- Number of mesh displacement relaxation iterations.
+    nSolveIter 30;
+
+    //- Maximum number of snapping relaxation iterations. Should stop
+    //  before upon reaching a correct mesh.
+    nRelaxIter 5;
+
+    // Feature snapping
+
+        //- Number of feature edge snapping iterations.
+        //  Leave out altogether to disable.
+        nFeatureSnapIter 10;
+
+        //- Detect (geometric only) features by sampling the surface
+        //  (default=false).
+        implicitFeatureSnap false;
+
+        //- Use castellatedMeshControls::features (default = true)
+        explicitFeatureSnap true;
+
+        //- Detect points on multiple surfaces (only for explicitFeatureSnap)
+        multiRegionFeatureSnap false;
+}
+
+// Settings for the layer addition.
+addLayersControls
+{
+    // Are the thickness parameters below relative to the undistorted
+    // size of the refined cell outside layer (true) or absolute sizes (false).
+    relativeSizes true;
+
+    // Per final patch (so not geometry!) the layer information
+
+    layers
+    {
+        DrivAer_PID__00 {nSurfaceLayers 3;}
+        DrivAer_PID__01 {nSurfaceLayers 3;}
+        DrivAer_PID__02 {nSurfaceLayers 3;}
+        DrivAer_PID__03 {nSurfaceLayers 3;}
+        DrivAer_PID__04 {nSurfaceLayers 3;}
+        DrivAer_PID__05 {nSurfaceLayers 3;}
+        DrivAer_PID__06 {nSurfaceLayers 3;}
+        DrivAer_PID__07 {nSurfaceLayers 3;}
+        DrivAer_PID__08 {nSurfaceLayers 3;}
+        DrivAer_PID__09 {nSurfaceLayers 3;}
+        DrivAer_PID__10 {nSurfaceLayers 3;}
+        DrivAer_PID__11 {nSurfaceLayers 3;}
+        DrivAer_PID__12 {nSurfaceLayers 3;}
+        DrivAer_PID__13 {nSurfaceLayers 3;}
+        DrivAer_PID__14 {nSurfaceLayers 3;}
+        DrivAer_PID__15 {nSurfaceLayers 3;}
+        DrivAer_PID__16 {nSurfaceLayers 3;}
+        DrivAer_PID__17 {nSurfaceLayers 3;}
+        DrivAer_PID__18 {nSurfaceLayers 3;}
+        DrivAer_PID__19 {nSurfaceLayers 3;}
+        DrivAer_PID__20 {nSurfaceLayers 3;}
+        DrivAer_PID__21 {nSurfaceLayers 3;}
+        DrivAer_PID__22 {nSurfaceLayers 3;}
+        DrivAer_PID__23 {nSurfaceLayers 3;}
+        DrivAer_PID__24 {nSurfaceLayers 3;}
+        DrivAer_PID__25 {nSurfaceLayers 3;}
+        DrivAer_PID__26 {nSurfaceLayers 3;}
+        DrivAer_PID__27 {nSurfaceLayers 3;}
+        DrivAer_PID__28 {nSurfaceLayers 3;}
+        DrivAer_PID__29 {nSurfaceLayers 3;}
+        DrivAer_PID__30 {nSurfaceLayers 3;}
+        DrivAer_PID__31 {nSurfaceLayers 3;}
+        DrivAer_PID__32 {nSurfaceLayers 3;}
+        DrivAer_PID__33 {nSurfaceLayers 3;}
+        DrivAer_PID__34 {nSurfaceLayers 3;}
+        DrivAer_PID__35 {nSurfaceLayers 3;}
+        Tire_FL         {nSurfaceLayers 3;}
+        Tire_FR         {nSurfaceLayers 3;}
+        Tire_RL         {nSurfaceLayers 3;}
+        Tire_RR         {nSurfaceLayers 3;}
+        WTUN_BELT       {nSurfaceLayers 3;}
+        WTUN_ROOF       {nSurfaceLayers 0;}
+        WTUN_WALLS      {nSurfaceLayers 0;}
+    }
+
+    // Expansion factor for layer mesh
+    expansionRatio 1.2;
+
+    //- Wanted thickness of final added cell layer. If multiple layers
+    //  is the thickness of the layer furthest away from the wall.
+    //  See relativeSizes parameter.
+    finalLayerThickness 0.9;
+
+    // Wanted thickness of the layer next to the wall.
+    // If relativeSizes this is relative to undistorted size of cell
+    // outside layer.
+    //firstLayerThickness 0.3;
+
+    //- Minimum thickness of cell layer. If for any reason layer
+    //  cannot be above minThickness do not add layer.
+    //  Relative to undistorted size of cell outside layer.
+    minThickness 0.1;
+
+    //- If points get not extruded do nGrow layers of connected faces that are
+    //  also not grown. This helps convergence of the layer addition process
+    //  close to features.
+    nGrow 0;
+
+    // Advanced settings
+
+    //- When not to extrude surface. 0 is flat surface, 90 is when two faces
+    //  make straight angle.
+    featureAngle 180;
+
+    // When to merge patch faces. Default is featureAngle. Useful when
+    // featureAngle is large.
+    mergePatchFacesAngle 90;
+
+    layerTerminationAngle 45;
+    
+    // At non-patched sides allow mesh to slip if extrusion direction makes
+    // angle larger than slipFeatureAngle.
+    slipFeatureAngle 30;
+
+    //- Maximum number of snapping relaxation iterations. Should stop
+    //  before upon reaching a correct mesh.
+    nRelaxIter 5;
+
+    // Number of smoothing iterations of surface normals
+    nSmoothSurfaceNormals 5;
+
+    // Number of smoothing iterations of interior mesh movement direction
+    nSmoothNormals 30;
+
+    // Smooth layer thickness over surface patches
+    nSmoothThickness 10;
+
+    // Stop layer growth on highly warped cells
+    maxFaceThicknessRatio 0.3;
+
+    // Reduce layer growth where ratio thickness to medial
+    // distance is large
+    maxThicknessToMedialRatio 0.3;
+
+    // Angle used to pick up medial axis points
+    minMedialAxisAngle 150;
+
+    // No. of steps walking away from the surface
+    nMedialAxisIter 10;
+
+    // Create buffer region for new layer terminations
+    nBufferCellsNoExtrude 0;
+
+    // Overall max number of layer addition iterations
+    nLayerIter 50;
+}
+
+// Generic mesh quality settings. At any undoable phase these determine
+// where to undo.
+
+meshQualityControls
+{
+    //- Maximum non-orthogonality allowed. Set to 180 to disable.
+    maxNonOrtho 60;
+
+    //- Max skewness allowed. Set to <0 to disable.
+    maxBoundarySkewness 10;
+    maxInternalSkewness 8;
+
+    //- Max concaveness allowed. Is angle (in degrees) below which concavity
+    //  is allowed. 0 is straight face, <0 would be convex face.
+    //  Set to 180 to disable.
+    maxConcave 80;
+
+    //- Minimum projected area v.s. actual area. Set to -1 to disable.
+    minFlatness 0.5;
+
+    //- Minimum pyramid volume. Is absolute volume of cell pyramid.
+    //  Set to a sensible fraction of the smallest cell volume expected.
+    //  Set to very negative number (e.g. -1E30) to disable.
+    minVol 1e-13;
+    minTetQuality 1e-30;
+
+    //- Minimum face area. Set to <0 to disable.
+    minArea 1e-13;
+
+    //- Minimum face twist. Set to <-1 to disable. dot product of face normal
+    //- and face centre triangles normal
+    minTwist 0.02;
+
+    //- minimum normalised cell determinant
+    //- 1 = hex, <= 0 = folded or flattened illegal cell
+    minDeterminant 0.01;
+
+    //- minFaceWeight (0 -> 0.5)
+    minFaceWeight 0.05;
+
+    //- minVolRatio (0 -> 1)
+    minVolRatio 0.01;
+
+    //- if >0 : preserve single cells with all points on the surface if the
+    //  resulting volume after snapping (by approximation) is larger than
+    //  minVolCollapseRatio times old volume (i.e. not collapsed to flat cell).
+    //  If <0 : delete always.
+    //minVolCollapseRatio 0.5;
+
+    //must be >0 for Fluent compatibility
+    minTriangleTwist -0.99;
+
+    //- Number of error distribution iterations
+    nSmoothScale 4;
+    //- amount to scale back displacement at error points
+    errorReduction 0.75;
+}
+
+/*
+writeFlags
+(
+    scalarLevels
+    layerSets
+    layerFields
+);
+*/
+
+// ************************************************************************* //
