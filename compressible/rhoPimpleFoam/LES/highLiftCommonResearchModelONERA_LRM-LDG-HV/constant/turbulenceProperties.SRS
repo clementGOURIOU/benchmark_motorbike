@@ -1,0 +1,30 @@
+FoamFile
+{
+    version         2;
+    format          ascii;
+    class           dictionary;
+    location        "constant";
+    object          turbulenceProperties;
+}
+
+
+simulationType  LES;
+
+LES
+{
+    LESModel        sigma;
+    delta           cubeRootVol;
+    turbulence      on;
+    printCoeffs     on;
+}
+
+RAS
+{
+    RASModel        SpalartAllmaras;
+    SpalartAllmarasCoeffs
+    {
+        Ct3             0;
+    }
+    turbulence      on;
+    printCoeffs     on;
+}

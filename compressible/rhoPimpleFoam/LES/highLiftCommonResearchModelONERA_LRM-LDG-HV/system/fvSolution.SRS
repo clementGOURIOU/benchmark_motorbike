@@ -1,0 +1,76 @@
+FoamFile
+{
+    version         2;
+    format          ascii;
+    class           dictionary;
+    object          fvSolution;
+}
+
+
+solvers
+{
+    "p|pcorr"
+    {
+        solver          PCG;
+        preconditioner  DIC;
+        tolerance       1e-07;
+        relTol          0.05;
+        minIter         1;
+    }
+    "pFinal|pcorrFinal"
+    {
+        solver          PCG;
+        preconditioner  DIC;
+        tolerance       1e-07;
+        relTol          0;
+        minIter         1;
+    }
+    "(rho.*|U.*|k.*|omega.*|nuTilda.*|h.*)"
+    {
+        solver          smoothSolver;
+        smoother        symGaussSeidel;
+        tolerance       1e-07;
+        relTol          0;
+        minIter         1;
+    }
+    Phi
+    {
+        solver          PCG;
+        preconditioner  DIC;
+        tolerance       1e-07;
+        relTol          0.05;
+        minIter         1;
+    }
+}
+
+potentialFlow
+{
+    nNonOrthogonalCorrectors 10;
+}
+
+PIMPLE
+{
+    nOuterCorrectors 2;
+    nCorrectors     1;
+    nNonOrthogonalCorrectors 0;
+}
+
+relaxationFactors
+{
+    fields
+    {
+        "p.*"           0.3;
+    }
+    equations
+    {
+        "U.*"           0.7;
+        "(k.*|omega.*)" 0.7;
+        "(nuTilda.*)"   0.7;
+        "(h.*)"         0.7;
+    }
+}
+
+cache
+{
+    grad(U)         ;
+}

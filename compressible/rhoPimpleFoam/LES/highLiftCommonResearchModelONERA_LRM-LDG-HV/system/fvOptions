@@ -1,0 +1,14 @@
+FoamFile
+{
+    version         2;
+    format          ascii;
+    class           dictionary;
+    object          fvOptions;
+}
+
+velocityDampingConstraint
+{
+    type            velocityDampingConstraint;
+    selectionMode   all;
+    UMax            272.21;
+}

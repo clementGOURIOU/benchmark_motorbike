@@ -1,0 +1,83 @@
+FoamFile
+{
+    version         2;
+    format          ascii;
+    class           volScalarField;
+    object          nut;
+}
+
+dimensions      [ 0 2 -1 0 0 0 0 ];
+
+internalField   uniform 0.000808016;
+
+boundaryField
+{
+    cyclic
+    {
+        type            cyclic;
+    }
+    cyclicAMI
+    {
+        type            cyclicAMI;
+    }
+    cyclicACMI
+    {
+        type            cyclicACMI;
+        value           uniform 0.000808016;
+    }
+    cyclicSlip
+    {
+        type            cyclicSlip;
+    }
+    empty
+    {
+        type            empty;
+    }
+    nonuniformTransformCyclic
+    {
+        type            nonuniformTransformCyclic;
+    }
+    processor
+    {
+        type            processor;
+    }
+    processorCyclic
+    {
+        type            processorCyclic;
+    }
+    symmetryPlane
+    {
+        type            symmetryPlane;
+    }
+    symmetry
+    {
+        type            symmetry;
+    }
+    wedge
+    {
+        type            wedge;
+    }
+    overset
+    {
+        type            overset;
+    }
+    "ff.*"
+    {
+        type            calculated;
+        value           uniform 0.000808016;
+    }
+    "ww_.*"
+    {
+        type            nutUSpaldingWallFunction;
+        value           uniform 0.000808016;
+        tolerance       1e-09;
+    }
+    ff_ymin
+    {
+        type            symmetry;
+    }
+    ff_ymax
+    {
+        type            symmetry;
+    }
+}
