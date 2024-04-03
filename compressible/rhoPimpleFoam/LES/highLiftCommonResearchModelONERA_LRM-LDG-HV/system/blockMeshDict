@@ -1,0 +1,16 @@
+FoamFile
+{
+    version         2;
+    format          ascii;
+    class           dictionary;
+    object          blockMeshDict;
+}
+
+
+vertices        ( ( - 2000 0 - 2000 ) ( 2000 0 - 2000 ) ( 2000 2000 - 2000 ) ( - 2000 2000 - 2000 ) ( - 2000 0 2000 ) ( 2000 0 2000 ) ( 2000 2000 2000 ) ( - 2000 2000 2000 ) );
+
+blocks          ( hex ( 0 1 2 3 4 5 6 7 ) ( 54 27 54 ) simpleGrading ( 1 1 1 ) );
+
+edges           ( );
+
+boundary        ( ff_xmin { type patch ; faces ( ( 0 3 7 4 ) ) ; } ff_xmax { type patch ; faces ( ( 1 5 6 2 ) ) ; } ff_ymin { type symmetry ; faces ( ( 0 4 5 1 ) ) ; } ff_ymax { type symmetry ; faces ( ( 3 2 6 7 ) ) ; } ff_zmin { type patch ; faces ( ( 0 1 2 3 ) ) ; } ff_zmax { type patch ; faces ( ( 4 7 6 5 ) ) ; } );

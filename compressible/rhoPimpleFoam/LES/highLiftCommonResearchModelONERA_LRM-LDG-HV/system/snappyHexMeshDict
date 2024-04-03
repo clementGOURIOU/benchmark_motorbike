@@ -1,0 +1,2140 @@
+// Upstream CFD, 2023
+//
+// The project leading to this application has received funding from
+// the European High-Performance Computing Joint Undertaking Joint
+// Undertaking (JU) under grant agreement No 956416. The JU receives
+// support from the European Union's Horizon 2020 research and
+// innovation programme and France, United Kingdom, Germany, Italy,
+// Croatia, Spain, Greece, Portugal
+//
+// Input surface mesh from AIAA HLPW5 Case 2.4 (ONERA_LRM-LDG-HV) 
+
+FoamFile
+{
+    version         2;
+    format          ascii;
+    class           dictionary;
+    object          snappyHexMeshDict;
+}
+
+castellatedMesh true;
+snap            true;
+addLayers       true;
+
+geometry
+{
+    "CRM_2p4_ONERA_LDG_v01.obj.gz"
+    {
+        type            triSurfaceMesh;
+        regions
+        {
+            ww_chine
+            {
+                name            ww_chine;
+            }
+            ww_TE
+            {
+                name            ww_TE;
+            }
+            ww_symmetry
+            {
+                name            ww_symmetry;
+            }
+            ww_stabilizer_horizontal_PS
+            {
+                name            ww_stabilizer_horizontal_PS;
+            }
+            ww_stabilizer_horizontal_SS
+            {
+                name            ww_stabilizer_horizontal_SS;
+            }
+            ww_stabilizer_vertical
+            {
+                name            ww_stabilizer_vertical;
+            }
+            ww_fairing
+            {
+                name            ww_fairing;
+            }
+            ww_pylon
+            {
+                name            ww_pylon;
+            }
+            ww_slat_bracket
+            {
+                name            ww_slat_bracket;
+            }
+            ww_wing_PS
+            {
+                name            ww_wing_PS;
+            }
+            ww_wing_SS
+            {
+                name            ww_wing_SS;
+            }
+            ww_flap
+            {
+                name            ww_flap;
+            }
+            ww_slat
+            {
+                name            ww_slat;
+            }
+            ww_nacelle
+            {
+                name            ww_nacelle;
+            }
+            ww_fuselage
+            {
+                name            ww_fuselage;
+            }
+        }
+        name            Airplane_Body;
+    }
+    "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz"
+    {
+        type            triSurfaceMesh;
+    }
+    ww_chine_TE_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_chine_TE );
+    }
+    ww_fuselage_TE_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_fuselage_TE );
+    }
+    ww_fuselage_7_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_fuselage_7 );
+    }
+    ww_fuselage_6_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_fuselage_6 );
+    }
+    ww_fuselage_5_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_fuselage_5 );
+    }
+    ww_fuselage_4_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_fuselage_4 );
+    }
+    ww_fuselage_3_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_fuselage_3 );
+    }
+    ww_fuselage_2_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_fuselage_2 );
+    }
+    ww_fuselage_1_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_fuselage_1 );
+    }
+    ww_pylon_TE_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_pylon_TE );
+    }
+    ww_pylon_wing_PS_D3_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_pylon_wing_PS_D3 );
+    }
+    ww_pylon_wing_PS_D2_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_pylon_wing_PS_D2 );
+    }
+    ww_pylon_wing_PS_D1_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_pylon_wing_PS_D1 );
+    }
+    ww_pylon_wing_PS_C4_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_pylon_wing_PS_C4 );
+    }
+    ww_pylon_wing_PS_C3_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_pylon_wing_PS_C3 );
+    }
+    ww_pylon_wing_PS_C2_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_pylon_wing_PS_C2 );
+    }
+    ww_pylon_wing_PS_C1_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_pylon_wing_PS_C1 );
+    }
+    ww_pylon_wing_PS_B4_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_pylon_wing_PS_B4 );
+    }
+    ww_pylon_wing_PS_B3_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_pylon_wing_PS_B3 );
+    }
+    ww_pylon_wing_PS_B2_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_pylon_wing_PS_B2 );
+    }
+    ww_pylon_wing_PS_B1_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_pylon_wing_PS_B1 );
+    }
+    ww_pylon_wing_PS_A4_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_pylon_wing_PS_A4 );
+    }
+    ww_pylon_nacelle_D3_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_pylon_nacelle_D3 );
+    }
+    ww_pylon_nacelle_D2_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_pylon_nacelle_D2 );
+    }
+    ww_pylon_nacelle_D1_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_pylon_nacelle_D1 );
+    }
+    ww_pylon_nacelle_C4_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_pylon_nacelle_C4 );
+    }
+    ww_pylon_nacelle_C3_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_pylon_nacelle_C3 );
+    }
+    ww_pylon_nacelle_C2_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_pylon_nacelle_C2 );
+    }
+    ww_pylon_nacelle_C1_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_pylon_nacelle_C1 );
+    }
+    ww_wing_PS_E1_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_wing_PS_E1 );
+    }
+    ww_wing_PS_D4_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_wing_PS_D4 );
+    }
+    ww_wing_PS_D3_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_wing_PS_D3 );
+    }
+    ww_wing_PS_D2_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_wing_PS_D2 );
+    }
+    ww_wing_PS_D1_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_wing_PS_D1 );
+    }
+    ww_wing_PS_C4_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_wing_PS_C4 );
+    }
+    ww_wing_PS_C3_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_wing_PS_C3 );
+    }
+    ww_wing_PS_C2_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_wing_PS_C2 );
+    }
+    ww_wing_PS_C1_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_wing_PS_C1 );
+    }
+    ww_wing_PS_B4_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_wing_PS_B4 );
+    }
+    ww_wing_PS_B3_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_wing_PS_B3 );
+    }
+    ww_wing_PS_B2_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_wing_PS_B2 );
+    }
+    ww_wing_PS_B1_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_wing_PS_B1 );
+    }
+    ww_wing_PS_A4_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_wing_PS_A4 );
+    }
+    ww_wing_PS_A3_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_wing_PS_A3 );
+    }
+    ww_wing_PS_A2_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_wing_PS_A2 );
+    }
+    ww_wing_PS_A1_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_wing_PS_A1 );
+    }
+    ww_wing_TE_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_wing_TE );
+    }
+    ww_wing_SS_E1_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_wing_SS_E1 );
+    }
+    ww_wing_SS_D4_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_wing_SS_D4 );
+    }
+    ww_wing_SS_D3_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_wing_SS_D3 );
+    }
+    ww_wing_SS_D2_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_wing_SS_D2 );
+    }
+    ww_wing_SS_D1_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_wing_SS_D1 );
+    }
+    ww_wing_SS_C4_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_wing_SS_C4 );
+    }
+    ww_wing_SS_C3_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_wing_SS_C3 );
+    }
+    ww_wing_SS_C2_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_wing_SS_C2 );
+    }
+    ww_wing_SS_C1_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_wing_SS_C1 );
+    }
+    ww_wing_SS_B4_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_wing_SS_B4 );
+    }
+    ww_wing_SS_B3_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_wing_SS_B3 );
+    }
+    ww_wing_SS_B2_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_wing_SS_B2 );
+    }
+    ww_wing_SS_B1_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_wing_SS_B1 );
+    }
+    ww_wing_SS_A4_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_wing_SS_A4 );
+    }
+    ww_wing_SS_A3_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_wing_SS_A3 );
+    }
+    ww_wing_SS_A2_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_wing_SS_A2 );
+    }
+    ww_wing_SS_A1_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_wing_SS_A1 );
+    }
+    ww_flap_TE_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_flap_TE );
+    }
+    ww_flap_PS_B2_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_flap_PS_B2 );
+    }
+    ww_flap_PS_B1_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_flap_PS_B1 );
+    }
+    ww_flap_PS_A4_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_flap_PS_A4 );
+    }
+    ww_flap_PS_A3_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_flap_PS_A3 );
+    }
+    ww_flap_PS_A2_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_flap_PS_A2 );
+    }
+    ww_flap_PS_A1_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_flap_PS_A1 );
+    }
+    ww_flap_SS_B2_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_flap_SS_B2 );
+    }
+    ww_flap_SS_B1_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_flap_SS_B1 );
+    }
+    ww_flap_SS_A4_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_flap_SS_A4 );
+    }
+    ww_flap_SS_A3_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_flap_SS_A3 );
+    }
+    ww_flap_SS_A2_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_flap_SS_A2 );
+    }
+    ww_flap_SS_A1_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_flap_SS_A1 );
+    }
+    ww_slat_TE_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_slat_TE );
+    }
+    ww_slat_PS_A2_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_slat_PS_A2 );
+    }
+    ww_slat_PS_A1_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_slat_PS_A1 );
+    }
+    ww_slat_SS_B1_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_slat_SS_B1 );
+    }
+    ww_slat_SS_A4_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_slat_SS_A4 );
+    }
+    ww_slat_SS_A3_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_slat_SS_A3 );
+    }
+    ww_slat_SS_A2_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_slat_SS_A2 );
+    }
+    ww_slat_SS_A1_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_slat_SS_A1 );
+    }
+    ww_chine_nacelle_C3_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_chine_nacelle_C3 );
+    }
+    ww_chine_nacelle_C2_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_chine_nacelle_C2 );
+    }
+    ww_chine_nacelle_C1_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_chine_nacelle_C1 );
+    }
+    ww_chine_nacelle_B4_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_chine_nacelle_B4 );
+    }
+    ww_nacelle_TE_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_nacelle_TE );
+    }
+    ww_nacelle_D3_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_nacelle_D3 );
+    }
+    ww_nacelle_D2_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_nacelle_D2 );
+    }
+    ww_nacelle_D1_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_nacelle_D1 );
+    }
+    ww_nacelle_C4_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_nacelle_C4 );
+    }
+    ww_nacelle_C3_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_nacelle_C3 );
+    }
+    ww_nacelle_C2_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_nacelle_C2 );
+    }
+    ww_nacelle_C1_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_nacelle_C1 );
+    }
+    ww_nacelle_B4_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_nacelle_B4 );
+    }
+    ww_nacelle_B3_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_nacelle_B3 );
+    }
+    ww_nacelle_B2_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_nacelle_B2 );
+    }
+    ww_nacelle_B1_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_nacelle_B1 );
+    }
+    ww_nacelle_A4_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_nacelle_A4 );
+    }
+    ww_nacelle_A3_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_nacelle_A3 );
+    }
+    ww_nacelle_A2_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_nacelle_A2 );
+    }
+    ww_nacelle_A1_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_nacelle_A1 );
+    }
+    ww_stabilizer_horizontal_PS_D2_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_stabilizer_horizontal_PS_D2 );
+    }
+    ww_stabilizer_horizontal_PS_D1_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_stabilizer_horizontal_PS_D1 );
+    }
+    ww_stabilizer_horizontal_PS_C4_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_stabilizer_horizontal_PS_C4 );
+    }
+    ww_stabilizer_horizontal_PS_C3_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_stabilizer_horizontal_PS_C3 );
+    }
+    ww_stabilizer_horizontal_PS_C2_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_stabilizer_horizontal_PS_C2 );
+    }
+    ww_stabilizer_horizontal_PS_C1_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_stabilizer_horizontal_PS_C1 );
+    }
+    ww_stabilizer_horizontal_PS_B4_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_stabilizer_horizontal_PS_B4 );
+    }
+    ww_stabilizer_horizontal_PS_B3_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_stabilizer_horizontal_PS_B3 );
+    }
+    ww_stabilizer_horizontal_PS_B2_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_stabilizer_horizontal_PS_B2 );
+    }
+    ww_stabilizer_horizontal_PS_B1_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_stabilizer_horizontal_PS_B1 );
+    }
+    ww_stabilizer_horizontal_PS_A4_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_stabilizer_horizontal_PS_A4 );
+    }
+    ww_stabilizer_horizontal_PS_A3_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_stabilizer_horizontal_PS_A3 );
+    }
+    ww_stabilizer_horizontal_PS_A2_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_stabilizer_horizontal_PS_A2 );
+    }
+    ww_stabilizer_horizontal_PS_A1_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_stabilizer_horizontal_PS_A1 );
+    }
+    ww_stabilizer_horizontal_TE_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_stabilizer_horizontal_TE );
+    }
+    ww_stabilizer_horizontal_SS_D2_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_stabilizer_horizontal_SS_D2 );
+    }
+    ww_stabilizer_horizontal_SS_D1_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_stabilizer_horizontal_SS_D1 );
+    }
+    ww_stabilizer_horizontal_SS_C4_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_stabilizer_horizontal_SS_C4 );
+    }
+    ww_stabilizer_horizontal_SS_C3_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_stabilizer_horizontal_SS_C3 );
+    }
+    ww_stabilizer_horizontal_SS_C2_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_stabilizer_horizontal_SS_C2 );
+    }
+    ww_stabilizer_horizontal_SS_C1_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_stabilizer_horizontal_SS_C1 );
+    }
+    ww_stabilizer_horizontal_SS_B4_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_stabilizer_horizontal_SS_B4 );
+    }
+    ww_stabilizer_horizontal_SS_B3_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_stabilizer_horizontal_SS_B3 );
+    }
+    ww_stabilizer_horizontal_SS_B2_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_stabilizer_horizontal_SS_B2 );
+    }
+    ww_stabilizer_horizontal_SS_B1_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_stabilizer_horizontal_SS_B1 );
+    }
+    ww_stabilizer_horizontal_SS_A4_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_stabilizer_horizontal_SS_A4 );
+    }
+    ww_stabilizer_horizontal_SS_A3_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_stabilizer_horizontal_SS_A3 );
+    }
+    ww_stabilizer_horizontal_SS_A2_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_stabilizer_horizontal_SS_A2 );
+    }
+    ww_stabilizer_horizontal_SS_A1_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_stabilizer_horizontal_SS_A1 );
+    }
+    ww_stabilizer_vertical_TE_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_stabilizer_vertical_TE );
+    }
+    ww_stabilizer_vertical_D4_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_stabilizer_vertical_D4 );
+    }
+    ww_stabilizer_vertical_D3_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_stabilizer_vertical_D3 );
+    }
+    ww_stabilizer_vertical_D2_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_stabilizer_vertical_D2 );
+    }
+    ww_stabilizer_vertical_D1_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_stabilizer_vertical_D1 );
+    }
+    ww_stabilizer_vertical_C4_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_stabilizer_vertical_C4 );
+    }
+    ww_stabilizer_vertical_C3_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_stabilizer_vertical_C3 );
+    }
+    ww_stabilizer_vertical_C2_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_stabilizer_vertical_C2 );
+    }
+    ww_stabilizer_vertical_C1_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_stabilizer_vertical_C1 );
+    }
+    ww_stabilizer_vertical_B4_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_stabilizer_vertical_B4 );
+    }
+    ww_stabilizer_vertical_B3_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_stabilizer_vertical_B3 );
+    }
+    ww_stabilizer_vertical_B2_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_stabilizer_vertical_B2 );
+    }
+    ww_stabilizer_vertical_B1_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_stabilizer_vertical_B1 );
+    }
+    ww_stabilizer_vertical_A4_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_stabilizer_vertical_A4 );
+    }
+    ww_stabilizer_vertical_A3_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_stabilizer_vertical_A3 );
+    }
+    ww_stabilizer_vertical_A2_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_stabilizer_vertical_A2 );
+    }
+    ww_stabilizer_vertical_A1_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_stabilizer_vertical_A1 );
+    }
+    ww_stabilizer_horizontal_outboard_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_stabilizer_horizontal_outboard );
+    }
+    ww_stabilizer_vertical_outboard_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_stabilizer_vertical_outboard );
+    }
+    ww_fairing_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_fairing );
+    }
+    ww_slat_bracket_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_slat_bracket );
+    }
+    ww_wing_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_wing );
+    }
+    ww_flap_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_flap );
+    }
+    ww_slat_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_slat );
+    }
+    ww_fuselage_symmetry_BLT
+    {
+        type            subTriSurfaceMesh;
+        surface         "CRM_2p4_ONERA_LDG_v01-Zones-2.obj.gz";
+        patches         ( ww_fuselage_symmetry );
+    }
+    "Slat_Cove.obj.gz"
+    {
+        type            triSurfaceMesh;
+        name            Slat_Cove;
+    }
+    "Flap_Cove_2.obj.gz"
+    {
+        type            triSurfaceMesh;
+        name            Flap_Cove;
+    }
+    "Wake_region_large_5.obj.gz"
+    {
+        type            triSurfaceMesh;
+        name            WakeRegion_Large;
+    }
+    "Wake_region_flap.obj.gz"
+    {
+        type            triSurfaceMesh;
+        name            WakeRegion_Flap;
+    }
+    "Wake_region_huge_4.obj.gz"
+    {
+        type            triSurfaceMesh;
+        name            WakeRegion_Huge;
+    }
+    "2p4_Wing_Root_2.obj.gz"
+    {
+        type            triSurfaceMesh;
+        name            Wing_Root;
+    }
+    "2p4_Wing_Root_Surface.obj.gz"
+    {
+        type            triSurfaceMesh;
+        name            Wing_Root_Surface;
+    }
+    "Nacelle_Inner.obj.gz"
+    {
+        type            triSurfaceMesh;
+        name            Nacelle_Inner;
+    }
+    "Nacelle_Wake_2.obj.gz"
+    {
+        type            triSurfaceMesh;
+        name            Nacelle_Wake;
+    }
+    "2p4_Nacelle_Vortex_2.obj.gz"
+    {
+        type            triSurfaceMesh;
+        name            Nacelle_Vortex_1;
+    }
+    Nacelle_Vortex_2
+    {
+        type            searchableBox;
+        min             ( 31 7.2 4.8 );
+        max             ( 39 11.2 7 );
+    }
+    Flap_Wing_Transition
+    {
+        type            searchableCone;
+        point1          ( 43 21.2 6 );
+        radius1         0.3;
+        innerRadius1    0;
+        point2          ( 45 21.2 6 );
+        radius2         1;
+        innerRadius2    0;
+    }
+    cylinder_wing_tip
+    {
+        type            searchableCone;
+        point1          ( 44.5 29 6.32581 );
+        radius1         1;
+        innerRadius1    0;
+        point2          ( 55.5 29 10.0339 );
+        radius2         3;
+        innerRadius2    0;
+    }
+    "2p4_Wing_Stabilizer_4.obj.gz"
+    {
+        type            triSurfaceMesh;
+        name            Wing_Stabilizer;
+    }
+    "2p4_Stabilizer_Root_Surface.obj.gz"
+    {
+        type            triSurfaceMesh;
+        name            Stabilizer_Root_Surface;
+    }
+    "Stabilizer_Horizontal_Wake_2.obj.gz"
+    {
+        type            triSurfaceMesh;
+        name            Stabilizer_Horizontal_Wake;
+    }
+    "Stabilizer_Vertical_Wake.obj.gz"
+    {
+        type            triSurfaceMesh;
+        name            Stabilizer_Vertical_Wake;
+    }
+    box_wake_large
+    {
+        type            searchableBox;
+        min             ( 25 0 -4 );
+        max             ( 95 34 18 );
+    }
+}
+
+castellatedMeshControls
+{
+    maxLocalCells   200000000;
+    maxGlobalCells  2000000000;
+    minRefinementCells 16;
+    maxLoadUnbalance 0.2;
+    nCellsBetweenLevels 5;
+    features        ( { file "CRM_2p4_ONERA_LDG_v01.eMesh" ; level 12 ; } );
+    refinementSurfaces
+    {
+        Airplane_Body
+        {
+            level           ( 12 12 );
+            regions
+            {
+                ww_wing_SS
+                {
+                    level           ( 14 14 );
+                }
+                ww_stabilizer_horizontal_SS
+                {
+                    level           ( 13 13 );
+                }
+                ww_stabilizer_horizontal_PS
+                {
+                    level           ( 13 13 );
+                }
+                ww_stabilizer_vertical
+                {
+                    level           ( 13 13 );
+                }
+                ww_slat
+                {
+                    level           ( 15 15 );
+                }
+                ww_flap
+                {
+                    level           ( 15 15 );
+                }
+                ww_nacelle
+                {
+                    level           ( 14 14 );
+                }
+                ww_pylon
+                {
+                    level           ( 14 14 );
+                }
+                ww_slat_bracket
+                {
+                    level           ( 15 15 );
+                }
+                ww_fairing
+                {
+                    level           ( 14 14 );
+                }
+                ww_TE
+                {
+                    level           ( 15 15 );
+                }
+            }
+        }
+    }
+    resolveFeatureAngle 30;
+    refinementRegions
+    {
+        Slat_Cove
+        {
+            mode            inside;
+            levels          ( ( 1e+15 14 ) );
+        }
+        Flap_Cove
+        {
+            mode            inside;
+            levels          ( ( 1e+15 14 ) );
+        }
+        Flap_Wing_Transition
+        {
+            mode            inside;
+            levels          ( ( 1e+15 14 ) );
+        }
+        WakeRegion_Flap
+        {
+            mode            inside;
+            levels          ( ( 1e+15 12 ) );
+        }
+        WakeRegion_Large
+        {
+            mode            inside;
+            levels          ( ( 1e+15 12 ) );
+        }
+        WakeRegion_Huge
+        {
+            mode            inside;
+            levels          ( ( 1e+15 11 ) );
+        }
+        Wing_Root
+        {
+            mode            inside;
+            levels          ( ( 1e+15 13 ) );
+        }
+        Wing_Root_Surface
+        {
+            mode            distance;
+            levels          ( ( 0.1 14 ) );
+        }
+        cylinder_wing_tip
+        {
+            mode            inside;
+            levels          ( ( 1e+15 13 ) );
+        }
+        Nacelle_Inner
+        {
+            mode            inside;
+            levels          ( ( 1e+15 13 ) );
+        }
+        Nacelle_Wake
+        {
+            mode            inside;
+            levels          ( ( 1e+15 12 ) );
+        }
+        Nacelle_Vortex_1
+        {
+            mode            inside;
+            levels          ( ( 1e+15 13 ) );
+        }
+        Nacelle_Vortex_2
+        {
+            mode            inside;
+            levels          ( ( 1e+15 13 ) );
+        }
+        Stabilizer_Horizontal_Wake
+        {
+            mode            inside;
+            levels          ( ( 1e+15 12 ) );
+        }
+        Wing_Stabilizer
+        {
+            mode            inside;
+            levels          ( ( 1e+15 11 ) );
+        }
+        Stabilizer_Root_Surface
+        {
+            mode            distance;
+            levels          ( ( 0.1 14 ) );
+        }
+        box_wake_large
+        {
+            mode            inside;
+            levels          ( ( 1e+15 10 ) );
+        }
+        ww_fuselage_1_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.023 14 ) );
+        }
+        ww_fuselage_2_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0325269 14 ) );
+        }
+        ww_fuselage_3_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.046 13 ) );
+        }
+        ww_fuselage_4_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0650538 13 ) );
+        }
+        ww_fuselage_5_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.092 12 ) );
+        }
+        ww_fuselage_6_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.092 12 ) );
+        }
+        ww_fuselage_7_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.092 12 ) );
+        }
+        ww_wing_SS_A1_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.023 15 ) ( 0.5 12 ) );
+        }
+        ww_wing_SS_A2_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0254537 15 ) ( 0.53125 12 ) );
+        }
+        ww_wing_SS_A3_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0281691 15 ) ( 0.5625 12 ) );
+        }
+        ww_wing_SS_A4_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0311743 15 ) ( 0.59375 12 ) );
+        }
+        ww_wing_SS_B1_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0345 15 ) ( 0.625 12 ) );
+        }
+        ww_wing_SS_B2_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0381805 15 ) ( 0.65625 12 ) );
+        }
+        ww_wing_SS_B3_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0422537 15 ) ( 0.6875 12 ) );
+        }
+        ww_wing_SS_B4_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0467614 14 ) ( 0.71875 12 ) );
+        }
+        ww_wing_SS_C1_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.05175 14 ) ( 0.75 12 ) );
+        }
+        ww_wing_SS_C2_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0572708 14 ) ( 0.78125 12 ) );
+        }
+        ww_wing_SS_C3_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0633805 14 ) ( 0.8125 12 ) );
+        }
+        ww_wing_SS_C4_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0701421 14 ) ( 0.84375 12 ) );
+        }
+        ww_wing_SS_D1_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.077625 14 ) ( 0.875 12 ) );
+        }
+        ww_wing_SS_D2_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0859062 14 ) ( 0.90625 12 ) );
+        }
+        ww_wing_SS_D3_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0950708 13 ) ( 0.9375 12 ) );
+        }
+        ww_wing_SS_D4_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.105213 13 ) ( 0.96875 12 ) );
+        }
+        ww_wing_SS_E1_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.116437 13 ) ( 1 12 ) );
+        }
+        ww_wing_PS_A1_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0115 15 ) );
+        }
+        ww_wing_PS_A2_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0127268 15 ) );
+        }
+        ww_wing_PS_A3_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0140846 15 ) );
+        }
+        ww_wing_PS_A4_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0155871 15 ) );
+        }
+        ww_wing_PS_B1_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.01725 15 ) );
+        }
+        ww_wing_PS_B2_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0190903 15 ) );
+        }
+        ww_wing_PS_B3_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0211268 15 ) );
+        }
+        ww_wing_PS_B4_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0233807 14 ) );
+        }
+        ww_wing_PS_C1_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.025875 14 ) );
+        }
+        ww_wing_PS_C2_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0286354 14 ) );
+        }
+        ww_wing_PS_C3_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0316903 14 ) );
+        }
+        ww_wing_PS_C4_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0350711 14 ) );
+        }
+        ww_wing_PS_D1_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0388125 14 ) );
+        }
+        ww_wing_PS_D2_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0429531 14 ) );
+        }
+        ww_wing_PS_D3_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0475354 13 ) );
+        }
+        ww_wing_PS_D4_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0526066 13 ) );
+        }
+        ww_wing_PS_E1_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0582187 13 ) );
+        }
+        ww_flap_SS_A1_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0115 15 ) );
+        }
+        ww_flap_SS_A2_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0127268 15 ) );
+        }
+        ww_flap_SS_A3_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0140846 15 ) );
+        }
+        ww_flap_SS_A4_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0155871 15 ) );
+        }
+        ww_flap_SS_B1_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.01725 15 ) );
+        }
+        ww_flap_SS_B2_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0190903 15 ) );
+        }
+        ww_flap_PS_A1_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0115 15 ) );
+        }
+        ww_flap_PS_A2_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0127268 15 ) );
+        }
+        ww_flap_PS_A3_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0140846 15 ) );
+        }
+        ww_flap_PS_A4_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0155871 15 ) );
+        }
+        ww_flap_PS_B1_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.01725 15 ) );
+        }
+        ww_flap_PS_B2_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0190903 15 ) );
+        }
+        ww_slat_SS_A1_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0115 15 ) );
+        }
+        ww_slat_SS_A2_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0127268 15 ) );
+        }
+        ww_slat_SS_A3_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0140846 15 ) );
+        }
+        ww_slat_SS_A4_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0155871 15 ) );
+        }
+        ww_slat_SS_B1_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.01725 15 ) );
+        }
+        ww_slat_PS_A1_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0115 15 ) );
+        }
+        ww_slat_PS_A2_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0127268 15 ) );
+        }
+        ww_nacelle_A1_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0115 15 ) );
+        }
+        ww_nacelle_A2_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0129339 15 ) );
+        }
+        ww_nacelle_A3_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0145465 15 ) );
+        }
+        ww_nacelle_A4_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0163602 15 ) );
+        }
+        ww_nacelle_B1_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0184 15 ) );
+        }
+        ww_nacelle_B2_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0206942 15 ) );
+        }
+        ww_nacelle_B3_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0232744 14 ) );
+        }
+        ww_nacelle_B4_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0261763 14 ) );
+        }
+        ww_nacelle_C1_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.02944 14 ) );
+        }
+        ww_nacelle_C2_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0331107 14 ) );
+        }
+        ww_nacelle_C3_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.037239 14 ) );
+        }
+        ww_nacelle_C4_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.041882 14 ) );
+        }
+        ww_nacelle_D1_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.047104 13 ) );
+        }
+        ww_nacelle_D2_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0529771 13 ) );
+        }
+        ww_nacelle_D3_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0595824 13 ) );
+        }
+        ww_chine_nacelle_B4_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0261763 14 ) );
+        }
+        ww_chine_nacelle_C1_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.02944 14 ) );
+        }
+        ww_chine_nacelle_C2_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0331107 14 ) );
+        }
+        ww_chine_nacelle_C3_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.037239 14 ) );
+        }
+        ww_pylon_nacelle_C1_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.02944 14 ) );
+        }
+        ww_pylon_nacelle_C2_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0331107 14 ) );
+        }
+        ww_pylon_nacelle_C3_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.037239 14 ) );
+        }
+        ww_pylon_nacelle_C4_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.041882 14 ) );
+        }
+        ww_pylon_nacelle_D1_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.047104 13 ) );
+        }
+        ww_pylon_nacelle_D2_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0529771 13 ) );
+        }
+        ww_pylon_nacelle_D3_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0595824 13 ) );
+        }
+        ww_pylon_wing_PS_A4_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0155871 15 ) ( 0.0595824 13 ) );
+        }
+        ww_pylon_wing_PS_B1_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.01725 15 ) ( 0.0595824 13 ) );
+        }
+        ww_pylon_wing_PS_B2_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0190903 15 ) ( 0.0595824 13 ) );
+        }
+        ww_pylon_wing_PS_B3_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0211268 15 ) ( 0.0595824 13 ) );
+        }
+        ww_pylon_wing_PS_B4_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0233807 14 ) ( 0.0595824 13 ) );
+        }
+        ww_pylon_wing_PS_C1_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.025875 14 ) ( 0.0595824 13 ) );
+        }
+        ww_pylon_wing_PS_C2_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0286354 14 ) ( 0.0595824 13 ) );
+        }
+        ww_pylon_wing_PS_C3_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0316903 14 ) ( 0.0595824 13 ) );
+        }
+        ww_pylon_wing_PS_C4_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0350711 14 ) ( 0.0595824 13 ) );
+        }
+        ww_pylon_wing_PS_D1_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0388125 14 ) ( 0.0595824 13 ) );
+        }
+        ww_pylon_wing_PS_D2_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0429531 14 ) ( 0.0595824 13 ) );
+        }
+        ww_pylon_wing_PS_D3_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0475354 13 ) );
+        }
+        ww_stabilizer_horizontal_SS_A1_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.023 14 ) ( 0.5 12 ) );
+        }
+        ww_stabilizer_horizontal_SS_A2_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0254537 14 ) ( 0.53125 12 ) );
+        }
+        ww_stabilizer_horizontal_SS_A3_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0281691 14 ) ( 0.5625 12 ) );
+        }
+        ww_stabilizer_horizontal_SS_A4_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0311743 14 ) ( 0.59375 12 ) );
+        }
+        ww_stabilizer_horizontal_SS_B1_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0345 14 ) ( 0.625 12 ) );
+        }
+        ww_stabilizer_horizontal_SS_B2_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0381805 14 ) ( 0.65625 12 ) );
+        }
+        ww_stabilizer_horizontal_SS_B3_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0422537 14 ) ( 0.6875 12 ) );
+        }
+        ww_stabilizer_horizontal_SS_B4_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0467614 13 ) ( 0.71875 12 ) );
+        }
+        ww_stabilizer_horizontal_SS_C1_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.05175 13 ) ( 0.75 12 ) );
+        }
+        ww_stabilizer_horizontal_SS_C2_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0572708 13 ) ( 0.78125 12 ) );
+        }
+        ww_stabilizer_horizontal_SS_C3_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0633805 13 ) ( 0.8125 12 ) );
+        }
+        ww_stabilizer_horizontal_SS_C4_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0701421 13 ) ( 0.84375 12 ) );
+        }
+        ww_stabilizer_horizontal_SS_D1_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.077625 13 ) ( 0.875 12 ) );
+        }
+        ww_stabilizer_horizontal_SS_D2_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0859062 13 ) ( 0.90625 12 ) );
+        }
+        ww_stabilizer_horizontal_PS_A1_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.023 14 ) );
+        }
+        ww_stabilizer_horizontal_PS_A2_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0254537 14 ) );
+        }
+        ww_stabilizer_horizontal_PS_A3_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0281691 14 ) );
+        }
+        ww_stabilizer_horizontal_PS_A4_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0311743 14 ) );
+        }
+        ww_stabilizer_horizontal_PS_B1_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0345 14 ) );
+        }
+        ww_stabilizer_horizontal_PS_B2_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0381805 14 ) );
+        }
+        ww_stabilizer_horizontal_PS_B3_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0422537 14 ) );
+        }
+        ww_stabilizer_horizontal_PS_B4_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0467614 13 ) );
+        }
+        ww_stabilizer_horizontal_PS_C1_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.05175 13 ) );
+        }
+        ww_stabilizer_horizontal_PS_C2_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0572708 13 ) );
+        }
+        ww_stabilizer_horizontal_PS_C3_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0633805 13 ) );
+        }
+        ww_stabilizer_horizontal_PS_C4_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0701421 13 ) );
+        }
+        ww_stabilizer_horizontal_PS_D1_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.077625 13 ) );
+        }
+        ww_stabilizer_horizontal_PS_D2_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0859062 13 ) );
+        }
+        ww_stabilizer_vertical_A1_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.023 14 ) );
+        }
+        ww_stabilizer_vertical_A2_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0254537 14 ) );
+        }
+        ww_stabilizer_vertical_A3_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0281691 14 ) );
+        }
+        ww_stabilizer_vertical_A4_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0311743 14 ) );
+        }
+        ww_stabilizer_vertical_B1_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0345 14 ) );
+        }
+        ww_stabilizer_vertical_B2_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0381805 14 ) );
+        }
+        ww_stabilizer_vertical_B3_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0422537 14 ) );
+        }
+        ww_stabilizer_vertical_B4_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0467614 13 ) );
+        }
+        ww_stabilizer_vertical_C1_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.05175 13 ) );
+        }
+        ww_stabilizer_vertical_C2_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0572708 13 ) );
+        }
+        ww_stabilizer_vertical_C3_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0633805 13 ) );
+        }
+        ww_stabilizer_vertical_C4_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0701421 13 ) );
+        }
+        ww_stabilizer_vertical_D1_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.077625 13 ) );
+        }
+        ww_stabilizer_vertical_D2_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0859062 13 ) );
+        }
+        ww_stabilizer_vertical_D3_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.0950708 12 ) );
+        }
+        ww_stabilizer_vertical_D4_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.105213 12 ) );
+        }
+        ww_chine_TE_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.00345 15 ) );
+        }
+        ww_flap_TE_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.00345 15 ) );
+        }
+        ww_nacelle_TE_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.00345 15 ) );
+        }
+        ww_pylon_TE_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.00345 15 ) );
+        }
+        ww_slat_TE_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.00345 15 ) );
+        }
+        ww_stabilizer_horizontal_TE_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.00345 15 ) );
+        }
+        ww_stabilizer_vertical_TE_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.00345 15 ) );
+        }
+        ww_wing_TE_BLT
+        {
+            mode            distance;
+            levels          ( ( 0.00345 15 ) );
+        }
+    }
+    locationInMesh  ( -1000 1000 1000 );
+    allowFreeStandingZoneFaces true;
+}
+
+snapControls
+{
+    nSmoothPatch    5;
+    tolerance       2;
+    nSolveIter      20;
+    nRelaxIter      15;
+    nFeatureSnapIter 20;
+    implicitFeatureSnap false;
+    explicitFeatureSnap true;
+    multiRegionFeatureSnap true;
+}
+
+addLayersControls
+{
+    layers
+    {
+        "ww_.*"
+        {
+            nSurfaceLayers  2;
+        }
+    }
+    relativeSizes   true;
+    thicknessModel  finalAndExpansion;
+    finalLayerThickness 0.8;
+    expansionRatio  1;
+    minThickness    1e-10;
+    nGrow           -1;
+    featureAngle    180;
+    slipFeatureAngle 60;
+    nSmoothSurfaceNormals 20;
+    nSmoothThickness 20;
+    nSmoothNormals  20;
+    nSmoothDisplacement 20;
+    maxFaceThicknessRatio 3;
+    maxThicknessToMedialRatio 3;
+    minMedialAxisAngle 90;
+    nMedialAxisIter 40;
+    nRelaxIter      30;
+    nBufferCellsNoExtrude 0;
+    nLayerIter      50;
+    nRelaxedIter    0;
+    nOuterIter      1;
+    meshShrinker    displacementMedialAxis;
+    solver          displacementLaplacian;
+    displacementLaplacianCoeffs
+    {
+        diffusivity     inverseVolume;
+    }
+    layerTerminationAngle -180;
+}
+
+meshQualityControls
+{
+    maxNonOrtho     70;
+    maxBoundarySkewness 20;
+    maxInternalSkewness 4;
+    maxConcave      80;
+    minVol          1e-13;
+    minTetQuality   1e-15;
+    minArea         -1;
+    minTwist        0.02;
+    minDeterminant  1e-08;
+    minFaceWeight   0.01;
+    minVolRatio     0.001;
+    minTriangleTwist -1;
+    relaxed
+    {
+        maxNonOrtho     75;
+        minTetQuality   -1e+30;
+        minTwist        -1;
+    }
+    nSmoothScale    4;
+    errorReduction  0.75;
+}
+
+writeFlags      ( scalarLevels layerSets layerFields );
+
+mergeTolerance  1e-12;
+
+mergePatchFaces off;

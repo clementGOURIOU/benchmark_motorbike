@@ -1,0 +1,85 @@
+FoamFile
+{
+    version         2;
+    format          ascii;
+    class           volScalarField;
+    object          p;
+}
+
+dimensions      [ 1 -1 -2 0 0 0 0 ];
+
+internalField   uniform 18314;
+
+boundaryField
+{
+    cyclic
+    {
+        type            cyclic;
+    }
+    cyclicAMI
+    {
+        type            cyclicAMI;
+    }
+    cyclicACMI
+    {
+        type            cyclicACMI;
+        value           uniform 18314;
+    }
+    cyclicSlip
+    {
+        type            cyclicSlip;
+    }
+    empty
+    {
+        type            empty;
+    }
+    nonuniformTransformCyclic
+    {
+        type            nonuniformTransformCyclic;
+    }
+    processor
+    {
+        type            processor;
+    }
+    processorCyclic
+    {
+        type            processorCyclic;
+    }
+    symmetryPlane
+    {
+        type            symmetryPlane;
+    }
+    symmetry
+    {
+        type            symmetry;
+    }
+    wedge
+    {
+        type            wedge;
+    }
+    overset
+    {
+        type            overset;
+    }
+    "(ff_xmin|ff_zmin)"
+    {
+        type            zeroGradient;
+    }
+    "(ff_xmax|ff_zmax)"
+    {
+        type            fixedValue;
+        value           uniform 18314;
+    }
+    "ww_.*"
+    {
+        type            zeroGradient;
+    }
+    ff_ymin
+    {
+        type            symmetry;
+    }
+    ff_ymax
+    {
+        type            symmetry;
+    }
+}

@@ -1,0 +1,35 @@
+FoamFile
+{
+    version         2;
+    format          ascii;
+    class           dictionary;
+    object          changeDictionaryDict;
+}
+
+internalField   uniform 0.000808016;
+
+nut
+{
+    boundaryField
+    {
+        ww_.*
+        {
+            type            LOTWWallModel;
+            value           uniform 0.000808016;
+            tolerance       1e-09;
+            copyToPatchInternalField 1;
+            RootFinder
+            {
+                type            Newton;
+                eps             1e-09;
+            }
+            Law
+            {
+                type            Spalding;
+            }
+            sampler         Crawling;
+            interpolationType cell;
+            hIsIndex        1;
+        }
+    }
+}

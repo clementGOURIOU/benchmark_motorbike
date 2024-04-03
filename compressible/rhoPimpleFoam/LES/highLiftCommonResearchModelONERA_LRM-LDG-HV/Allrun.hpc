@@ -1,0 +1,110 @@
+#!/bin/sh
+### Script for meshing and running highLiftCommonResearchModelLDGHV
+### (Case 2.4 of the AIAA High-Lift Prediction Workshop 5)
+### Upstream CFD, 2023
+
+# The project leading to this application has received funding from
+# the European High-Performance Computing Joint Undertaking Joint
+# Undertaking (JU) under grant agreement No 956416. The JU receives
+# support from the European Union's Horizon 2020 research and
+# innovation programme and France, United Kingdom, Germany, Italy,
+# Croatia, Spain, Greece, Portugal
+#
+# We acknowledge the EuroHPC Joint Undertaking for awarding this project access to
+# the EuroHPC supercomputer LUMI, hosted by CSC (Finland) and the LUMI consortium
+# through a EuroHPC Development Access call.
+# Some simulations were performed on the national supercomputer HPE Apollo Hawk at
+# the High Performance Computing Center Stuttgart (HLRS) under a test account.
+# The authors gratefully acknowledge the HPC RIVR consortium (www.hpc-rivr.si)
+# and EuroHPC JU (eurohpc-ju.europa.eu) for funding this research by providing
+# computing resources of the HPC system Vega at the Institute of Information
+# Science (www.izum.si).
+
+# This script was developed and tested using 8192 cores on LUMI-C (AMD Epyc Milan)
+
+# name of parallel execution command (e.g. mpirun or srun)
+# Should be adapted to your system.
+parEx="srun"
+
+# name of log files folder
+LOGDIR="logFiles"
+mkdir -p ${LOGDIR}
+
+# clean the directories, only needed for meshing
+./Allclean.mesh
+
+echo -e -n 'Meshing\n'
+(
+    cd system
+    cp controlDict.SHM controlDict
+    cp fvSchemes.SHM fvSchemes
+    cp fvSolution.SHM fvSolution
+    cd ..
+)
+
+# extract feature edges
+surfaceFeatureExtract > ${LOGDIR}/M01_surfaceFeatureExtract.log 2>&1 || exit 1
+
+# generate initial Cartesian mesh via blockMesh
+echo -e -n '   Creating base mesh\n'
+blockMesh > ${LOGDIR}/M02_blockMesh.log 2>&1 || exit 1
+
+# decompose case
+echo -e -n '   Initial decomposition\n'
+${parEx} redistributePar -parallel -decompose -noZero -constant -decomposeParDict system/decomposeParDict_SHM > ${LOGDIR}/M03_decomposePar.log 2>&1 || exit 1
+
+# run snappyHexMesh
+echo -e -n '   Running SHM\n'
+${parEx} snappyHexMesh -parallel -decomposeParDict system/decomposeParDict_SHM -overwrite > ${LOGDIR}/M04_snappyHexMesh.log 2>&1
+
+# run renumberMesh
+echo -e -n '   Optimizing matrices\n'
+${parEx} renumberMesh -parallel -decomposeParDict system/decomposeParDict_SHM -overwrite > ${LOGDIR}/M05_renumberMesh.log 2>&1
+
+# run checkMesh
+echo -e -n '   Checking mesh\n'
+${parEx} checkMesh -constant -parallel -decomposeParDict system/decomposeParDict_SHM > ${LOGDIR}/M06_checkMesh.log 2>&1
+   
+echo -e -n 'Preparing simulation\n'
+
+# initialise 0 folder, remove old postProcessing
+rm -r 0
+cp -r 0.orig 0
+
+cp 0/U_WMLES 0/U
+rm 0/U_RANS 0/U_WMLES
+
+# decompose CFD domain, only decompose fields if mesh already present (should be always the case)
+echo -e -n '   Decomposing fields\n'
+decomposePar -copyZero -fields -decomposeParDict system/decomposeParDict_SHM > ${LOGDIR}/R01_decomposeParField.log 2>&1 || exit 1
+   
+# init boundary layer
+${parEx} applyBoundaryLayer -parallel -ybl 0.5 > ${LOGDIR}/R02_applyBoundaryLayer.log 2>&1
+
+echo -e -n '   Adjusting boundary conditions for WMLES\n'
+# change BC of nut to include Mukhas BC after RANS
+${parEx} changeDictionary -parallel -dict system/changeDictionary_nut.dict -enableFunctionEntries > ./${LOGDIR}/R03_changeDictionary_nut.log 2>&1
+
+# change BC of velocity from RANS ramping to WMLES condition
+${parEx} changeDictionary -parallel -dict system/changeDictionary_u.dict -enableFunctionEntries > ./${LOGDIR}/R04_changeDictionary_u.log 2>&1
+
+
+echo -e -n 'Run Simulation\n'
+
+# run solver in parallel with WMLES settings
+echo -e -n '   Copy control files for WMLES\n'
+system_copy="fvSolution fvSchemes"
+for i_copy in $system_copy; do
+    cp system/${i_copy}.SRS system/${i_copy}
+done
+cp constant/turbulenceProperties.SRS constant/turbulenceProperties
+
+# change BC of hSample for walls after RANS (or to restart simulation with different h value for testing)
+${parEx} changeDictionary -parallel -dict system/changeDictionary_hSample.dict -enableFunctionEntries > ./${LOGDIR}/S01_changeDictionary_hSample.log 2>&1
+
+echo -e -n '   Running initial SRS\n'
+cp system/controlDict.SRS.init system/controlDict
+
+${parEx} rhoPimpleFoam -parallel > ${LOGDIR}/S02_rhoPimpleFoam.log 2>&1
+
+#------------------------------------------------------------------------------

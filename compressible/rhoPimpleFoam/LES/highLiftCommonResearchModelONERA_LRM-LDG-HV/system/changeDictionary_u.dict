@@ -1,0 +1,24 @@
+FoamFile
+{
+    version         2;
+    format          ascii;
+    class           dictionary;
+    object          changeDictionaryDict;
+}
+
+
+dimensions      [ 0 1 -1 0 0 0 0 ];
+
+internalField   uniform ( 64.0694 0 22.9402 );
+
+U
+{
+    boundaryField
+    {
+        "(ff_xMin|ff_zMin)"
+        {
+            type            fixedValue;
+            value           uniform ( 64.0694 0 22.9402 );
+        }
+    }
+}

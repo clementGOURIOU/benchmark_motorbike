@@ -1,0 +1,43 @@
+FoamFile
+{
+    version         2;
+    format          ascii;
+    class           dictionary;
+    object          controlDict;
+}
+
+application     rhoPimpleFoam;
+
+startFrom       latestTime;
+
+startTime       0;
+
+stopAt          endTime;
+
+endTime         0.0024;
+
+deltaT          1.2e-05;
+
+writeControl    timeStep;
+
+writeInterval   2000;
+
+purgeWrite      2;
+
+writeFormat     binary;
+
+writePrecision  8;
+
+writeCompression off;
+
+timeFormat      general;
+
+timePrecision   7;
+
+runTimeModifiable true;
+
+libs            ( "libWallModelledLES.so" "libturbulenceModelSchemes.so");
+
+functions
+{
+}
