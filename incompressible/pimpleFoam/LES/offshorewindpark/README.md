@@ -55,7 +55,11 @@ Meteorological wind direction range from 314 to 329 degree
 
 `./Allwmake`
 
-2. Prepare the grid with the script Allpre
+2a. Edit the script Allpre to choose the desired grid size of 12M or 103M elements 
+
+`vi Allpre`
+
+2b. Prepare the grid with the script Allpre
 
 `./Allpre`
 

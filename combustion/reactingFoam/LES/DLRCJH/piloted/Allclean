@@ -7,4 +7,4 @@
 # Cleaning up the case
 cleanCase
 
-rm -rf 0 constant/polyMesh
+rm -rf 0 constant/polyMesh constant/extendedFeatureEdgeMesh

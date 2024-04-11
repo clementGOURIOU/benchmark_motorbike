@@ -72,7 +72,7 @@ The utility *mapFieldsPar* can be used for propagation of the developed flow fro
 ## Models
 - Solver: **reactingFoam** is used as the top-level solver.
 - Turbulence: LES kinetic energy equation model (*kEqn*).
-- Combustion: the fuel mixture is inhomogeneous since the main and pilot nozzles are operated with the different air-to-fuel ratios (when pilots are active). The *PaSR* combustion model is employed (further information is reported in the *known issues* section).
+- Combustion: the fuel mixture is inhomogeneous since the main and pilot nozzles are operated with the different air-to-fuel ratios (when pilots are active). The *EDC* combustion model is employed (further information is reported in the *known issues* section).
 
 ## Numerics
 LES modeling relies on high accuracy of the discretization; the following schemes are utilized: linear, limitedLinear, limitedLinear01. For the velocity convection limitedLinearV is used. For the temporal discretization, the first-order implicit Euler scheme is adopted (particularly in the case of non-initialized fields). Pure second order time schemes such as crankNicolson 1 and backward proved to be unstable in the present case. Linear solvers utilized are based on the conjugate gradients method. The PIMPLE loop has 2 outer and 1 inner corrections with 0 non-orthogonal corrections. Maximum acceptable Courant number is 0.3 but can be extended up to 0.6. Utility renumberMesh can be used to reduce the bandwidth of the resulting matrix and accelerate the linear solver execution.
@@ -187,7 +187,7 @@ Detailed finite-rate chemical kinetics is required to accurately describe combus
 ## Instructions
 
 ### Preliminary
-- Compile the model *GPUChemistryModel* via the *Allwmake* file contained in the folder *thermophysicalModels* (under development for OpenFOAM-v2212)
+- Compile the model *GPUChemistryModel* via the *Allwmake* file contained in the folder *thermophysicalModels* (for OpenFOAM-v9, under development for OpenFOAM-v2306)
     - first, the Allwmake automatically compiles the NVIDIA CUDA scripts
     - then, the Allwmake compiles the CPU scripts to add the GPUChemistryModel to the runTime selection table
 - Set the *constant/chemistryProperties* file to develop the simulation with the new model
