@@ -1,4 +1,4 @@
-// Parametrized m4 script for the blockMeshDict generation for the ERCOFTAC 
+// Parametrized m4 script for the blockMeshDict generation for the ERCOFTAC
 // diffuser.
 //
 // The development was originaly done by:
@@ -17,7 +17,7 @@
 //
 // Run using
 // m4 -P blockMeshDict.m4 > blockMeshDict
-// 
+//
 m4_dnl>
 m4_dnl> ------------------------------------------------------------------------
 m4_dnl> *** m4 DEFINITIONS ***
@@ -25,10 +25,10 @@ m4_dnl>
 m4_changecom(//)m4_changequote([,]) m4_dnl>
 m4_define(calc, [m4_esyscmd(perl -e 'use Math::Trig; printf ($1)')]) m4_dnl>
 m4_define(VCOUNT, 0) m4_dnl>
-m4_define( 
-    vlabel, 
+m4_define(
+    vlabel,
     [ m4_dnl>
-        [// ]Vertex $1 = VCOUNT m4_define($1, VCOUNT) m4_define([VCOUNT], 
+        [// ]Vertex $1 = VCOUNT m4_define($1, VCOUNT) m4_define([VCOUNT],
         m4_incr(VCOUNT)) m4_dnl>
     ] m4_dnl>
 ) m4_dnl>
@@ -37,73 +37,73 @@ m4_dnl>
 m4_dnl> ------------------------------------------------------------------------
 m4_dnl> *** AUXILLARY PERL SCRIPTS ***
 m4_dnl>
-m4_define(calcCellsNumber, [m4_esyscmd(perl -e ' 
-    # Compute number of cells iteratively. 
-    # Arguments: 
-    #   1 - length of the first cell 
-    #   2 - Start coordinate of the block of the considered axis 
-    #   3 - End coordinate of the block of the considered axis 
-    #   4 - simpleGrading coefficient 
-    # a - cell-to-cell expansion ratio; n - number of cells along the axis. 
-    $n = 10;  # Start value 
-    $l1 = $1; 
-    $L = abs($3 - $2);  # Length of the block 
-    $g = $4; 
-    # Check whether the simpleGrading equals 1 
-    if (abs($g - 1.0) < 1e-6) 
-    { 
-        $n = $L/$l1; 
-    } 
-    else 
-    { 
-        do 
-        { 
-            $n_prev = $n; 
-            $a = $g**(1/($n - 1)); 
-            $n = log(abs(1 + ($a - 1)*$L/$l1))/log($a); 
-            $err = abs($n - $n_prev); 
-        } 
-        while($err > 1e-2); 
-    } 
-    print(int($n + 0.5)); 
+m4_define(calcCellsNumber, [m4_esyscmd(perl -e '
+    # Compute number of cells iteratively.
+    # Arguments:
+    #   1 - length of the first cell
+    #   2 - Start coordinate of the block of the considered axis
+    #   3 - End coordinate of the block of the considered axis
+    #   4 - simpleGrading coefficient
+    # a - cell-to-cell expansion ratio; n - number of cells along the axis.
+    $n = 10;  # Start value
+    $l1 = $1;
+    $L = abs($3 - $2);  # Length of the block
+    $g = $4;
+    # Check whether the simpleGrading equals 1
+    if (abs($g - 1.0) < 1e-6)
+    {
+        $n = $L/$l1;
+    }
+    else
+    {
+        do
+        {
+            $n_prev = $n;
+            $a = $g**(1/($n - 1));
+            $n = log(abs(1 + ($a - 1)*$L/$l1))/log($a);
+            $err = abs($n - $n_prev);
+        }
+        while($err > 1e-2);
+    }
+    print(int($n + 0.5));
 ')]) m4_dnl>
 m4_dnl>
-m4_define(calcCellsNumberInnerOGrid, [m4_esyscmd(perl -e ' 
-    # Calculate number of cells in the radial direction of an O-block which 
-    # has an rectangular block with arcs on the inner side. 
-    # Arguments: 
-    #   1 - length of the last cell of the outer O-grid 
-    #   2 - radial inner corner coordinate 
-    #   3 - radial arc center coordinate 
-    #   4 - radial outer corner coordinate 
-    # n - number of cells along the considered axis; 
-    $lLastOuterO = $1; 
-    $drArc = $2 - $3;  # Radial delta between the inner corner and arc center 
-    $L = $4; # - $2;  # Radial length of the block 
-    $n = ($L + $drArc/2)/$lLastOuterO; 
-    print(int($n + 0.5)); 
+m4_define(calcCellsNumberInnerOGrid, [m4_esyscmd(perl -e '
+    # Calculate number of cells in the radial direction of an O-block which
+    # has an rectangular block with arcs on the inner side.
+    # Arguments:
+    #   1 - length of the last cell of the outer O-grid
+    #   2 - radial inner corner coordinate
+    #   3 - radial arc center coordinate
+    #   4 - radial outer corner coordinate
+    # n - number of cells along the considered axis;
+    $lLastOuterO = $1;
+    $drArc = $2 - $3;  # Radial delta between the inner corner and arc center
+    $L = $4; # - $2;  # Radial length of the block
+    $n = ($L + $drArc/2)/$lLastOuterO;
+    print(int($n + 0.5));
 ')]) m4_dnl>
 m4_dnl>
-m4_define(calcCellsNumberHGrid, [m4_esyscmd(perl -e ' 
-    # Calculate number of cells in the radial direction of the H-block whose 
-    # edges are arcs neighboring to an outer O-grid. 
-    # Arguments: 
-    #   1 - length of the last cell of the outer O-grid 
-    #   2 - radial inner corner coordinate 
-    #   3 - radial arc center coordinate 
-    # a - cell-to-cell expansion ratio; n - number of cells along the axis. 
-    $lLastOuterO = $1; 
-    $drArc = $2 - $3;  # Radial delta between the inner corner and arc center 
-    $L = 2*$3; # - $2;  # Radial length of the block 
-    $n = ($L - $drArc)/$lLastOuterO; 
-    print(int($n + 0.5)); 
+m4_define(calcCellsNumberHGrid, [m4_esyscmd(perl -e '
+    # Calculate number of cells in the radial direction of the H-block whose
+    # edges are arcs neighboring to an outer O-grid.
+    # Arguments:
+    #   1 - length of the last cell of the outer O-grid
+    #   2 - radial inner corner coordinate
+    #   3 - radial arc center coordinate
+    # a - cell-to-cell expansion ratio; n - number of cells along the axis.
+    $lLastOuterO = $1;
+    $drArc = $2 - $3;  # Radial delta between the inner corner and arc center
+    $L = 2*$3; # - $2;  # Radial length of the block
+    $n = ($L - $drArc)/$lLastOuterO;
+    print(int($n + 0.5));
 ')]) m4_dnl>
 m4_dnl>
 m4_dnl> * Not used here. Kept as a backup. *
-m4_define(calcCellsNumberBisect, [m4_esyscmd(perl -e ' 
-    $b = 0; $l = 0; $h = 1; $err = 1; 
-    do 
-    { 
+m4_define(calcCellsNumberBisect, [m4_esyscmd(perl -e '
+    $b = 0; $l = 0; $h = 1; $err = 1;
+    do
+    {
         $m = ($l + $h)/2;
         $a = 1/$m;
         $n = log(1 + ($a - 1)*$2/$1)/log($a);
@@ -118,9 +118,9 @@ m4_define(calcCellsNumberBisect, [m4_esyscmd(perl -e '
             $h = $m;
         }
         $err = abs($b - $m);
-    } 
-    while($err > 1e-6); 
-    print(int($n + 0.5)) 
+    }
+    while($err > 1e-6);
+    print(int($n + 0.5))
 ')]) m4_dnl>
 m4_dnl>
 m4_dnl>
@@ -356,7 +356,7 @@ blocks
     hex (A0 A1 A2 A3 B0 B1 B2 B3 ) AB
     (hNumberOfCells hNumberOfCells zABnumberOfCells)
     simpleGrading (1 1 1)
-    // block5 - positive x O-grid block 2nd belt 
+    // block5 - positive x O-grid block 2nd belt
     hex (A9 A5 A4 A8 B9 B5 B4 B8 ) AB
     (rNumberOfCells2nd hNumberOfCells zABnumberOfCells)
     simpleGrading (rGrading2 1 1)
@@ -394,7 +394,7 @@ blocks
     hex (B0 B1 B2 B3 C0 C1 C2 C3 ) BC
     (hNumberOfCells hNumberOfCells zBCnumberOfCells)
     simpleGrading (1 1 1)
-    // block5 - positive x O-grid block 2nd belt 
+    // block5 - positive x O-grid block 2nd belt
     hex (B9 B5 B4 B8 C9 C5 C4 C8 ) BC
     (rNumberOfCells2nd hNumberOfCells zBCnumberOfCells)
     simpleGrading (rGrading2 1 1)
@@ -432,7 +432,7 @@ blocks
     hex (C0 C1 C2 C3 D0 D1 D2 D3 ) CD
     (hNumberOfCells hNumberOfCells zCDnumberOfCells)
     simpleGrading (1 1 zGradingCD)
-    // block5 - positive x O-grid block 2nd belt 
+    // block5 - positive x O-grid block 2nd belt
     hex (C9 C5 C4 C8 D9 D5 D4 D8 ) CD
     (rNumberOfCells2nd hNumberOfCells zCDnumberOfCells)
     simpleGrading (rGrading2 1 zGradingCD)
@@ -470,7 +470,7 @@ blocks
     hex (D0 D1 D2 D3 E0 E1 E2 E3 ) DE
     (hNumberOfCells hNumberOfCells zDEnumberOfCells)
     simpleGrading (1 1 zGradingDE)
-    // block5 - positive x O-grid block 2nd belt 
+    // block5 - positive x O-grid block 2nd belt
     hex (D9 D5 D4 D8 E9 E5 E4 E8 ) DE
     (rNumberOfCells2nd hNumberOfCells zDEnumberOfCells)
     simpleGrading (rGrading2 1 zGradingDE)
@@ -504,11 +504,11 @@ blocks
     hex (E4 E0 E3 E7 F4 F0 F3 F7 ) EF
     (rNumberOfCells1st hNumberOfCells zEFnumberOfCells)
     simpleGrading (rGrading1 1 zGradingEF)
-    // block4 - central O-grid block 
+    // block4 - central O-grid block
     hex (E0 E1 E2 E3 F0 F1 F2 F3 ) EF
     (hNumberOfCells hNumberOfCells zEFnumberOfCells)
     simpleGrading (1 1 zGradingEF)
-    // block5 - positive x O-grid block 2nd belt 
+    // block5 - positive x O-grid block 2nd belt
     hex (E9 E5 E4 E8 F9 F5 F4 F8 ) EF
     (rNumberOfCells2nd hNumberOfCells zEFnumberOfCells)
     simpleGrading (rGrading2 1 zGradingEF)
@@ -537,8 +537,8 @@ edges
     arc A5 A6 (0 calc(rRelAo*rA) zA)
     arc A6 A7 (-calc(rRelAo*rA) 0 zA)
     arc A7 A4 (0 -calc(rRelAo*rA) zA)
-    arc A8  A9  (rA 0 zA) 
-    arc A9  A10 (0 rA zA) 
+    arc A8  A9  (rA 0 zA)
+    arc A9  A10 (0 rA zA)
     arc A10 A11 (-rA 0 zA)
     arc A11 A8  (0 -rA zA)
 

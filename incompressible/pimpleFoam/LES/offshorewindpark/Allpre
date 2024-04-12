@@ -11,6 +11,12 @@
 # innovation programme and France, United Kingdom, Germany, Italy,
 # Croatia, Spain, Greece, Portugal
 
+### Choose the desired grid size of 12M or 103M elements
+grid_size="12M"
+#grid_size="103M"
+
+# Use the correct controlDict for the desired grid resolution
+cp system/controlDict_${grid_size} system/controlDict
 
 # Source tutorial run functions
 . $WM_PROJECT_DIR/bin/tools/RunFunctions
@@ -22,8 +28,8 @@ loopRefineMesh () {
         done
 }
 
-
-runApplication blockMesh
+# Run blockMesh with the dictionary for the desired grid size
+runApplication blockMesh -dict system/blockMeshDict_${grid_size}
 runApplication -s iter1 transformPoints -rollPitchYaw '(0 0 123.17)'
 runApplication -s iter2 transformPoints -translate '( 319.5 5963.5 0)'
 runApplication -s iter3 transformPoints -scale 1000

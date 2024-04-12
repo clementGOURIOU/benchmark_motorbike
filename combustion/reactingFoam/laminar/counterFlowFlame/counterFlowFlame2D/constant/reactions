@@ -1,0 +1,21 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2306                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+
+reactions
+{
+    methaneReaction
+    {
+        type     irreversibleArrhenius;
+        reaction "CH4 + 2O2 = CO2 + 2H2O";
+        A        5.2e16;
+        beta     0;
+        Ta       14906;
+    }
+}
+
+// ************************************************************************* //

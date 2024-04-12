@@ -3,7 +3,7 @@
 Sergey Lesnik and Henrik Rusche, Wikki GmbH, Germany
 
 ## Copyright
-Copyright (c) 2022-2023 Wikki GmbH
+Copyright (c) 2022-2024 Wikki GmbH
 
 <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons Licence" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a><br />
 
@@ -12,18 +12,20 @@ This work is licensed under a <a rel="license" href="http://creativecommons.org/
 ## Introduction
 The case is based on the experiment carried out by Pitz and Daily[^PitzDaily], who measured a combustion flow formed at a backward facing step. The goal of the work was to study the turbulent shear layer during a combustion process in conditions similar to those of the industrial and aircraft gas turbine combustors. The premixed combustion is stabilized by recirculation of hot products which are mixed with cold reactants in a turbulent shear layer. The setup with a backward facing step is one of the simplest configurations reproducing these conditions.
 
+![pitzDaily3D_62M_exaFOAM_RT_720p.png](figures/pitzDaily3D_62M_exaFOAM_RT_720p.png)
+
 ## Experimental Configuration
-The combustor is quasi two-dimensional because of the rectangular cross-section. The air and propane are mixed in a premix channel of 1 m length filled with stainless steel wool for turbulence reduction. The premix channel is $`H=`$ 51 mm high (y-direction) and 173 mm wide (z-direction). The flow cross-section converges over the backside of the step by a factor of 2 in y-direction keeping the same width. Downstream of the step, the stream enters the test section, which is 220 mm long (x-direction) and has the same cross-section as the premix channel. The outlet section introduces a contraction with a 2:1 area ratio.
+The combustor is quasi two-dimensional because of the rectangular cross-section. The air and propane are mixed in a premix channel of 1 m length filled with stainless steel wool for turbulence reduction. The premix channel is $H=$ 51 mm high (y-direction) and 173 mm wide (z-direction). The flow cross-section converges over the backside of the step by a factor of 2 in y-direction keeping the same width. Downstream of the step, the stream enters the test section, which is 220 mm long (x-direction) and has the same cross-section as the premix channel. The outlet section introduces a contraction with a 2:1 area ratio.
 
 ## Measurements
 The lateral sides (back and front) of the test section are two quartz windows. The transparent walls allow measurements with a laser anemometer. These rely on dried alumina particles with an average diameter of 2e-7 m, which are added to the flow.
 
-The measurements are performed at the planes $`x/H=`$ 0.5, 1, 2, 3, 4, 5, 6, 7, where $`x`$ is a coordinate perpendicular to the cross-section of the test section and directed downstream. The starting point $`x`$ = 0 mm is located at the step edge. The measuring planes are normal to the walls.
+The measurements are performed at the planes $x/H=$ 0.5, 1, 2, 3, 4, 5, 6, 7, where x is a coordinate perpendicular to the cross-section of the test section and directed downstream. The starting point x = 0 mm is located at the step edge. The measuring planes are normal to the walls.
 
 ## Flow parameters
-- Air/propane mixture: $`\nu=1 \cdot 10^{−5}`$ m²/s.
-- Average axial velocity at the inlet: $`U_i=`$  6.65 m/s and at the step edge $`U_0=`$ 13.3 m/s.
-- Reynolds number: $`Re_H=U_0 H / \nu=`$ 22000.
+- Air/propane mixture: $\nu=1 \cdot 10^{−5}$ m²/s.
+- Average axial velocity at the inlet: $U_i=$  6.65 m/s and at the step edge $U_0=$ 13.3 m/s.
+- Reynolds number: $Re_H=U_0 H / \nu=$ 22000.
 - Atmospheric pressure at the outlet.
 
 # Numerical Setup
@@ -48,11 +50,11 @@ LES modeling relies on high accuracy of the discretization and thus higher order
 Linear solvers utilized are based on the *conjugate gradients* method. The PIMPLE loop has 2 outer and 1 inner corrections with 0 non-orthogonal corrections. The time step interval is fixed and set to a value such that the maximum Courant number is lower than 0.5. Utility *renumberMesh* is used to reduce the bandwidth of the resulting matrix and accelerate the linear solvers.
 
 ## Mesh
-The mesh consists of hexahedra. It is generated using *pyhton3*, *m4*, *perl* and *blockMesh*. The file with the geometry properties is *system/blockMeshDict.m4*. The lengths of all parts may be varied by altering few variables. The two most important input values are the thickness of the 1st cell in y-direction starting at a wall $`l_\text{wall}`$ and the characteristic cell size in the core region in x-, y- and z-direction $`l_\text{core}`$. *Perl* scripts are introduced to allow a convenient mesh refinement. Therein, the number of block cells in y-direction is calculated based on the inputs using iterative procedures to produce a good quality mesh without jumps in the cell sizes between the blocks. $`l_\text{wall}=`$ 0.02 mm is sufficient to obtain a mesh with y+<1. The vertical wall of the step is not important for the turbulence modeling since the flow is fully detached at this location and therefore the y+ constraint is not applied here.
+The mesh consists of hexahedra. It is generated using *pyhton3*, *m4*, *perl* and *blockMesh*. The file with the geometry properties is *system/blockMeshDict.m4*. The lengths of all parts may be varied by altering few variables. The two most important input values are the thickness of the 1st cell in y-direction starting at a wall $l_\text{wall}$ and the characteristic cell size in the core region in x-, y- and z-direction $l_\text{core}$. *Perl* scripts are introduced to allow a convenient mesh refinement. Therein, the number of block cells in y-direction is calculated based on the inputs using iterative procedures to produce a good quality mesh without jumps in the cell sizes between the blocks. $l_\text{wall}=$ 0.02 mm is sufficient to obtain a mesh with y+<1. The vertical wall of the step is not important for the turbulence modeling since the flow is fully detached at this location and therefore the y+ constraint is not applied here.
 
 ## Boundary Conditions
 | Variable | Description                    | Units    |
-|----------|--------------------------------|----------|
+| -------- | ------------------------------ | -------- |
 | alphat   | Turbulence thermal diffusivity | kg/(ms)  |
 | b        | Regress variable               | -        |
 | k        | Turbulence kinetic energy      | m²/s²    |
@@ -79,28 +81,29 @@ Figure: Isovolume of the vorticity magnitude colored by velocity magnitude.
 
 Figure: Velocity, temperature and pressure in the mid-plane.
 
-The validation is performed using 3 million cells case by comparing the mean velocity and turbulent intensity profiles in x- and y-directions at x-normal planes described in section [measurements](#measurements). The evaluation planes are situated at several distances downstream of the step, whereby $`x`$ = 0 mm is the step edge.
+The validation is performed using 3 million cells case by comparing the mean velocity and turbulent intensity profiles in x- and y-directions at x-normal planes described in section [measurements](#measurements). The evaluation planes are situated at several distances downstream of the step, whereby x = 0 mm is the step edge.
 
-| $`x`$ in mm | $`U`$ mean | $`V`$ mean |
-|-|-|-|
-|0| ![U0.png](figures/U0.png) |
-|25| ![U1.png](figures/U1.png) | ![V1.png](figures/V1.png) |
-|50| ![U2.png](figures/U2.png) | ![V2.png](figures/V2.png) |
-|125| ![U5.png](figures/U5.png) | ![V5.png](figures/V5.png) |
+| x in mm | U mean                    | V mean                    |
+| ------- | ------------------------- | ------------------------- |
+| 0       | ![U0.png](figures/U0.png) |                           |
+| 25      | ![U1.png](figures/U1.png) | ![V1.png](figures/V1.png) |
+| 50      | ![U2.png](figures/U2.png) | ![V2.png](figures/V2.png) |
+| 125     | ![U5.png](figures/U5.png) | ![V5.png](figures/V5.png) |
 
-| $`x`$ in mm | $`u_{rms}`$ | $`v_{rms}`$ |
-|-|-|-|
-|25| ![uRms1.png](figures/uRms1.png) | ![vRms1.png](figures/vRms1.png) |
-|50| ![uRms2.png](figures/uRms2.png) | ![vRms2.png](figures/vRms2.png) |
-|125| ![uRms5.png](figures/uRms5.png) | ![vRms5.png](figures/vRms5.png)|
+| x in mm | $u_{rms}$                       | $v_{rms}$                       |
+| ------- | ------------------------------- | ------------------------------- |
+| 25      | ![uRms1.png](figures/uRms1.png) | ![vRms1.png](figures/vRms1.png) |
+| 50      | ![uRms2.png](figures/uRms2.png) | ![vRms2.png](figures/vRms2.png) |
+| 125     | ![uRms5.png](figures/uRms5.png) | ![vRms5.png](figures/vRms5.png) |
 
-The comparison shows that the mean velocity agrees well with the experimental results. Whereas the streamwise velocity component $`U`$ shows good agreement, the transverse component $`V`$ exhibits some deviations. At $`x`$ = 50 mm, the mean of $`V`$ from the experiment points mainly upwards with a maximum of 0.15 m/s whereas the calculation predicts downward orientation of the velocity. The comparison of the Reynolds normal stresses $`u_{rms}`$ and $`v_{rms}`$ shows good agreement whereby the shear layer seems to be wider in the calculations results, which can be seen from the profiles at $`x`$ = 25 mm and 50 mm.
+The comparison shows that the mean velocity agrees well with the experimental results. Whereas the streamwise velocity component U shows good agreement, the transverse component V exhibits some deviations. At x = 50 mm, the mean of V from the experiment points mainly upwards with a maximum of 0.15 m/s whereas the calculation predicts downward orientation of the velocity. The comparison of the Reynolds normal stresses $u_{rms}$ and $v_{rms}$ shows good agreement whereby the shear layer seems to be wider in the calculations results, which can be seen from the profiles at x = 25 mm and 50 mm.
 
 One of the reasons for the discrepancies may be the turbulence boundary condition at the inlet. The velocity is set to a fixed value. An alternative approach may be usage of a synthetic turbulence model for the BC. None of such models available in OpenFOAM is included in the setup since all of them are relatively new and therefore poorly tested. Furthermore, the walls are considered to be adiabatic (Neumann temperature BC) according to the setup from Weller[^Weller], whereas the walls in the experiment do certainly conduct heat. A fixed temperature BC would be more appropriate but no information on the experimental wall temperature is available.
 
 
 # Microbenchmark
-- Known to run with OpenFOAM-v2106. For meshing and postprocessing additional software is needed: m4, perl, python3, gnuplot.
+- Known to run with OpenFOAM-v2106 compiled with double precision (WM_PRECISION_OPTION=DP).
+- For meshing and postprocessing additional software is needed: m4, perl, python3, gnuplot.
 - Two cases are provided: 3M, 62M with approx. 3 and 62 million cells.
 - Two setups for each mesh size are provided
 	- *fixedTol*: the tolerances of the linear solvers are fixed, that is a usual setup for a production run. The execution time fluctuations between the time steps are large and are not only dependent on the mesh size but also on the decomposition (e.g. number of processors). In the context of the microbenchmark, it is used to provide mean iteration numbers for the *fixedIter* setup.
@@ -109,8 +112,8 @@ One of the reasons for the discrepancies may be the turbulence boundary conditio
 
 ## Instructions
 ### Restart files
-In order to enable restarts developed fields for the two mesh sizes are provided on the e4 platform (see access instructions at https://team.exafoam.eu/projects/exafoam/wiki) under:
-/data/exafoam/wp2-validation/microbenchmarks/pitzDaily3DRestart
+In order to enable restarts, meshes and corresponding developed fields are provided on the DaRUS data repository under:
+https://doi.org/10.18419/darus-3744
 
 ### Preparation
 - *fixedIter* run does not need to be executed as a restart. The time step is set to be 1000 times smaller than the numerically and physically reasonable one (compare to *fixedTol* settings). This allows to start from the non-initialized fields ("0_orig" folder). Nevertheless, such a run may fail and restart fields should be downloaded and placed into the "0" folder instead. Iteration numbers are set according to *fixedTol* runs for the two mesh sizes:

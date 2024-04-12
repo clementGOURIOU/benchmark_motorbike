@@ -1,13 +1,14 @@
 /*--------------------------------*- C++ -*----------------------------------*\
- =========                |
- \      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
-  \    /   O peration     | Website:  https://openfoam.org
-   \  /    A nd           | Version:  dev                                   
-    \/     M anipulation  |
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2306                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
 FoamFile
 {
     format      ascii;
+    version     2.0;
     class       dictionary;
     object      blockMeshDict;
 }
@@ -15,10 +16,10 @@ FoamFile
 
 #include "${FOAM_CASE}/constant/caseSettings"
 
-scale 0.001;
+convertToMeters 0.001;
 
 //- INPUT
-xGradingChamber 5;
+xGradingChamber 1.1;
 
 //- CONSTANT DATA
 
@@ -34,8 +35,8 @@ zMax 47.5;
 
 //- AUTOMATIC CELLS
 additionalCells 12;
-nCellsXTank #calc "int( ($xMax - $xMin) / $:mesh.avgMeshSize + $additionalCells)";
-nCellsYTank #calc "int( ($yMax - $yMin) / $:mesh.avgMeshSize + $additionalCells)";
+nCellsXTank #calc "int( ($xMax - $xMin) / $!mesh/avgMeshSize + $additionalCells)";
+nCellsYTank #calc "int( ($yMax - $yMin) / $!mesh/avgMeshSize + $additionalCells)";
 
 //- GRADING
 xGradingChamberRev #calc "1.0 / $xGradingChamber";
@@ -56,11 +57,18 @@ vertices
 
 blocks
 (
-    hex ( 0 1 2 3 4 5 6 7 ) ($nCellsXTank $nCellsYTank $nCellsYTank) simpleGrading ($xGradingChamber 1.0 1.0)
+    hex ( 0 1 2 3 4 5 6 7 )        ($nCellsXTank $nCellsYTank $nCellsYTank) simpleGrading ($xGradingChamber 1.0 1.0)
 );
 
 edges
 ();
+
+defaultPatch
+{
+    name walls;
+    type wall;
+}
+
 
 boundary
 (

@@ -5,23 +5,51 @@
 #We stop this script when we encounter a problem
 trap "exit -1" ERR
 
-setKeyword () {
-    _entry="$1"
-    _value="$2"
-    _file="$3"
-
-    foamDictionary -entry "$_entry" -set "$_value" "$_file" > /dev/null
-}
-
 ./makeMesh $1
 
 if [ -n "$1" ] && [ "$1" -gt 1 ];
 then
     runParallel setFields
+    
+    #- preliminary cold run
+    foamDictionary -entry "chemistry" -set "off" "constant/chemistryProperties" > /dev/null
+    foamDictionary -entry "active" -set "false" "constant/combustionProperties" > /dev/null
+    foamDictionary -entry "combustionModel" -set "none" "constant/combustionProperties" > /dev/null
+    foamDictionary -entry "endTime" -set "0.05" "system/controlDict" > /dev/null
+    foamDictionary -entry "maxCo" -set "0.8" "system/controlDict" > /dev/null
+    foamDictionary -entry "maxDeltaT" -set "2e-6" "system/controlDict" > /dev/null
     runParallel $(getApplication)
+
+    #- hot run
+    foamDictionary -entry "chemistry" -set "on" "constant/chemistryProperties" > /dev/null
+    foamDictionary -entry "active" -set "true" "constant/combustionProperties" > /dev/null
+    foamDictionary -entry "combustionModel" -set "EDC" "constant/combustionProperties" > /dev/null
+    foamDictionary -entry "endTime" -set "0.15" "system/controlDict" > /dev/null
+    foamDictionary -entry "maxCo" -set "0.25" "system/controlDict" > /dev/null
+    foamDictionary -entry "maxDeltaT" -set "5e-7" "system/controlDict" > /dev/null
+    runParallel $(getApplication)
+
 
 else
     runApplication setFields
+
+    #- preliminary cold run
+    foamDictionary -entry "chemistry" -set "off" "constant/chemistryProperties" > /dev/null
+    foamDictionary -entry "active" -set "false" "constant/combustionProperties" > /dev/null
+    foamDictionary -entry "combustionModel" -set "none" "constant/combustionProperties" > /dev/null
+    foamDictionary -entry "endTime" -set "0.05" "system/controlDict" > /dev/null
+    foamDictionary -entry "maxCo" -set "0.8" "system/controlDict" > /dev/null
+    foamDictionary -entry "maxDeltaT" -set "2e-6" "system/controlDict" > /dev/null
     runApplication $(getApplication)
+
+    #- hot run
+    foamDictionary -entry "chemistry" -set "on" "constant/chemistryProperties" > /dev/null
+    foamDictionary -entry "active" -set "true" "constant/combustionProperties" > /dev/null
+    foamDictionary -entry "combustionModel" -set "EDC" "constant/combustionProperties" > /dev/null
+    foamDictionary -entry "endTime" -set "0.15" "system/controlDict" > /dev/null
+    foamDictionary -entry "maxCo" -set "0.25" "system/controlDict" > /dev/null
+    foamDictionary -entry "maxDeltaT" -set "5e-7" "system/controlDict" > /dev/null
+    runApplication $(getApplication)
+
 fi
 
