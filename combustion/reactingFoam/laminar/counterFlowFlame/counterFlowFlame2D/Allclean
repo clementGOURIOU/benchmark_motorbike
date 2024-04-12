@@ -1,0 +1,12 @@
+#!/bin/bash
+# 
+# Source clean functions
+. $WM_PROJECT_DIR/bin/tools/CleanFunctions
+
+rm -rf log.* > /dev/null 2>&1
+rm -rf postProcessing > /dev/null 2>&1
+rm -r constant/polyMesh dynamicMesh > /dev/null 2>&1
+rm -rf 0 > /dev/null 2>&1
+cleanCase
+
+

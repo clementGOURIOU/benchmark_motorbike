@@ -1,13 +1,14 @@
 /*--------------------------------*- C++ -*----------------------------------*\
- =========                |
- \      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
-  \    /   O peration     | Website:  https://openfoam.org
-   \  /    A nd           | Version:  dev                                   
-    \/     M anipulation  |
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2306                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
 FoamFile
 {
     format      ascii;
+    version     2.0;
     class       dictionary;
     object      snappyHexMeshDict;
 }
@@ -25,29 +26,27 @@ geometry
         type triSurfaceMesh;
         name DLRCJH;
     }
-/*
-    refineCylinder
-    {
-        type searchableCylinder;
-        point1 (-0.4    -0.00999  0);
-        point2 (-0.0035 -0.00999  0);
-        radius 0.041;
-    }
-*/
-    refineChamberExternal
+
+    refineChamber1
     {
         type searchableBox;
-        min (0.0025 -0.043 -0.038);
-        max (0.390   0.022  0.038);
+        min (-0.035 -0.039 -0.04);
+        max ( 0.215  0.031  0.04);
     }
-/*
-    refineChamberInternal
+
+    refineChamber2
     {
         type searchableBox;
-        min (0.0035 -0.0415 -0.035);
-        max (0.300   0.016   0.035);
+        min ( 0.00 -0.0325 -0.035);
+        max ( 0.17  0.0125  0.035);
     }
-*/
+    
+    refinePipes
+    {
+        type searchableBox;
+        min (-0.0625  0.01095 -0.04);
+        max ( 0.0160  0.0465  0.04);
+    }
 };
 
 // Settings for the castellatedMesh generation.
@@ -56,7 +55,7 @@ castellatedMeshControls
     // Refinement parameters
     // ~~~~~~~~~~~~~~~~~~~~~
 
-    maxLocalCells 10000000;
+    maxLocalCells 40000000;
     maxGlobalCells 100000000;
     minRefinementCells 20;
     maxLoadUnbalance 0.10;
@@ -75,7 +74,7 @@ castellatedMeshControls
     {
         DLRCJH    
         { 
-            level (1 2); 
+            level (1 1); 
             patchInfo 
             { 
                 type wall; 
@@ -88,25 +87,24 @@ castellatedMeshControls
 
     refinementRegions
     {
-/*
-        refineCylinder
+        refineChamber1
         {
             mode inside;
             levels ((1e-5 1));
         }
-*/
-        refineChamberExternal
-        {
-            mode inside;
-            levels ((1e-5 1));
-        }
-/*
-        refineChamberInternal
+
+        refineChamber2
         {
             mode inside;
             levels ((1e-5 2));
         }
-*/
+
+
+        refinePipes
+        {
+            mode inside;
+            levels ((1e-5 2));
+        }
     }
 
     locationInMesh (0.005123 0.000123 0.000123);

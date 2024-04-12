@@ -1,0 +1,86 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2306                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      controlDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+application     reactingFoam;
+
+startFrom       startTime;
+
+startTime       0;
+
+stopAt          endTime;
+
+endTime         0.5;
+
+deltaT          1e-6;
+
+writeControl    adjustableRunTime;
+
+writeInterval   5e-3;
+
+purgeWrite      0;
+
+writeFormat     ascii;
+
+writePrecision  6;
+
+writeCompression off;
+
+timeFormat      general;
+
+timePrecision   6;
+
+runTimeModifiable true;
+
+adjustTimeStep  yes;
+
+maxCo           0.3;
+
+maxDeltaT	2e-5;
+
+functions
+{
+    #includeFunc Qdot;
+    #include "sample";
+
+    cuttingPlane
+    {
+        type            surfaces;
+        libs            ("libsampling.so");
+        writeControl    writeTime;
+
+        surfaceFormat   vtk;
+        writeFormat     ascii;
+        fields          (p U T CH4 O2 H2O CO2 Qdot);
+
+        interpolationScheme cellPoint;
+
+        surfaces
+        (
+            slice
+            {
+                type            cuttingPlane;
+                planeType       pointAndNormal;
+                point           (0 0 0);
+                normal          (0 0 1);
+                interpolate     true;
+            }
+        );
+    }
+}
+
+
+// ************************************************************************* //

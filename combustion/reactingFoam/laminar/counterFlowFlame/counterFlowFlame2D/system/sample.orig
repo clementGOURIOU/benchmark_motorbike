@@ -1,0 +1,24 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2106                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+axialLines
+{
+
+    nPoints         100;    
+    start           ( 0 0 0 );
+    end             ( 0.02 0 0 );
+
+    fields          ( U p O2 CH4 CO2 H2O Qdot T);
+
+    axis            x;
+
+    #includeEtc "caseDicts/postProcessing/graphs/graph.cfg"
+    #includeEtc "caseDicts/postProcessing/graphs/graphUniform.cfg"
+}
+
+// ************************************************************************* //

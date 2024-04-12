@@ -1,0 +1,36 @@
+#!/bin/bash
+# 
+cd "${0%/*}" || exit                                # Run from this directory
+. ${WM_PROJECT_DIR:?}/bin/tools/RunFunctions        # Tutorial run functions
+trap "exit -1" ERR
+#------------------------------------------------------------------------------
+
+./Allclean
+
+# set number of cells
+if [ "$1" ]
+then
+    nCellsX=$1;
+else
+    nCellsX=1000;
+fi
+
+cp -r system/blockMeshDict.orig system/blockMeshDict
+foamDictionary system/blockMeshDict -entry nCellsX -set $nCellsX > /dev/null 2>&1
+cp -r system/sample.orig system/sample
+foamDictionary system/sample -entry axialLines/nPoints -set $nCellsX > /dev/null 2>&1
+
+#- build mesh
+runApplication blockMesh
+
+#- set initial conditions
+cp -r 0.bak 0
+
+
+#- decompose
+runApplication decomposePar
+
+#- run Application
+runParallel $(getApplication)
+
+

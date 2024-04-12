@@ -130,9 +130,10 @@ adjoint equations.
 
 ### Preparation
 1. Download and compile the 'feature-unsteady-adjoint' branch (see [Microbenchmark](#microbenchmark)).
-2. Download the mesh and initial flow solution from the E4 cluster (see access
-   instructions at https://team.exafoam.eu/projects/exafoam/wiki) under:
-   /data/exafoam/wp2-validation/microbenchmarks/TMECarRestart. Place the *polyMesh* folder under *constant*. 
+2. Download the tar ball including the mesh and flow initialisation from the DaRUS [repository](https://doi.org/10.18419/darus-3714) [^Margetis24].
+   Place the *polyMesh* folder under *constant*. 
+   The initial flow solution included in the tar ball as the *0* folder is obtained after running the DDES flow model for $1sec$.
+   If you want to start the simulation from a uniform initialisation instead, rename the *0<span>.</span>org* folder to *0*.
 
 ### Case run
 - Run *Allrun* to solve the flow and adjoint equations and compute the sensitivity derivatives or provide a job submission script that performs the same steps. The script takes an optional argument corresponding to the *endTime* of the flow solution and the *integrationEndTime* of the objective function. 
@@ -144,3 +145,4 @@ This application has been developed as part of the exaFOAM Project https://www.e
 
 ## Footnotes
 [^Griewank2000]: Griewank, A., Walther, A. (2000). Algorithm 799: Revolve: An implementation of checkpointing for the reverse or adjoint mode of  computational differentiation, ACM Transactions on Mathematical Software, Vol. 26(1)
+[^Margetis24]: Margetis, Andreas-Stefanos; Papoutsis-Kiachagias, Evangelos; Giannakoglou, Kyriakos, 2024, "exaFOAM Industrial Benchmark B2 - Unsteady primal and adjoint solution around the TME CHR car", https://doi.org/10.18419/darus-3714, DaRUS, V1

@@ -2,30 +2,31 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Version:  dev
+    \\  /    A nd           | Version:  9
      \\/     M anipulation  |
 \*---------------------------------------------------------------------------*/
 FoamFile
 {
-    format      ascii;
-    class       dictionary;
-    location    "constant";
-    object      combustionProperties;
+    format          ascii;
+    class           dictionary;
+    version         2;
+    object          combustionProperties;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-combustionModel  PaSR;
+combustionModel none;
 
-active true;
+active          false;
 
 PaSRCoeffs
 {
-    Cmix    1;
+    Cmix            1;
 }
 
 EDCCoeffs
 {
-    version v2005;
+    version         v2005;
 }
+
 
 // ************************************************************************* //

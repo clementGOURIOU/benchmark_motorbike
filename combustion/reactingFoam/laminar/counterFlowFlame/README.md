@@ -59,7 +59,7 @@ The name of the files, and the chemical species concentrations at start time are
 |$U$       |Axial velocity                |m/s      |
 |$p$       |Pressure                      |Pa       |
 |$T$       |Temperature                   |K        |
-|$Y_i$     |Mass fraction of the *i*-th chemical specie |-        |
+|$Y_i$     |Mass fraction of the *i*-th chemical specie |-|
 
 ### Internal field
 Pressure $p =$ 1e5 Pa; temperature $T =$ 2000 K; the mass fraction of $N_2 =$ 1.
@@ -182,8 +182,5 @@ This application has been developed as part of the exaFOAM Project https://www.e
 # Footnotes
 [^Fernandez2016]: Eduardo Fernández-Tarrazo, Mario Sanchez-Sanz, Antonio Sánchez, and Forman Williams. A multipurpose reduced chemical-kinetic mechanism for methanol combustion. Combustion Theory and Modelling, 20:1–19, 05 2016.
 [^OFWiki]: https://openfoamwiki.net/index.php/Main_Page
-[^Reference2]: Fusheng Xu, Stephen D. Tse, Jafar F. Al-Sharab, and Bernard H. Kear. Flame synthesis of aligned tungsten oxide
-nanowires. Applied Physics Letters, 88(24):243115, 2006.
-[^Reference3]: S. Yokoi, S. Mikami, Yoshiya Matsukawa, Yasuhiro Saito, Y. Matsushita, H. Aoki, and W. Malalasekera. Improve-
-ment of the prediction accuracy of no emissions in counter-flow diffusion flames on using no mass fraction as a
-progress variable. 2017.
+[^Reference2]: Fusheng Xu, Stephen D. Tse, Jafar F. Al-Sharab, and Bernard H. Kear. Flame synthesis of aligned tungsten oxide nanowires. Applied Physics Letters, 88(24):243115, 2006.
+[^Reference3]: S. Yokoi, S. Mikami, Yoshiya Matsukawa, Yasuhiro Saito, Y. Matsushita, H. Aoki, and W. Malalasekera. Improvement of the prediction accuracy of no emissions in counter-flow diffusion flames on using no mass fraction as a progress variable. 2017.

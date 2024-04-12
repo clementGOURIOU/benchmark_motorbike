@@ -3,7 +3,7 @@
 Sergey Lesnik and Henrik Rusche, Wikki GmbH, Germany
 
 ## Copyright
-Copyright (c) 2022-2023 Wikki GmbH
+Copyright (c) 2022-2024 Wikki GmbH
 
 <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons Licence" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a><br />
 
@@ -33,24 +33,7 @@ Figure: Streamlines colored by velocity magnitude
 |![midSliceStreamlines](figures/midSliceStreamlines.png) | ![midSliceVelocityVectors](figures/midSliceVelocityVectors.png) |
 
 # Microbenchmark
-
-## Standard case
-The standard cavity case setup from the OpenFOAM tutorials does not meet the microbenchmark requirements because of the following issues:
-* The case is not stationary. It deals with the start-up of the flow meaning that the flow starts to develop from 0 m/s at t = 0 s until it reaches a stationary state. The stationary state is reached after 1 s, which corresponds to the lid 10 times passing by, according to the white paper[^Bna]. For the smallest mesh with 1 Mio cells (1M) with the Courant number 1 (Co = 1) this leads to 1000 time steps, which is not feasible for a microbenchmark.
-* The iteration number of the linear solver per time step n_iter differs for every time step if tolerance is setup as the convergence criterion. The iteration number also fluctuates significantly, whereby on average it decreases during the run and reaches a certain plateau at some point (for 1M case approx. after 0.34 s).
-* The iteration number n_iter is also dependent on the mesh size and the decomposition.
-
-## Microbenchmark adjustments
-Considering the above arguments the case is altered. It has to be adapted to the profiling requirements meaning that a compromise between the fast execution, representativeness, repeatability and simple handling needs to be achieved:
-* Fast execution: A single run consists of 15 time steps.
-* Repeatability: During the profiling run the iteration number of the linear solver is fixed.
-* Simple handling:
-	* Start at t = 0 s, no restart file.
-	*  The iteration number is the same for a mesh of a certain size independent of the decomposition.
-* Representativeness: The present cavity case aims to reproduce the solver behavior from t = 0 s up to the point where the iteration number reaches the plateau mentioned above. This time point differs for different mesh sizes, which is accounted for in the provided benchmark. In this way, the case is representative for the initial transient of the cavity case.
-
-## Properties
-* Known to run with OpenFOAM-v2106.
+* Known to run with OpenFOAM-v2106 compiled with double precision (WM_PRECISION_OPTION=DP).
 * The momentum predictor is switched off since it is counterproductive for low Reynolds number flows when the PISO algorithm is used.
 * The cases are setup to run at Co = 1 (CFL number). If mesh size is changed, adjust the time step in 'controlDict' to keep Co = 1.
 * The cases are setup to run for 15 time steps, which produces meaningful statistics for the wall clock time (see section "Methodology" for details).
@@ -61,6 +44,19 @@ Considering the above arguments the case is altered. It has to be adapted to the
 * Only *fixedIter* setup should be used for profiling.
 * `renumberMesh` utility is used to reduce the bandwidth of the matrix.
 
+## Microbenchmark vs. tutorial case setup
+The standard cavity case setup from the OpenFOAM tutorials does not meet the microbenchmark requirements because of the following issues:
+* The case is not stationary. It deals with the start-up of the flow meaning that the flow starts to develop from 0 m/s at t = 0 s until it reaches a stationary state. The stationary state is reached after 1 s, which corresponds to the lid 10 times passing by, according to the white paper[^Bna]. For the smallest mesh with 1 Mio cells (1M) with the Courant number 1 (Co = 1) this leads to 1000 time steps, which is not feasible for a microbenchmark.
+* The iteration number of the linear solver per time step n_iter differs for every time step if tolerance is setup as the convergence criterion. The iteration number also fluctuates significantly, whereby on average it decreases during the run and reaches a certain plateau at some point (for 1M case approx. after 0.34 s).
+* The iteration number n_iter is also dependent on the mesh size and the decomposition.
+
+Considering the above arguments the case is altered. It has to be adapted to the profiling requirements meaning that a compromise between the fast execution, representativeness, repeatability and simple handling needs to be achieved:
+* Fast execution: A single run consists of 15 time steps.
+* Repeatability: During the profiling run the iteration number of the linear solver is fixed.
+* Simple handling:
+	* Start at t = 0 s, no restart file.
+	*  The iteration number is the same for a mesh of a certain size independent of the decomposition.
+* Representativeness: The present cavity case aims to reproduce the solver behavior from t = 0 s up to the point where the iteration number reaches the plateau mentioned above. This time point differs for different mesh sizes, which is accounted for in the provided benchmark. In this way, the case is representative for the initial transient of the cavity case.
 
 ## Instructions
 One of the major issues of the cavity test case is the fact that the  iteration number of the linear solver grows with increasing mesh size if the linear solver tolerance is set. Thus, the two following approaches are possible.
@@ -90,18 +86,18 @@ Optionally, adjusting `maxIter` for every run (when the decomposition method or 
 ## Methodology
 This section describes how the cases were setup. It serves for informative purposes only and is not a part of the microbenchmark.
 * The three cases were first run up to t=0.5s. For each case the following procedure was performed.
-	* Find out averaged initial residual $`r_c`$ at the end of the run: [0.4s, 0.5s].
-	* The initial residual reaches a plateau (not decreasing anymore) at some point before t=0.4s. Find out this point in time by finding at which time $`1.2 r_c`$ of the initial residual is reached (e.g. for the 1M case $`t_c`$=0.34s). Put differently, it is assumed that the
-	* Calculate the averaged iteration number $`iter_{run}`$ from $`t`$ up to $`t_c`$.
-	* Calculate the averaged iteration number $`iter_{start}`$ from the first *15* time steps.
-	* Build a factor $`a_{case}=iter_{start}/iter_{run}`$.
-* An average factor $`a`$ was build based on the three cases. It is used for the extrapolation from *fixedTol* setup to *fixedIter* setup giving a mean iteration number, which is representative for the whole run of the initial transient. In this way there is no need to run a case for the complete duration of 0.5s.
-* Run the cases with the fixed iteration number $`iter_{run}`$ for 1000 time steps.
-	* Analyze the wall clock time per time step $`dt_{wc}`$.
-	* Compute its average $`dt_{wcAv}`$ and standard deviation $`dt_{wcStd}`$
-	* Compute the sample size of time steps needed for 95% confidence level with 1% error and given $`dt_{wcAv}`$, $`dt_{wcStd}`$ according to this formula:
-	$`n_{dt} = 1.96^2*dt_{wcStd}^2/(dt_{wcAv}*0.01)^2`$
-* Several runs to evaluate $`n_{dt}`$ on both a workstation and on a HPC were performed. The highest $`n_{dt}`$ was found to be 13. Finally, it is set to 15 to be aligned with the *fixedTol* setup.
+	* Find out averaged initial residual $r_c$ at the end of the run: [0.4s, 0.5s].
+	* The initial residual reaches a plateau (not decreasing anymore) at some point before t=0.4s. Find out this point in time by finding at which time $1.2 r_c$ of the initial residual is reached (e.g. for the 1M case $t_c$=0.34s). Put differently, it is assumed that the
+	* Calculate the averaged iteration number $iter_{run}$ from $t$ up to $t_c$.
+	* Calculate the averaged iteration number $iter_{start}$ from the first *15* time steps.
+	* Build a factor $a_{case}=iter_{start}/iter_{run}$.
+* An average factor $a$ was build based on the three cases. It is used for the extrapolation from *fixedTol* setup to *fixedIter* setup giving a mean iteration number, which is representative for the whole run of the initial transient. In this way there is no need to run a case for the complete duration of 0.5s.
+* Run the cases with the fixed iteration number $iter_{run}$ for 1000 time steps.
+	* Analyze the wall clock time per time step $dt_{wc}$.
+	* Compute its average $dt_{wcAv}$ and standard deviation $dt_{wcStd}$
+	* Compute the sample size of time steps needed for 95% confidence level with 1% error and given $dt_{wcAv}$, $dt_{wcStd}$ according to this formula:
+	$n_{dt} = 1.96^2*dt_{wcStd}^2/(dt_{wcAv}*0.01)^2$
+* Several runs to evaluate $n_{dt}$ on both a workstation and on a HPC were performed. The highest $n_{dt}$ was found to be 13. Finally, it is set to 15 to be aligned with the *fixedTol* setup.
 
 
 # General remarks
