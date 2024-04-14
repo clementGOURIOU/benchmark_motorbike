@@ -1,3 +1,7 @@
+# Authors
+
+Roberto Da Via' (Scientifc Researcher @ ENEA, Bologna) and Raffaele Ponzini (CFD methodology engineer @ CINECA)  
+
 # OpenFoam used version:
 v1912
 
@@ -34,3 +38,5 @@ Meshes are built as follows:
 - M and L meshes will be done in few more minutes thanks to the mirroMesh function.
 - if you like to activate the checkMesh option please consider more time as overall execution time
 - Other larger meshes can be built using the same approach
+
+
