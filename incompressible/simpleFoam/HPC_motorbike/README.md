@@ -1,6 +1,6 @@
 # Authors
 
-Roberto Da Via' (Scientifc Researcher @ ENEA, Bologna) and Raffaele Ponzini (CFD methodology engineer @ CINECA)  
+Roberto Da Via' @rdavia (Scientifc Researcher @ ENEA, Bologna) and Raffaele Ponzini (CFD methodology engineer @ CINECA)  
 
 # OpenFoam used version:
 v1912
