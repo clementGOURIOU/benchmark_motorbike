@@ -78,12 +78,9 @@ The geometry is discretized with non-orthogonal unstructured meshes generated wi
 
 Figure 2. Microbenchmark coarsest mesh.
 
-## Files
+## Mesh and Restart Files
 
-The files for this case study are available in the exaFOAM WP2 repository
-https://develop.openfoam.com/exafoam/wp2-validation/-/tree/master/viscoelastic/viscoelasticFluidFoam/profileExtrusion
-
-DaRUS dataset: https://doi.org/10.18419/darus-3799
+In order to enable restarts, meshes and corresponding developed fields are provided on the DaRUS data repository under: https://doi.org/10.18419/darus-3799
 
 ## Case folders
 

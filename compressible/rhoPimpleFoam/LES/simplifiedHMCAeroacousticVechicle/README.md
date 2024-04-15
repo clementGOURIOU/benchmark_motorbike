@@ -74,7 +74,7 @@ The bottlenecks to be addressed in exaFOAM using the release code series OpenFOA
 
 
 ## Instructions to run the case
-Please fetch the geoemtry files from <a href="https://darus.uni-stuttgart.de/file.xhtml?persistentId=doi:10.18419/darus-3735/1">link</a>
+Please fetch the geometry files from the DaRUS data repository under: https://doi.org/10.18419/darus-3735
 
 The setup for nref=1 (baseline) is tested in OpenFOAM v2212.
 
