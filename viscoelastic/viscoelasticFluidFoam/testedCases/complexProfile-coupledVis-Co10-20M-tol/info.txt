@@ -1,0 +1,5 @@
+maxCo:10
+solver:coupledViscoelasticFoam
+mesh:20M
+solverControl:tol
+nProcs:1536

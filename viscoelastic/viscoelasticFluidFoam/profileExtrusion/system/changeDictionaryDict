@@ -1,0 +1,158 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | foam-extend: Open Source CFD                    |
+|  \\    /   O peration     | Version:     5.0                                |
+|   \\  /    A nd           | Web:         http://www.foam-extend.org         |
+|    \\/     M anipulation  | For copyright notice see file Copyright         |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      changeDictionaryDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dictionaryReplacement
+{
+    boundary
+    {
+        symV
+        {
+            type        symmetryPlane;
+        }
+        symH
+        {
+            type        symmetryPlane;
+        }
+    }
+    p
+    {
+        boundaryField
+        {
+            symV
+            {
+                type        symmetryPlane;
+            }
+            symH
+            {
+                type        symmetryPlane;
+            }
+        }
+    }
+    U
+    {
+        boundaryField
+        {
+            symV
+            {
+                type        symmetryPlane;
+            }
+            symH
+            {
+                type        symmetryPlane;
+            }
+        }
+    }
+    tau
+    {
+        boundaryField
+        {
+            symV
+            {
+                type        symmetryPlane;
+            }
+            symH
+            {
+                type        symmetryPlane;
+            }
+        }
+    }
+    tauM1
+    {
+        boundaryField
+        {
+            symV
+            {
+                type        symmetryPlane;
+            }
+            symH
+            {
+                type        symmetryPlane;
+            }
+        }
+    }
+    tauM2
+    {
+        boundaryField
+        {
+            symV
+            {
+                type        symmetryPlane;
+            }
+            symH
+            {
+                type        symmetryPlane;
+            }
+        }
+    }
+    tauM3
+    {
+        boundaryField
+        {
+            symV
+            {
+                type        symmetryPlane;
+            }
+            symH
+            {
+                type        symmetryPlane;
+            }
+        }
+    }
+    tauM4
+    {
+        boundaryField
+        {
+            symV
+            {
+                type        symmetryPlane;
+            }
+            symH
+            {
+                type        symmetryPlane;
+            }
+        }
+    }
+    tauM5
+    {
+        boundaryField
+        {
+            symV
+            {
+                type        symmetryPlane;
+            }
+            symH
+            {
+                type        symmetryPlane;
+            }
+        }
+    }
+    tauM6
+    {
+        boundaryField
+        {
+            symV
+            {
+                type        symmetryPlane;
+            }
+            symH
+            {
+                type        symmetryPlane;
+            }
+        }
+    }
+}
+
+// ************************************************************************* //

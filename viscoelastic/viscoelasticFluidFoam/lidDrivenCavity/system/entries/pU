@@ -1,0 +1,23 @@
+    p
+    {
+        solver          GAMG;
+        smoother        DIC;
+        cacheAgglomeration true;
+        nCellsInCoarsestLevel 10;
+        agglomerator    faceAreaPair;
+        mergeLevels     1;
+
+        tolerance       &pTol;
+        relTol          &pRelTol;
+        minIter         &pMinIter;
+        maxIter         &pMaxIter;
+    }
+    U
+    {
+        solver          PBiCG;
+        preconditioner  DILU;
+        tolerance       &uTol;
+        relTol          &uRelTol;
+        minIter         &uMinIter;
+        maxIter         &uMaxIter;
+    }

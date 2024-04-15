@@ -2,7 +2,7 @@
 
 ## Authors
 
-Author: Bruno Martins and Ricardo Costa (UMinho)
+Author: Gabriel Magalhães, Bruno Martins and Ricardo Costa (UMinho)
 
 Reviser: Miguel Nóbrega (UMinho)
 
@@ -14,11 +14,11 @@ Copyright (c) 2022-2023 University of Minho
 
 ## OpenFOAM branch/version
 
-foam-extend 4.1
+foam-extend 5.0
 
 ## Description
 
-The lid-driven cavity is a well-known benchmark for assessing computational methods. The interest in using a lid-driven cavity as a microbenchmark to evaluate the solver's computational performance is related to its simple geometry and orthogonal meshes, which will allow the study of the solver's numerical implementation, without having to deal with issues pertaining to non-orthogonal meshes. The well-known singularities in this example can help study the precision of the discretization methods implemented. The problem is modelled considering the isothermal and incompressible 2D flow of a non-linear viscoelastic fluid. The solver employed is the viscoelasticFluidFoam, available in foam-extend 4.1.
+The lid-driven cavity is a well-known benchmark for assessing computational methods. The interest in using a lid-driven cavity as a microbenchmark to evaluate the solver's computational performance is related to its simple geometry and orthogonal mesh, which will allow the study of the solver's numerical implementation, without having to deal with issues pertaining to non-orthogonal meshes. The well-known singularities in this example can help study the precision of the discretization methods implemented. The problem is modelled considering the isothermal and incompressible 2D flow of a non-linear viscoelastic fluid. The solver initially employed is the viscoelasticFluidFoam, available in foam-extend 5.0.
 
 ## Geometry
 
@@ -41,9 +41,9 @@ This microbenchmark has fixed lateral and bottom walls and a top lid with a vari
 | | |Velocity - U [m/s] |Pressure - p [Pa]|Stress - Tau [Pa]|
 | Initial Conditions | Type | uniform | uniform | uniform |
 |  | Value | (0 0 0) | 0 | (0 0 0 0 0 0) |
-| movingWall  | Type  | sinWallVelocity | zeroGradient  | zeroGradient  |
+| movingWall  | Type  | sinWallVelocity | zeroGradient  | linearExtrapolation  |
 |  | Value | - | - | - |
-| fixedWalls | Type  | fixedValue | zeroGradient | zeroGradient  |
+| fixedWalls | Type  | fixedValue | zeroGradient | linearExtrapolation  |
 |  | Value | uniform (0 0 0) | - | - |
 
 Table 1. Initial and boundary conditions.
@@ -52,7 +52,7 @@ Table 1. Initial and boundary conditions.
 
 To run the cases a new sinWallVelocity boundary condition is required, and it must be compiled prior to running the case as follows:
 
-1. Source a foam-extend 4.1 installation.
+1. Source a foam-extend 5.0 installation.
 2. Change the directory to "src".
 2. Execute "./Allwmake".
 
@@ -70,27 +70,47 @@ The numerical distribution of pressure, velocity and stress are shown in Figure 
 
 Figure 2. Microbenchmark numerical solution.
 
-## Mesh and Restart Files
+## Files
 
-In order to enable restarts, meshes and corresponding developed fields are provided on the DaRUS data repository under: https://doi.org/10.18419/darus-3798
+exaFOAM WP2 repository
+https://develop.openfoam.com/exafoam/wp2-validation/-/tree/master/viscoelastic/viscoelasticFluidFoam/lidDrivenCavity
+
+DaRUS dataset
+https://doi.org/10.18419/darus-3798
 
 ## Case folders
 
-For a fixed relative/absolute tolerance for residual convergence criteria, the following case folders are included:
+For a fixed relative/absolute tolerance for residual convergence criteria, the following cases are possible:
 * 1M_fixedTol - Mesh with 1 million cells.
 * 4M_fixedTol - Mesh with 4 million cells.
 * 16M_fixedTol - Mesh with 16 million cells.
 
-For a fixed number of inner iterations for residual convergence criteria, the following case folders are included:
+For a fixed number of inner iterations for residual convergence criteria, the following cases are possible:
 * 1M_fixedIter - Mesh with 1 million cells.
 * 4M_fixedIter - Mesh with 4 million cells.
 * 16M_fixedIter - Mesh with 16 million cells.
 
-For the *fixedIter* cases, the fixed number of iterations chosen is representative of the solver's behaviour with a more evolved solution and, thus, restarting files should be applied. Suitable restarting files and associated meshes are provided at the DaRUS repository (XXXX), which were obtained by running the same case with a fixed relative/absolute tolerance for a few seconds of physical time.
+For the *fixedIter* cases, the fixed number of iterations chosen is representative of the solver's behaviour with a more evolved solution and, thus, restarting files should be applied. Suitable restarting files and associated meshes are provided at the [DaRUS repository](https://doi.org/10.18419/darus-3798), which were obtained by running the same case with a fixed relative/absolute tolerance for a few seconds of physical time.
 
 ## Running the simulations
 
-Check the README.md file inside each case folder.
+### Custom boundary condition
+
+This microbenchmark requires a custom boundary condition, named sinWallVelocity, which should be compiled before running this case study. 
+
+### Running the simulations:
+
+1. Change the directory to the desired case folder.
+2. Execute "./Allrun.pre".
+3. Execute "./Allrun".
+
+### Additional notes:
+
+1. The case is prepared using the script [generateCase](../generateCase.sh). The configurations about number of processes, solution control, solver and mesh are defined in this script. After the execution a new folder is generated for the case using the configuration specified by the user. More details in the [general README](../README.md).
+
+2. All cases have a restart file to start the simulation in a specified timestep, for which the calculation procedure is more stable and thus more representative of the total run time. The complete case study with the calculation files can be obtained at the E4 cluster in folder “/data/exafoam/wp2-validation/microbenchmarks/viscoelastic/lidDrivenCavity".
+
+3. The version of the case study stored in this repository, is prepared to generate the mesh, decompose the data and start the simulation from the latest time.
 
 ## Acknowledgment
 
@@ -107,3 +127,4 @@ The case can be made available with public access.
 [1] J. Azaiez, R. Guénette, A. Ait-Kadi, Entry ﬂow calculations using multimode models, Journal of Non-Newtonian Fluid Mechanics, 66(2-3), 271–281, 1996.
 
 [2] H. Giesekus, A simple constitutive equation for polymer fluids based on the concept of deformation dependent tensorial mobility, Journal of Non-Newtonian Fluid Mechanics 11(1-2), 69-109, 1982.
+

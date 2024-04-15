@@ -2,7 +2,7 @@
 
 ## Authors
 
-Author: Bruno Martins and Ricardo Costa (UMinho)
+Author: Gabriel Magalhães, Bruno Martins and Ricardo Costa (UMinho)
 
 Reviser: Miguel Nóbrega (UMinho)
 
@@ -14,19 +14,11 @@ Copyright (c) 2022-2023 University of Minho
 
 ## OpenFOAM branch/version
 
-foam-extend 4.1
+foam-extend 5.0
 
 ## Description
 
-The computational time required to perform a numerical simulation of profile extrusion forming, considering more realistic (viscoelastic) constitutive models, is incompatible with the industrial requirements. This microbenchmark case study mimics a typical profile extrusion problem and aims at assessing the solvers available in OpenFOAM, namely viscoelasticFluidFoam integrated into foam-extend 4.1. Due to the simplified geometry employed, the computational meshes required to obtain accurate results will be much smaller than those of the associated industrial scale case study. This should allow performing initial exploratory studies. Thus, the results obtained are expected to give insights into improving the viscoelasticFluidFoam solver.    
-
-## Custom GiesekusIBSD viscoelastic constitutive model
-
-This benchmark requires a custom viscoelastic constitutive model, named GiesekusIBSD, where a stabilization procedure (improved both sides diffusion) is implemented, which should be compiled before running the case study, as follows:
-
-1. Source a foam-extend 4.1 installation.
-2. Change the directory to "src".
-2. Execute "./Allwmake".
+The computational time required to perform a numerical simulation of profile extrusion forming, considering more realistic (viscoelastic) constitutive models, is incompatible with the industrial requirements. This microbenchmark case study mimics a typical profile extrusion problem and aims at assessing the solvers available in OpenFOAM, namely viscoelasticFluidFoam integrated into foam-extend 5.0. Due to the simplified geometry employed, the computational meshes required to obtain accurate results will be much smaller than those of the associated industrial scale case study. This should allow performing initial exploratory studies. Thus, the results obtained are expected to give insights into improving the viscoelasticFluidFoam solver.   
 
 ## Geometry
 
@@ -53,14 +45,30 @@ Table 1. Microbenchmark initial and boundary conditions.
 |  | Value | (0 0 0) | 0 | (0 0 0 0 0 0) |
 | inlet | Type  | fixedValue | zeroGradient  | fixedValue |
 |  | Value | uniform (0 0 2.03e-03) | - | uniform (0 0 0 0 0 0) |
-| outlet | Type  | zeroGradient  | fixedValue | zeroGradient  |
+| outlet | Type  | zeroGradient  | fixedValue | linearExtrapolation  |
 |  | Value | - | uniform (0 0 0 ) | - |
-| wall | Type  | fixedValue | zeroGradient | zeroGradient  |
+| wall | Type  | fixedValue | zeroGradient | linearExtrapolation  |
 |  | Value | uniform (0 0 0) | - | - |
 | symmetryXZ | Type  | symmetryPlane | symmetryPlane | symmetryPlane |
 |  | Value | - | - | - |
 | symmetryYZ | Type  | symmetryPlane | symmetryPlane | symmetryPlane |
 |  | Value | - | - | - |
+
+When using the coupled solvers (semi-coupled or fully-coupled) a modification is necessary for the symmetry planes as shown in Table 2.
+
+Table 2. Microbenchmark boundary conditions for symmetry planes when using coupled viscoelastic solvers.
+
+| | | | Variables | |
+|--|--|--|--|--|
+| | |Velocity - U [m/s] |Pressure - p [Pa]|Stress - Tau [Pa]|
+| symmetryXZ | Type  | blockSymmPlane | zeroGradient | linearExtrapolation |
+|  | Value | - | - | - |
+| symmetryYZ | Type  | blockSymmPlane | zeroGradient | linearExtrapolation |
+|  | Value | - | - | - |
+
+Besides the boundary conditions, it is necessary to build the symmetry planes as general patches (type patch) when generating the mesh for the coupled solvers.
+
+NOTE: all the considerations for the particular cases are did in the script [generateCase](../generateCase.sh)
 
 ## Computational Mesh
 
@@ -70,29 +78,41 @@ The geometry is discretized with non-orthogonal unstructured meshes generated wi
 
 Figure 2. Microbenchmark coarsest mesh.
 
-## Mesh and Restart Files
+## Files
 
-In order to enable restarts, meshes and corresponding developed fields are provided on the DaRUS data repository under: https://doi.org/10.18419/darus-3799
+The files for this case study are available in the exaFOAM WP2 repository
+https://develop.openfoam.com/exafoam/wp2-validation/-/tree/master/viscoelastic/viscoelasticFluidFoam/profileExtrusion
+
+DaRUS dataset: https://doi.org/10.18419/darus-3799
 
 ## Case folders
 
-For a fixed relative/absolute tolerance for residual convergence criteria, the following case folders are included:
+For a fixed relative/absolute tolerance for residual convergence criteria, tthe following cases are possible:
 * 1M_fixedTol - Mesh with 1 million cells.
 * 20M_fixedTol - Mesh with 20 million cells.
 
-For a fixed number of inner iterations for residual convergence criteria, the following case folders are included:
+For a fixed number of inner iterations for residual convergence criteria, the following cases are possible:
 * 1M_fixedIter - Mesh with 1 million cells.
 * 20M_fixedIter - Mesh with 20 million cells.
 
-For the *fixedIter* cases, the fixed number of iterations chosen is representative of the solver's behaviour with a more evolved solution and, thus, restarting files should be applied. Suitable restarting files and associated meshes are provided at the DaRUS repository (XXXX), which were obtained by running the same case with a fixed relative/absolute tolerance for a few seconds of physical time.
-
 ## Running the simulations
 
-Check the README.md file inside each case folder.
+1. Change the directory to the desired case folder.
+2. Execute "./Allrun.pre".
+3. Execute "./Allrun".
+
+### Additional notes:
+
+1. The case is prepared using the script [generateCase](../generateCase.sh). The configurations about number of processes, solution control, solver and mesh are defined in this script. After the execution a new folder is generated for the case using the configuration specified by the user. More details in the [general README](../README.md).
+
+2. All cases have a restart file to start the simulation in a specified timestep, for which the calculation procedure is more stable and thus more representative of the total run time. The complete case study with the calculation files can be obtained at the E4 cluster in folder “/data/exafoam/wp2-validation/macrobenchmarks/viscoelastic/complexProfileExtrusion”.
+
+3. The version of the case study stored in this repository is prepared to generate the mesh, decompose the data and start the simulation from the latest time.
+
 
 ## Results
 
-The numerical distribution of pressure, velocity and stress are shown in Figure 3. The accuracy of the calculations can be assessed by the distribution of pressure, velocity and stress components along the 3D domain, the velocity and stress distributions at the outlet cross-section and the average pressure at the inlet.
+The numerical distribution of pressure, velocity and stress are shown in Figure 3. The accuracy of the calculations can be assessed by the distribution of pressure, velocity and stress components along the 3D domain, the velocity and stress distributions at the outlet cross-section and the average pressure at the inlet. 
 
 <img src="./figures/profileExtrusion_p.png" alt="footer" height="300">
 <img src="./figures/profileExtrusion_UMagnitude.png" alt="footer" height="300">
