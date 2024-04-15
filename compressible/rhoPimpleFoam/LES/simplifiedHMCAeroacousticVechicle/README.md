@@ -76,6 +76,8 @@ The bottlenecks to be addressed in exaFOAM using the release code series OpenFOA
 ## Instructions to run the case
 The setup for nref=1 (baseline) is tested in OpenFOAM v2212.
 
+Allrun script has instructions to use the geometry files on constant/triSurface. However, if they are missing, please fetch them first from the DaRUS data repository under: https://doi.org/10.18419/darus-3735
+
 We have flexibility to scale the mesh simply by changing this (nref) parameter inside file system/parameters, and for each increment, the mesh might scale upto 8^(nref-1) than previous level.
 
 Execution is typically a call to Allrun script with required number of processors as argument. e.g. ./Allrun 16
@@ -83,7 +85,6 @@ Execution is typically a call to Allrun script with required number of processor
 Selecting both nref and the number of cores gives flexibility to compare scalability. For example, one could use lower nref (1-3) to study scalability with lower core number, and go higher if larger hardware is available.
 
 The case should build automatically according to 'nref' and number of processors requested. Any post-processing (like gnuplot) could be evaluated separately.
-
 
 ## References
 ESI Aeroacoustics Training Course Material 2016-2023, Applications: Aeroacoustics (<a href="https://www.openfoam.com">openfoam.com</a>)
