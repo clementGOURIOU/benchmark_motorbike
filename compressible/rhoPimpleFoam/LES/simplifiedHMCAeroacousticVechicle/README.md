@@ -86,11 +86,6 @@ Selecting both nref and the number of cores gives flexibility to compare scalabi
 
 The case should build automatically according to 'nref' and number of processors requested. Any post-processing (like gnuplot) could be evaluated separately.
 
-## Mesh and Restart Files
-
-In order to enable restarts, meshes and corresponding developed fields are provided on the DaRUS data repository under:
-https://doi.org/10.18419/darus-3735
-
 ## References
 ESI Aeroacoustics Training Course Material 2016-2023, Applications: Aeroacoustics (<a href="https://www.openfoam.com">openfoam.com</a>)
 
