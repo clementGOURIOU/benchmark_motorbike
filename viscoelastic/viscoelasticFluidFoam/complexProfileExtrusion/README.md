@@ -90,7 +90,7 @@ For a fixed number of inner iterations for residual convergence criteria, the fo
 * 10M_fixedIter - Mesh with 10 million cells.
 * 40M_fixedIter - Mesh with 40 million cells.
 
-For the *fixedIter* cases, the fixed number of iterations chosen is representative of the solver's behaviour with a more evolved solution and, thus, restarting files should be applied. Suitable restarting files and associated meshes are provided at the DaRUS repository (XXXX), which were obtained by running the same case with a fixed relative/absolute tolerance for a few seconds of physical time.
+For the *fixedIter* cases, the fixed number of iterations chosen is representative of the solver's behaviour with a more evolved solution and, thus, restarting files should be applied. Suitable restarting files and associated meshes are provided at the DaRUS repository (https://doi.org/10.18419/darus-3797), which were obtained by running the same case with a fixed relative/absolute tolerance for a few seconds of physical time.
 
 ## Running the simulations
 
