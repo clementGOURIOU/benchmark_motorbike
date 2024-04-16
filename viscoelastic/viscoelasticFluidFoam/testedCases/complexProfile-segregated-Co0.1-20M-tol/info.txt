@@ -1,0 +1,5 @@
+maxCo:0.1
+solver:segregatedViscoelasticFoam
+mesh:20M
+solverControl:tol
+nProcs:1536

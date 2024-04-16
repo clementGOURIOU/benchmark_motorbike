@@ -1,0 +1,41 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Version:  foam-extend 5.0
+    \\  /    A nd           | PorousMedia: A Wikki Brasil project
+     \\/     M anipulation  | Solver: coupledMatrixFoam
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      sampleDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+interpolationScheme           cell;
+
+setFormat                     raw;
+
+sets                          
+(
+    acrossFlow
+    {
+        type            midPointAndFace;
+        axis            distance;
+        start           (0.0065 0.0273 0.165);
+        end             (0.0065 0.0273 0.205);
+        nPoints         5000;
+    }
+);
+
+surfaces                      ( );
+
+surfaceFormat null;
+
+fields                        (tauM1);
+
+
+//************************************************************************** //

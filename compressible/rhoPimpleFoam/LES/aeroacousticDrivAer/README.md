@@ -73,7 +73,7 @@ Qualitative comparisons equivalent to the baseline case shown in Figures 3 and 4
 The setup is tested in OpenFOAM v2306.
 
 Allrun script has instructions to copy geometry constant/triSurface.
-However, if they are missing in "$FOAM_TUTORIALS/resources/geometry/I7_aeroacoustics_DrivAer" please fetch them first from link (TBD)
+However, if they are missing in "$FOAM_TUTORIALS/resources/geometry/I7_aeroacoustics_DrivAer" please fetch them first from the DaRUS data repository under: https://doi.org/10.18419/darus-3736
 
 Execution is typically a call to Allrun script with required number of processors as argument. e.g. ./Allrun 256
 

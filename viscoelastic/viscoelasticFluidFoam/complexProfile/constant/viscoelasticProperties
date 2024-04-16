@@ -1,0 +1,81 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | foam-extend: Open Source CFD                    |
+|  \\    /   O peration     | Version:     5.0                                |
+|   \\  /    A nd           | Web:         http://www.foam-extend.org         |
+|    \\/     M anipulation  | For copyright notice see file Copyright         |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      viscoelasticProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+rheology
+{
+    type    &model;
+
+    models
+    (
+        M1
+        {
+            type        Giesekus;
+            rho         rho [1 -3 0 0 0 0 0] 1200.0;
+            etaS        etaS [1 -1 -1 0 0 0 0] 0.0;
+            etaP        etaP [1 -1 -1 0 0 0 0] 320.0;
+            lambda      lambda [0 0 1 0 0 0 0] 0.0008;
+            alpha       alpha [0 0 0 0 0 0 0] 0.1;
+
+            stabilization   IBSD;
+        }
+        M2
+        {
+            type        Giesekus;
+            rho         rho [1 -3 0 0 0 0 0] 1200.0;
+            etaS        etaS [1 -1 -1 0 0 0 0] 0.0;
+            etaP        etaP [1 -1 -1 0 0 0 0] 1625.0;
+            lambda      lambda [0 0 1 0 0 0 0] 0.0065;
+            alpha       alpha [0 0 0 0 0 0 0] 0.6;
+
+            stabilization   IBSD;
+        }
+        M3
+        {
+            type        Giesekus;
+            rho         rho [1 -3 0 0 0 0 0] 1200.0;
+            etaS        etaS [1 -1 -1 0 0 0 0] 0.0;
+            etaP        etaP [1 -1 -1 0 0 0 0] 3000.0;
+            lambda      lambda [0 0 1 0 0 0 0] 0.06;
+            alpha       alpha [0 0 0 0 0 0 0] 0.001;
+
+            stabilization   IBSD;
+        }
+        M4
+        {
+            type        Giesekus;
+            rho         rho [1 -3 0 0 0 0 0] 1200.0;
+            etaS        etaS [1 -1 -1 0 0 0 0] 0.0;
+            etaP        etaP [1 -1 -1 0 0 0 0] 2400.0;
+            lambda      lambda [0 0 1 0 0 0 0] 0.3;
+            alpha       alpha [0 0 0 0 0 0 0] 0.007;
+
+            stabilization   IBSD;
+        }
+        M5
+        {
+            type        Giesekus;
+            rho         rho [1 -3 0 0 0 0 0] 1200.0;
+            etaS        etaS [1 -1 -1 0 0 0 0] 0.0;
+            etaP        etaP [1 -1 -1 0 0 0 0] 1500.0;
+            lambda      lambda [0 0 1 0 0 0 0] 2.5;
+            alpha       alpha [0 0 0 0 0 0 0] 0.0008;
+
+            stabilization   IBSD;
+        }
+    );
+}
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

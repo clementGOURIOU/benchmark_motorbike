@@ -1,0 +1,18 @@
+    p
+    {
+        solver          PCG;
+        preconditioner  DILU;
+        tolerance       &pTol;
+        relTol          &pRelTol;
+        minIter         &pMinIter;
+        maxIter         &pMaxIter;
+    }
+    U
+    {
+        solver          PBiCG;
+        preconditioner  DILU;
+        tolerance       &uTol;
+        relTol          &uRelTol;
+        minIter         &uMinIter;
+        maxIter         &uMaxIter;
+    }

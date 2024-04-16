@@ -86,6 +86,11 @@ The gnuplot script `Plot_turbines.gnu` can be used to monitor the progress of th
 
 Figure 4. Wind turbine power evolution over time.
 
+## Mesh and Restart Files
+
+In order to enable restarts, meshes and corresponding developed fields are provided on the DaRUS data repository under:
+https://doi.org/10.18419/darus-3975
+
 
 ## Known issues
 

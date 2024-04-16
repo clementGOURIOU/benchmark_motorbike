@@ -1,3 +1,3 @@
-myparabolicVelocityFvPatchVectorField.C
+sinWallVelocityFvPatchVectorField.C
 
-LIB = $(FOAM_USER_LIBBIN)/mylibParabolicVelocity
+LIB = $(FOAM_USER_LIBBIN)/sinWallVelocity

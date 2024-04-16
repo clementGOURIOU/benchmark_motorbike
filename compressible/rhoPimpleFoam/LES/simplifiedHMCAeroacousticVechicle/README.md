@@ -74,6 +74,8 @@ The bottlenecks to be addressed in exaFOAM using the release code series OpenFOA
 
 
 ## Instructions to run the case
+Please fetch the geometry files from the DaRUS data repository under: https://doi.org/10.18419/darus-3735
+
 The setup for nref=1 (baseline) is tested in OpenFOAM v2212.
 
 We have flexibility to scale the mesh simply by changing this (nref) parameter inside file system/parameters, and for each increment, the mesh might scale upto 8^(nref-1) than previous level.

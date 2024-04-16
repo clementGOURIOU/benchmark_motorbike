@@ -1,0 +1,24 @@
+    UpTau
+    {
+        solver          AMG;
+        cycle           V-cycle;
+        coarseningType  SAMG;
+        norm            componentNorm;
+        normComponent   3;
+
+        minGroupSize    4;
+        maxGroupSize    6;
+
+        nPreSweeps      1;
+        nPostSweeps     3;
+        groupSize       2;
+        minCoarseEqns   4;
+        nMaxLevels      100;
+        scale           on;
+        smoother        ILUC0;
+
+        tolerance       &pTol;
+        relTol          &pRelTol;
+        minIter         &pMinIter;
+        maxIter         &pMaxIter;
+    }

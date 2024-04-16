@@ -1,0 +1,28 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # Run from this directory
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+listLines="redLine blueLine greenLine"
+listModes="M1"
+mv postProcessing postProcessing_execution
+runApplication reconstructPar -latestTime
+for line in $listLines; do
+
+    cp system/sampleDict.$line system/sampleDict
+
+    runApplication sample
+
+    mv log.sample log.sample.$line
+
+    for mode in $listModes; do
+        cp system/sampleDict.$line$mode system/sampleDict
+
+        runApplication sample
+
+        mv log.sample log.sample.$line$mode
+    done
+
+    mv postProcessing postProcessing_$line
+done

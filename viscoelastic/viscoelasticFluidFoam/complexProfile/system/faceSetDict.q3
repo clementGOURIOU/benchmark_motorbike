@@ -1,0 +1,38 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | foam-extend: Open Source CFD                    |
+|  \\    /   O peration     | Version:     5.0                                |
+|   \\  /    A nd           | Web:         http://www.foam-extend.org         |
+|    \\/     M anipulation  | For copyright notice see file Copyright         |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      faceSetDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+// Name of set to operate on
+name outletQ3;
+
+// One of clear/new/invert/add/delete|subset/list
+action new;
+
+// Actions to apply to pointSet. These are all the topoSetSource's ending
+// in ..ToFace (see the meshTools library).
+topoSetSources
+(
+    // All faces of patch
+    boxToFace
+    {
+        box (0.079 -1e20 0.1999999) (1e20 1e20 1e20)
+    }
+    boundaryToFace 
+    { 
+        name outlet;      // Name of patch, regular expressions allowed
+    }
+);
+
+// ************************************************************************* //

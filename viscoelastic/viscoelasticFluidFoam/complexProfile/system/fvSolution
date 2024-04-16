@@ -1,0 +1,72 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\	  /  F ield         | foam-extend: Open Source CFD                    |
+|  \\    /   O peration     | Version:     5.0                                |
+|   \\  /    A nd           | Web:         http://www.foam-extend.org         |
+|    \\/     M anipulation  | For copyright notice see file Copyright         |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      fvSolution;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+solvers
+{
+#include    "./system/entries/&UpSolver"
+
+    "tau.*"
+    {
+        solver          PBiCG;
+        preconditioner  DILU;
+        tolerance       &tauTol;
+        relTol          &tauRelTol;
+        minIter         &tauMinIter;
+        maxIter         &tauMaxIter;
+    }
+}
+
+PISO
+{
+    nCorrectors         2;
+    nNonOrthogonalCorrectors 0;
+    pRefCell            0;
+    pRefValue           0;
+}
+
+blockSolver
+{
+    coupledTerms
+    {
+        tauInU          true;
+        UInTau          true;
+    }
+
+    nOuterCorrectors 2;
+    convergence     1e-5;
+
+    pRefCell 0;
+    pRefValue 0;
+}
+
+fieldBounds
+{
+    U      500;
+    p      -5e4 5e4;
+}
+
+relaxationFactors
+{
+    U                   &uRelax;
+    tau                 0.3;
+    tauM1               0.3;
+    tauM2               0.3;
+    tauM3               0.3;
+    tauM4               0.3;
+    tauM5               0.3;
+    tauM6               0.3;
+}
+// ************************************************************************* //

@@ -1,0 +1,67 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | foam-extend: Open Source CFD                    |
+|  \\    /   O peration     | Version:     4.1                                |
+|   \\  /    A nd           | Web:         http://www.foam-extend.org         |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      fvSchemes;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+ddtSchemes
+{
+    default             Euler;
+}
+
+gradSchemes
+{
+    default             Gauss linear;
+    grad(p)             Gauss linear;
+    grad(U)             Gauss linear;
+}
+
+divSchemes
+{
+    default                         none;
+
+    div(phi,U)                      Gauss upwind;
+    div((nuEff*dev(T(grad(U)))))    Gauss upwind;
+
+    div(phi,tau)                    Gauss linear;
+    div(phi,tauM1)                  Gauss upwind;
+    div(phi,tauM2)                  Gauss upwind;
+    div(phi,tauM3)                  Gauss upwind;
+    div(phi,tauM4)                  Gauss upwind;
+    div(phi,tauM5)                  Gauss upwind;
+    div(phi,tauM6)                  Gauss upwind;
+    div(U)                          Gauss linear;
+    div(tau)                        Gauss linear;
+}
+
+laplacianSchemes
+{
+    default                      none;
+    laplacian(etaPEff,U)         Gauss linear corrected;
+    laplacian(etaPEff+etaS,U)    Gauss linear corrected;
+    laplacian(rAU,p)             Gauss linear corrected;
+    laplacian((1|A(U)),p)        Gauss linear corrected;
+}
+
+interpolationSchemes
+{
+    default             linear;
+    interpolate(HbyA)   linear;
+}
+
+snGradSchemes
+{
+    default             corrected;
+}
+
+// ************************************************************************* //

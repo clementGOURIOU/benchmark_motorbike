@@ -43,7 +43,7 @@ The bottlenecks and HPC challenges towards exa-scale computing are restated belo
 The setup is tested in OpenFOAM v2306 in 144 cores. Please change core count as needed for scalability tests.
 
 Allrun script has instructions to copy geometry aerodynamicsDrivAer/constant/triSurface.
-However, if they are missing in "$FOAM_TUTORIALS/resources/geometry/I9_aerodynamics_DrivAer" please fetch them first from link (TBD) 
+However, if they are missing in "$FOAM_TUTORIALS/resources/geometry/I9_aerodynamics_DrivAer" please fetch them first from from the DaRUS data repository under: https://doi.org/10.18419/darus-3737 
 
 Execution is typically a call to Allrun script at top level directory e.g. ./Allrun
 

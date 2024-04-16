@@ -1,0 +1,145 @@
+	pInlet
+	{
+		type            faceSource;
+		functionObjectLibs ("libfieldFunctionObjects.so");
+		surfaceFormat	null;
+
+		enabled         true;
+		outputControl   timeStep;
+
+		// Output to log&file (true) or to file only
+		log             true;
+
+		// Output field values as well
+		valueOutput     true;
+
+		// Type of source: patch/faceZone/sampledSurface
+		source          patch;
+
+		// if patch or faceZone: name of patch or faceZone
+		sourceName      inlet;
+
+		// Operation: areaAverage/sum/weightedAverage ...
+		operation       areaAverage;
+
+		fields
+		(
+		    p
+		);
+	}
+	phiOutlet
+	{
+		type            faceSource;
+		functionObjectLibs ("libfieldFunctionObjects.so");
+		surfaceFormat	null;
+
+		enabled         true;
+		outputControl   timeStep;
+
+		// Output to log&file (true) or to file only
+		log             true;
+
+		// Output field values as well
+		valueOutput     true;
+
+		// Type of source: patch/faceZone/sampledSurface
+		source          patch;
+
+		// if patch or faceZone: name of patch or faceZone
+		sourceName      outlet;
+
+		// Operation: areaAverage/sum/weightedAverage ...
+		operation       sum;
+
+		fields
+		(
+		    phi
+		);
+	}
+	phiQ1
+	{
+		type            faceSource;
+		functionObjectLibs ("libfieldFunctionObjects.so");
+		surfaceFormat	null;
+
+		enabled         true;
+		outputControl   timeStep;
+
+		// Output to log&file (true) or to file only
+		log             true;
+
+		// Output field values as well
+		valueOutput     true;
+
+		// Type of source: patch/faceZone/sampledSurface
+		source          faceZone;
+
+		// if patch or faceZone: name of patch or faceZone
+		sourceName      outletQ1;
+
+		// Operation: areaAverage/sum/weightedAverage ...
+		operation       sum;
+
+		fields
+		(
+		    phi
+		);
+	}
+	phiQ2
+	{
+		type            faceSource;
+		functionObjectLibs ("libfieldFunctionObjects.so");
+		surfaceFormat	null;
+
+		enabled         true;
+		outputControl   timeStep;
+
+		// Output to log&file (true) or to file only
+		log             true;
+
+		// Output field values as well
+		valueOutput     true;
+
+		// Type of source: patch/faceZone/sampledSurface
+		source          faceZone;
+
+		// if patch or faceZone: name of patch or faceZone
+		sourceName      outletQ2;
+
+		// Operation: areaAverage/sum/weightedAverage ...
+		operation       sum;
+
+		fields
+		(
+		    phi
+		);
+	}
+	phiQ3
+	{
+		type            faceSource;
+		functionObjectLibs ("libfieldFunctionObjects.so");
+		surfaceFormat	null;
+
+		enabled         true;
+		outputControl   timeStep;
+
+		// Output to log&file (true) or to file only
+		log             true;
+
+		// Output field values as well
+		valueOutput     true;
+
+		// Type of source: patch/faceZone/sampledSurface
+		source          faceZone;
+
+		// if patch or faceZone: name of patch or faceZone
+		sourceName      outletQ3;
+
+		// Operation: areaAverage/sum/weightedAverage ...
+		operation       sum;
+
+		fields
+		(
+		    phi
+		);
+	}
